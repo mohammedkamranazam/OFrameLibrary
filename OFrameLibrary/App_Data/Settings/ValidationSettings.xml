@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<validationSetting>
+  <validationExpressions>
+    <validationExpression name="DateParseExpression" value="dd-MMM-yyyy" />
+    <validationExpression name="TimeParseExpression" value="hh:mm:ss tt" />
+    <validationExpression name="DateTimeParseExpression" value="dd-MMM-yyyy @ hh:mm:ss tt" />
+    <validationExpression name="PasswordValidationExpression" value="^(?=.*\W).{7,20}$" />
+    <validationExpression name="UsernameValidationExpression" value="^[a-zA-Z0-9][a-zA-Z0-9-._]{2,18}[a-zA-Z0-9]$" />
+    <validationExpression name="CalendarValidationExpression" value="^(([0-9])|([0-2][0-9])|([3][0-1]))\-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\-\d{4}$" />
+    <validationExpression name="TimeValidationExpression" value="^((([0]?[1-9]|1[0-2])(:|\.)[0-5][0-9]((:|\.)[0-5][0-9])?( )?(AM|am|aM|Am|PM|pm|pM|Pm))|(([0]?[0-9]|1[0-9]|2[0-3])(:|\.)[0-5][0-9]((:|\.)[0-5][0-9])?))$" />
+    <validationExpression name="LandlineValidationExpression" value="^\d{10,14}$" />
+    <validationExpression name="MobileValidationExpression" value="^\d{10,14}$" />
+    <validationExpression name="ZipCodeValidationExpression" value="^[a-zA-Z0-9 -]{6,10}$" />
+    <validationExpression name="IPAddressValidationExpression" value="^(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])$" />
+    <validationExpression name="NameValidationExpression" value="^([a-zA-z\s]{2,40})$" />
+    <validationExpression name="EmailValidationExpression" value="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" />
+    <validationExpression name="UrlValidationExpression" value="(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?" />
+    <validationExpression name="UriValidationExpression" value="^(https?|ftp)://[a-z0-9-]+(\.[a-z0-9-]+)+(/[\w-]+)*/[\w-]+\.(gif|png|jpg|bmp)$" />
+    <validationExpression name="ImageValidationExpression" value="^.*\.((j|J)(p|P)(e|E)?(g|G)|(g|G)(i|I)(f|F)|(p|P)(n|N)(g|G)|(b|B)(m|M)(p|P))$" />
+    <validationExpression name="FileValidationExpression" value="^.*\.((d|D)(o|O)(c|C)?(x|X)|(p|P)(d|D)(f|F)|(d|D)(o|O)(c|C)|(x|X)(l|L)(s|S)?(x|X))$" />
+    <validationExpression name="AudioFileValidationExpression" value="^.*\.((m|M)(p|P)(3|3)|(w|W)(a|A)(v|V)|(w|W)(m|M)(a|A))$" />
+    <validationExpression name="VideoFileValidationExpression" value="^.*\.((m|M)(p|P)(4|4)|(a|A)(v|V)(i|I)|(f|F)(l|L)(v|V))$" />
+    <validationExpression name="FloatValidationExpression" value="^\d*\.?\d*$" />
+    <validationExpression name="IntegerValidationExpression" value="^\d+$" />
+  </validationExpressions>
+  <validationMessages>
+    <language locale="en-US">
+      <validationMessage name="PasswordValidationErrorMessage" value="7 to 20 characters and atleast 1 symbol" />
+      <validationMessage name="UsernameValidationErrorMessage" value="alphabets, numbers, hyphen(-), dot(.), underscore(_) are allowed, 4 to 20 characters" />
+      <validationMessage name="CalendarValidationErrorMessage" value="valid date format is dd-MMM-yyyy" />
+      <validationMessage name="TimeValidationErrorMessage" value="valid time format is HH:MM:SS TT" />
+      <validationMessage name="LandlineValidationErrorMessage" value="10 to 14 digits" />
+      <validationMessage name="MobileValidationErrorMessage" value="10 to 14 digits" />
+      <validationMessage name="ZipCodeValidationErrorMessage" value="invalid zip code" />
+      <validationMessage name="IPAddressValidationErrorMessage" value="invalid ip address" />
+      <validationMessage name="NameValidationErrorMessage" value="only alphabets and spaces, 2 to 40 characters" />
+      <validationMessage name="EmailValidationErrorMessage" value="invalid email id" />
+      <validationMessage name="UrlValidationErrorMessage" value="invalid website address" />
+      <validationMessage name="UriValidationErrorMessage" value="invalid URI address" />
+      <validationMessage name="ImageValidationErrorMessage" value="only jpeg, gif, png, bmp images" />
+      <validationMessage name="FileValidationErrorMessage" value="only doc(x), pdf, xls(x) files" />
+      <validationMessage name="AudioFileValidationErrorMessage" value="only mp3, wma, and wav files" />
+      <validationMessage name="VideoFileValidationErrorMessage" value="only mp4, avi and flv files" />
+      <validationMessage name="FloatValidationErrorMessage" value="floating point numbers only" />
+      <validationMessage name="IntegerValidationErrorMessage" value="integer values only" />
+      <validationMessage name="InvalidFormData" value="Invalid form data" />
+      <validationMessage name="MobileIsRequired" value="Mobile number is required" />
+      <validationMessage name="EmailIsRequired" value="Email ID is required" />
+      <validationMessage name="NameIsRequired" value="Name is required" />
+      <validationMessage name="CityIsRequired" value="City is required" />
+      <validationMessage name="StateIsRequired" value="State is required" />
+      <validationMessage name="CommentIsRequired" value="Comment is required" />
+      <validationMessage name="DropDownIsRequired" value="Please select one" />
+    </language>
+    <language locale="ar-SA">
+      <validationMessage name="InvalidFormData" value="بيانات النموذج غير صالح" />
+      <validationMessage name="MobileIsRequired" value="مطلوب رقم تليفون" />
+      <validationMessage name="EmailIsRequired" value="مطلوب عنوان البريد الإلكتروني" />
+      <validationMessage name="NameIsRequired" value="مطلوب اسم" />
+      <validationMessage name="CityIsRequired" value="مطلوب المدينة" />
+      <validationMessage name="StateIsRequired" value="مطلوب الدولة" />
+      <validationMessage name="CommentIsRequired" value="مطلوب تعليق" />
+      <validationMessage name="DropDownIsRequired" value="الرجاء اختيار واحد" />
+    </language>
+  </validationMessages>
+</validationSetting>

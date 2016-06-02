@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storages>
+  <storage name="Storage" path="~/Storage/" />
+  <storage name="Storage_Temp" path="~/Storage/Temp/" />
+  <storage name="Storage_Uploads" path="~/Storage/Uploads/" />
+</storages>

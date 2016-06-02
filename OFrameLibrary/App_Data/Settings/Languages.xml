@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<languages>
+  <language locale="ar-SA" direction="rtl" name="عربي">
+    <key name="xxx" value="xyz" />
+  </language>
+  <language locale="en-US" direction="ltr" name="English">
+    <key name="xxx" value="abc" />
+  </language>
+</languages>

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<servers default="fatcow">
+  <server domain="http://domain.tld" ip="domain.tld" isHttp="True" name="MyRemote1" password="123456" path="directory1/directory2/directory3/" rootDirectory="ftpRootDirectory/" username="oframeremotestorage" />
+</servers>

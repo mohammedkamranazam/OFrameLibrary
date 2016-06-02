@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<pages>
+  <page id="HomePage">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="title" content="{ONLY-SITENAME}" />
+  </page>
+  <page id="AboutUsPage">
+    <meta name="keywords" content="about us, information, know us, company details" />
+    <meta name="description" content="know about us" />
+    <meta name="title" content="About Us{ONLY-TITLE}" />
+  </page>
+</pages>

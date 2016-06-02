@@ -1,0 +1,28 @@
+﻿using OFrameLibrary.Helpers;
+using System.Web.Optimization;
+
+namespace OFrameLibrary.App_Start
+{
+    public class BundleConfig
+    {
+        public static void RegisterBundles(BundleCollection bundles)
+        {
+            foreach (var directory in ThemeHelper.GetThemeDirectories())
+            {
+                var cssBundle = new StyleBundle(string.Format("~/Theme_{0}", directory));
+
+                cssBundle.Include(ThemeStylesheetsHelper.GetPathsFromSettings(directory));
+
+                bundles.Add(cssBundle);
+
+                var scriptBundle = new ScriptBundle(string.Format("~/Script_{0}", directory));
+
+                scriptBundle.Include(ThemeScriptsHelper.GetPathsFromSettings(directory));
+
+                bundles.Add(scriptBundle);
+            }
+
+            // BundleTable.EnableOptimizations = true;
+        }
+    }
+}
