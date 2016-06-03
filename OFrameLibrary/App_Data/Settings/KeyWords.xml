@@ -8,6 +8,7 @@
   <key name="LocalStoragesFile" value="App_Data/Settings/LocalStorages.xml" />
   <key name="SEOFile" value="App_Data/Settings/PageSEO.xml" />
   <!--__________________________________________________________________________________________________________________________________________-->
+  <key name="EventLogSourceName" value="OFrame" />
   <key name="EnableQA" value="False" />
   <key name="AppInstalled" value="True" />
   <key name="MainTheme" value="Default" />
@@ -16,6 +17,7 @@
   <key name="CheckOutTheme" value="CheckOut" />
   <key name="EnableOAuthRegistration" value="True" />
   <key name="TargetTimeZoneID" value="India Standard Time" />
+  <key name="LoginPath" value="/Authentication/Login" />
   <!--__________________________________________________Performance Configuration Section________________________________________________________________________________________-->
   <key name="PerformanceMode" value="None" />
   <!--None, ApplicationState, Cache, MemoryCache, Session (do not use Session performance mode when application state is set to use SQL Server Session State Database)-->
@@ -24,22 +26,28 @@
   <key name="PerformanceTimeOutMinutes" value="1440" />
   <key name="CookieTimeOutMinutes" value="1440" />
   <!--______________________________________________Redis Configuration_____________________________________________________________________________________________________-->
-  <key name="RedisHost" value="domain.redis.cache.windows.net" />
+  <key name="RedisHost" value="" />
   <key name="RedisIsSsl" value="true" />
-  <key name="RedisPassword" value="redisPasswordInBase64EncryptedFormat" />
-  <key name="ApplicationRedisAuthenticationKey" value="RedisAuthenticationKey" />
+  <key name="RedisPassword" value="" />
+  <key name="ApplicationRedisAuthenticationKey" value="" />
   <!--______________________________________________Payment Gateway Configuration_____________________________________________________________________________________________________-->
-  <key name="CCAvenueMerchantID" value="123456" />
-  <key name="CCAvenueAccessCode" value="ABCDEFGHIJKLMN" />
-  <key name="CCAvenueWorkingKey" value="54358490754654675486758096" />
-  <key name="CCAvenueCurrencyCode" value="INR" />
-  <key name="CCAvenueLanguageCode" value="en" />
+  <key name="CCAvenueMerchantID" value="" />
+  <key name="CCAvenueAccessCode" value="" />
+  <key name="CCAvenueWorkingKey" value="" />
+  <key name="CCAvenueCurrencyCode" value="" />
+  <key name="CCAvenueLanguageCode" value="" />
+  <!--__________________________________________________SMS Server Configuration Section________________________________________________________________________________________-->
+  <key name="SMSServiceName" value="TWILIO" />
+  <!--TWILIO, ASPSMS, CUSTOM-->
+  <key name="SMSAccountIdentification" value="" />
+  <key name="SMSAccountPassword" value="" />
+  <key name="SMSAccountFrom" value="" />
   <!--__________________________________________________Email Server Configuration Section________________________________________________________________________________________-->
-  <key name="SendUsingSendGrid" value="True" />
-  <key name="SendGridServer" value="mail.domain.tld" />
-  <key name="SendGridUsername" value="encryptedBase64UserName" />
-  <key name="SendGridPassword" value="encryptedBase64Password" />
-  <key name="MailSmtp" value="True" />
+  <key name="EmailServiceName" value="SENDGRID" />
+  <!--SENDGRID, RELAY, SMTP-->
+  <key name="SendGridServer" value="" />
+  <key name="SendGridUsername" value="" />
+  <key name="SendGridPassword" value="" />
   <key name="MailServer" value="" />
   <key name="MailLogOnId" value="" />
   <key name="MailLogOnPassword" value="" />
@@ -55,6 +63,7 @@
   <key name="DisableSpamCheck" value="false" />
   <key name="DisableTemplate" value="false" />
   <key name="DisableUnsubscribe" value="false" />
+  <key name="MailLabel" value="OFrame" />
   <!--__________________________________________________Locale Configuration Section________________________________________________________________________________________-->
   <key name="DefaultLocale" value="en-US" />
   <key name="IsSiteMultiLingual" value="True" />
@@ -74,6 +83,8 @@
   <key name="GoogleSecretKey" value="" />
   <key name="TwitterAPIKey" value="" />
   <key name="TwitterSecretKey" value="" />
+  <key name="MicrosoftAPIKey" value="" />
+  <key name="MicrosoftSecretKey" value="" />
   <!--__________________________________________________________________________________________________________________________________________-->
   <key name="GoogleAnalyticsCode" value="" />
   <key name="GoogleWebmasterTool" value="" />

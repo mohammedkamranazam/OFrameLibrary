@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Google;
 using OFrameLibrary.Helpers;
 using Owin;
 using System;
+using System.Diagnostics;
 
 [assembly: OwinStartup(typeof(OFrameLibrary.Startup))]
 
@@ -25,7 +26,7 @@ namespace OFrameLibrary
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,// OFrameLibrary.OFrame.Constants.Keys.ApplicationCookie,
-                LoginPath = new PathString("/Authentication/Login"),
+                LoginPath = new PathString(AppConfig.LoginPath),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Enables the application to validate the security stamp when the user logs in.
@@ -75,36 +76,53 @@ namespace OFrameLibrary
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             //Uncomment the following lines to enable logging in with third party login providers
-            app.UseMicrosoftAccountAuthentication(
-                clientId: "",
-                clientSecret: "");
-
-            app.UseTwitterAuthentication(
-               consumerKey: "",
-               consumerSecret: "");
-
-            var fo = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions()
+            if (!string.IsNullOrWhiteSpace(AppConfig.MicrosoftSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.MicrosoftAPIKey))
             {
-                AppId = "",
-                AppSecret = "",
-                Provider = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationProvider()
-            };
+                app.UseMicrosoftAccountAuthentication(
+                    clientId: AppConfig.MicrosoftAPIKey,
+                    clientSecret: AppConfig.MicrosoftSecretKey);
+            }
 
-            fo.Scope.Add("email");
-
-            app.UseFacebookAuthentication(fo);
-
-            var go = new GoogleOAuth2AuthenticationOptions()
+            if (!string.IsNullOrWhiteSpace(AppConfig.TwitterSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.TwitterAPIKey))
             {
-                //CallbackPath = Microsoft.Owin.PathString.FromUriComponent("/Authentication/ExternalLoginCallback"),
-                ClientId = "",
-                ClientSecret = "",
-                Provider = new GoogleOAuth2AuthenticationProvider()
-            };
+                app.UseTwitterAuthentication(
+                   consumerKey: AppConfig.TwitterAPIKey,
+                   consumerSecret: AppConfig.TwitterSecretKey);
+            }
 
-            go.Scope.Add("email");
+            if (!string.IsNullOrWhiteSpace(AppConfig.FacebookSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.FacebookAPIKey))
+            {
+                var fo = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions()
+                {
+                    AppId = "",
+                    AppSecret = "",
+                    Provider = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationProvider()
+                };
 
-            app.UseGoogleAuthentication(go);
+                fo.Scope.Add("email");
+
+                app.UseFacebookAuthentication(fo);
+            }
+
+            if (!string.IsNullOrWhiteSpace(AppConfig.GoogleSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.GoogleAPIKey))
+            {
+                var go = new GoogleOAuth2AuthenticationOptions()
+                {
+                    //CallbackPath = Microsoft.Owin.PathString.FromUriComponent("/Authentication/ExternalLoginCallback"),
+                    ClientId = "",
+                    ClientSecret = "",
+                    Provider = new GoogleOAuth2AuthenticationProvider()
+                };
+
+                go.Scope.Add("email");
+
+                app.UseGoogleAuthentication(go);
+            }
+
+            if (!EventLog.SourceExists(AppConfig.EventLogSourceName))
+            {
+                EventLog.CreateEventSource(AppConfig.EventLogSourceName, "ErrorLog");
+            }
         }
     }
 }

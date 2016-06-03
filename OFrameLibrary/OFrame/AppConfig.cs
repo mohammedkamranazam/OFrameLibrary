@@ -8,12 +8,273 @@ namespace OFrameLibrary
 {
     public static class AppConfig
     {
+        //public static string XXXXXX
+        //{
+        //    get
+        //    {
+        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
+        //    }
+
+        //    set
+        //    {
+        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
+        //    }
+        //}
+        //public static string XXXXXX
+        //{
+        //    get
+        //    {
+        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
+        //    }
+
+        //    set
+        //    {
+        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
+        //    }
+        //}
+        //public static string XXXXXX
+        //{
+        //    get
+        //    {
+        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
+        //    }
+
+        //    set
+        //    {
+        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
+        //    }
+        //}
+        //public static string XXXXXX
+        //{
+        //    get
+        //    {
+        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
+        //    }
+
+        //    set
+        //    {
+        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
+        //    }
+        //}
+        //public static string XXXXXX
+        //{
+        //    get
+        //    {
+        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
+        //    }
+
+        //    set
+        //    {
+        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
+        //    }
+        //}
+        public static string EventLogSourceName
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("EventLogSourceName");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("EventLogSourceName", value);
+            }
+        }
+        public static string SMSServiceName
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("SMSServiceName");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("SMSServiceName", value);
+            }
+        }
+
+        public static string SMSAccountIdentification
+        {
+            get
+            {
+                var value = KeywordsHelper.GetKeywordValue("SMSAccountIdentification");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
+            set
+            {
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("SMSAccountIdentification", sm.Encrypt(value));
+            }
+        }
+
+        public static string SMSAccountPassword
+        {
+            get
+            {
+                var value = KeywordsHelper.GetKeywordValue("SMSAccountPassword");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
+            set
+            {
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("SMSAccountPassword", sm.Encrypt(value));
+            }
+        }
+
+        public static string SMSAccountFrom
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("SMSAccountFrom");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("SMSAccountFrom", value);
+            }
+        }
+
+        public static string EmailServiceName
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("EmailServiceName");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("EmailServiceName", value);
+            }
+        }
+
+        public static string SendGridServer
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("SendGridServer");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("SendGridServer", value);
+            }
+        }
+
+        public static string SendGridUsername
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("SendGridUsername");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("SendGridUsername", value);
+            }
+        }
+
+        public static string SendGridPassword
+        {
+            get
+            {
+                var value = KeywordsHelper.GetKeywordValue("SendGridPassword");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
+            set
+            {
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("SendGridPassword", sm.Encrypt(value));
+            }
+        }
+
+        public static string MailLabel
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("MailLabel");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("MailLabel", value);
+            }
+        }
+        
+        public static string LoginPath
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("LoginPath");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("LoginPath", value);
+            }
+        }
+
         public static string ApplicationRedisAuthenticationKey
         {
             get
             {
-                SymCryptography sm = new SymCryptography();
-                return sm.Decrypt(KeywordsHelper.GetKeywordValue("ApplicationRedisAuthenticationKey"));
+                var value = KeywordsHelper.GetKeywordValue("ApplicationRedisAuthenticationKey");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
             }
             set
             {
@@ -50,11 +311,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("RedisPassword");
+                var value = KeywordsHelper.GetKeywordValue("RedisPassword");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
             }
             set
             {
-                KeywordsHelper.SetKeywordValue("RedisPassword", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("RedisPassword", sm.Encrypt(value));
             }
         }
 
@@ -182,12 +459,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("MAITelemetricKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("MAITelemetricKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("MAITelemetricKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("MAITelemetricKey", sm.Encrypt(value));
             }
         }
 
@@ -618,18 +910,29 @@ namespace OFrameLibrary
 
         public static string MailLogOnPassword
         {
-            set
-            {
-                SymCryptography smc = new SymCryptography();
-
-                KeywordsHelper.SetKeywordValue("MailLogOnPassword", smc.Encrypt(value.ToString()));
-            }
-
             get
             {
-                SymCryptography smc = new SymCryptography();
+                var value = KeywordsHelper.GetKeywordValue("MailLogOnPassword");
 
-                return smc.Decrypt(KeywordsHelper.GetKeywordValue("MailLogOnPassword"));
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
+            set
+            {
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("MailLogOnPassword", sm.Encrypt(value));
             }
         }
 
@@ -656,19 +959,6 @@ namespace OFrameLibrary
             get
             {
                 return DataParser.IntParse(KeywordsHelper.GetKeywordValue("MailServerPort"), true);
-            }
-        }
-
-        public static bool MailSmtp
-        {
-            set
-            {
-                KeywordsHelper.SetKeywordValue("MailSmtp", value.ToString());
-            }
-
-            get
-            {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("MailSmtp"));
             }
         }
 
@@ -938,16 +1228,87 @@ namespace OFrameLibrary
             }
         }
 
+        public static string MicrosoftAPIKey
+        {
+            get
+            {
+                var value = KeywordsHelper.GetKeywordValue("MicrosoftAPIKey");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
+            set
+            {
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("MicrosoftAPIKey", sm.Encrypt(value));
+            }
+        }
+
+        public static string MicrosoftSecretKey
+        {
+            get
+            {
+                var value = KeywordsHelper.GetKeywordValue("MicrosoftSecretKey");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
+            set
+            {
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("MicrosoftSecretKey", sm.Encrypt(value));
+            }
+        }
+
         public static string FacebookAPIKey
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("FacebookAPIKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("FacebookAPIKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("FacebookAPIKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("FacebookAPIKey", sm.Encrypt(value));
             }
         }
 
@@ -955,12 +1316,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("FacebookSecretKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("FacebookSecretKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("FacebookSecretKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("FacebookSecretKey", sm.Encrypt(value));
             }
         }
 
@@ -968,12 +1344,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("GoogleAPIKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("GoogleAPIKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("GoogleAPIKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("GoogleAPIKey", sm.Encrypt(value));
             }
         }
 
@@ -981,12 +1372,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("GoogleSecretKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("GoogleSecretKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("GoogleSecretKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("GoogleSecretKey", sm.Encrypt(value));
             }
         }
 
@@ -994,12 +1400,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("TwitterAPIKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("TwitterAPIKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("TwitterAPIKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("TwitterAPIKey", sm.Encrypt(value));
             }
         }
 
@@ -1007,12 +1428,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("TwitterSecretKey");
-            }
+                var value = KeywordsHelper.GetKeywordValue("TwitterSecretKey");
 
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
+            }
             set
             {
-                KeywordsHelper.SetKeywordValue("TwitterSecretKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("TwitterSecretKey", sm.Encrypt(value));
             }
         }
 
@@ -1020,11 +1456,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("CCAvenueMerchantID");
+                var value = KeywordsHelper.GetKeywordValue("CCAvenueMerchantID");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
             }
             set
             {
-                KeywordsHelper.SetKeywordValue("CCAvenueMerchantID", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("CCAvenueMerchantID", sm.Encrypt(value));
             }
         }
 
@@ -1032,11 +1484,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("CCAvenueAccessCode");
+                var value = KeywordsHelper.GetKeywordValue("CCAvenueAccessCode");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
             }
             set
             {
-                KeywordsHelper.SetKeywordValue("CCAvenueAccessCode", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("CCAvenueAccessCode", sm.Encrypt(value));
             }
         }
 
@@ -1044,11 +1512,27 @@ namespace OFrameLibrary
         {
             get
             {
-                return KeywordsHelper.GetKeywordValue("CCAvenueWorkingKey");
+                var value = KeywordsHelper.GetKeywordValue("CCAvenueWorkingKey");
+
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return "KEYWORD_VALUE_NULL";
+                }
+
+                try
+                {
+                    SymCryptography sm = new SymCryptography();
+                    return sm.Decrypt(value);
+                }
+                catch
+                {
+                    return "DECRYPT_FAILED";
+                }
             }
             set
             {
-                KeywordsHelper.SetKeywordValue("CCAvenueWorkingKey", value);
+                SymCryptography sm = new SymCryptography();
+                KeywordsHelper.SetKeywordValue("CCAvenueWorkingKey", sm.Encrypt(value));
             }
         }
 

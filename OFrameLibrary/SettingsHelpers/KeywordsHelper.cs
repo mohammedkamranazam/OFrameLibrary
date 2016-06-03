@@ -64,7 +64,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKeywordValue(string name)
         {
-            return GetKeywordValue(name, PerformanceMode.ApplicationState);
+            return GetKeywordValue(name, PerformanceMode.MemoryCache);
         }
 
         public static string GetKeywordValue(string name, PerformanceMode performanceMode)
