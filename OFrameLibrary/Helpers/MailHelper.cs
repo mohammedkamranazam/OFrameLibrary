@@ -67,7 +67,7 @@ namespace OFrameLibrary.Helpers
             // Send the email.
             if (transportWeb != null)
             {
-                transportWeb.DeliverAsync(myMessage).RunSynchronously();
+                transportWeb.DeliverAsync(myMessage);
             }
         }
 

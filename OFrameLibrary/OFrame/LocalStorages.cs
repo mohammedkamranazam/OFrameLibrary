@@ -4,6 +4,19 @@ namespace OFrameLibrary
 {
     public static class LocalStorages
     {
+        public static string Storage_Logs
+        {
+            get
+            {
+                return LocalStoragesHelper.GetStoragePath("Storage_Logs");
+            }
+
+            set
+            {
+                LocalStoragesHelper.SetStoragePath("Storage_Logs", value);
+            }
+        }
+
         public static string Storage
         {
             get

@@ -3,4 +3,5 @@
   <storage name="Storage" path="~/Storage/" />
   <storage name="Storage_Temp" path="~/Storage/Temp/" />
   <storage name="Storage_Uploads" path="~/Storage/Uploads/" />
+  <storage name="Storage_Logs" path="~/Storage/Logs/" />
 </storages>

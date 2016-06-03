@@ -76,53 +76,38 @@ namespace OFrameLibrary
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             //Uncomment the following lines to enable logging in with third party login providers
-            if (!string.IsNullOrWhiteSpace(AppConfig.MicrosoftSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.MicrosoftAPIKey))
+
+            app.UseMicrosoftAccountAuthentication(
+                clientId: AppConfig.MicrosoftAPIKey,
+                clientSecret: AppConfig.MicrosoftSecretKey);
+
+            app.UseTwitterAuthentication(
+               consumerKey: AppConfig.TwitterAPIKey,
+               consumerSecret: AppConfig.TwitterSecretKey);
+
+            var fo = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions()
             {
-                app.UseMicrosoftAccountAuthentication(
-                    clientId: AppConfig.MicrosoftAPIKey,
-                    clientSecret: AppConfig.MicrosoftSecretKey);
-            }
+                AppId = AppConfig.FacebookAPIKey,
+                AppSecret = AppConfig.FacebookSecretKey,
+                Provider = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationProvider()
+            };
 
-            if (!string.IsNullOrWhiteSpace(AppConfig.TwitterSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.TwitterAPIKey))
+            fo.Scope.Add("email");
+
+            app.UseFacebookAuthentication(fo);
+
+            var go = new GoogleOAuth2AuthenticationOptions()
             {
-                app.UseTwitterAuthentication(
-                   consumerKey: AppConfig.TwitterAPIKey,
-                   consumerSecret: AppConfig.TwitterSecretKey);
-            }
+                ClientId = AppConfig.GoogleAPIKey,
+                ClientSecret = AppConfig.GoogleSecretKey,
+                Provider = new GoogleOAuth2AuthenticationProvider()
+            };
 
-            if (!string.IsNullOrWhiteSpace(AppConfig.FacebookSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.FacebookAPIKey))
-            {
-                var fo = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions()
-                {
-                    AppId = "",
-                    AppSecret = "",
-                    Provider = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationProvider()
-                };
+            go.Scope.Add("email");
 
-                fo.Scope.Add("email");
+            app.UseGoogleAuthentication(go);
 
-                app.UseFacebookAuthentication(fo);
-            }
-
-            if (!string.IsNullOrWhiteSpace(AppConfig.GoogleSecretKey) && !string.IsNullOrWhiteSpace(AppConfig.GoogleAPIKey))
-            {
-                var go = new GoogleOAuth2AuthenticationOptions()
-                {
-                    //CallbackPath = Microsoft.Owin.PathString.FromUriComponent("/Authentication/ExternalLoginCallback"),
-                    ClientId = "",
-                    ClientSecret = "",
-                    Provider = new GoogleOAuth2AuthenticationProvider()
-                };
-
-                go.Scope.Add("email");
-
-                app.UseGoogleAuthentication(go);
-            }
-
-            if (!EventLog.SourceExists(AppConfig.EventLogSourceName))
-            {
-                EventLog.CreateEventSource(AppConfig.EventLogSourceName, "ErrorLog");
-            }
+            
         }
     }
 }
