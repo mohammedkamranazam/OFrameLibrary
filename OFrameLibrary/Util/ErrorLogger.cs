@@ -13,7 +13,7 @@ namespace OFrameLibrary.Util
         public static void LogError(Exception ex)
         {
             var datetime = Utilities.DateTimeNow();
-            var dateTime = String.Format("{0}, at {1}", datetime.ToLongDateString(), datetime.ToShortTimeString());
+            var dateTime = string.Format("{0}, at {1}", datetime.ToLongDateString(), datetime.ToShortTimeString());
 
             var errorMessage = "Exception generated on " + dateTime;
 
@@ -50,7 +50,7 @@ namespace OFrameLibrary.Util
                 errorMessage += "<br /><br /> Method: " + mailException.TargetSite;
                 errorMessage += "<br /><br /> Stack Trace: <br /><br />" + mailException.StackTrace;
 
-                string mydocpath = HttpContext.Current.Server.MapPath(LocalStorages.Storage_Logs);
+                string mydocpath = LocalStorages.Storage_Logs.MapPath();
 
                 string fileName = string.Format("{0}.txt", Utilities.DateTimeNow().ToShortDateString());
 

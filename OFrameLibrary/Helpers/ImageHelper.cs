@@ -192,9 +192,9 @@ namespace OFrameLibrary.Helpers
                     }
                 }
             }
-            catch (Exception Ex)
+            catch
             {
-                throw (Ex);
+                throw;
             }
         }
 
@@ -543,7 +543,7 @@ namespace OFrameLibrary.Helpers
                     }
                     else
                     {
-                        throw e;
+                        throw;
                     }
                 }
             }

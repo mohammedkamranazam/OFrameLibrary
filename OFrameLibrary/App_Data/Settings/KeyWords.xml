@@ -8,6 +8,7 @@
   <key name="LocalStoragesFile" value="App_Data/Settings/LocalStorages.xml" />
   <key name="SEOFile" value="App_Data/Settings/PageSEO.xml" />
   <!--__________________________________________________________________________________________________________________________________________-->
+  <key name="AppDBContext" value="DefaultConnection" />
   <key name="EventLogSourceName" value="OFrame" />
   <key name="EnableQA" value="False" />
   <key name="AppInstalled" value="True" />
@@ -18,6 +19,8 @@
   <key name="EnableOAuthRegistration" value="True" />
   <key name="TargetTimeZoneID" value="India Standard Time" />
   <key name="LoginPath" value="/Authentication/Login" />
+  <key name="TwoFactorAuthWaitTime" value="60" />
+  <key name="CookieExpireTimeSpan" value="365" />
   <!--__________________________________________________Performance Configuration Section________________________________________________________________________________________-->
   <key name="PerformanceMode" value="None" />
   <!--None, ApplicationState, Cache, MemoryCache, Session (do not use Session performance mode when application state is set to use SQL Server Session State Database)-->
@@ -25,6 +28,7 @@
   <!--Default, NotRemovable-->
   <key name="PerformanceTimeOutMinutes" value="1440" />
   <key name="CookieTimeOutMinutes" value="1440" />
+  <key name="EnableBundleOptimization" value="True" />
   <!--______________________________________________Redis Configuration_____________________________________________________________________________________________________-->
   <key name="RedisHost" value="" />
   <key name="RedisIsSsl" value="true" />

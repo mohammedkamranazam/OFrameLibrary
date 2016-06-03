@@ -29,9 +29,9 @@ namespace OFrameLibrary.Util
 
             if (!bool.TryParse(text, out value))
             {
-                value = (returnTrue) ? true : false;
+                value = returnTrue;
 
-                ErrorLogger.LogError(String.Format("BoolParse: string [{0}] not in proper format", text));
+                ErrorLogger.LogError(string.Format("BoolParse: string [{0}] not in proper format", text));
             }
 
             return value;
@@ -43,7 +43,7 @@ namespace OFrameLibrary.Util
 
             if (!DateTime.TryParse(text, out value))
             {
-                ErrorLogger.LogError(String.Format("DateTimeParse: string [{0}] not in proper format", text));
+                ErrorLogger.LogError(string.Format("DateTimeParse: string [{0}] not in proper format", text));
             }
 
             return value;
@@ -51,18 +51,18 @@ namespace OFrameLibrary.Util
 
         public static double DoubleParse(this string number)
         {
-            return DoubleParse(number, false);
+            return DoubleParse(number, 0);
         }
 
-        public static double DoubleParse(this string number, bool returnOne)
+        public static double DoubleParse(this string number, double nullReturn)
         {
             double value;
 
             if (!double.TryParse(number, out value))
             {
-                value = (returnOne) ? 1 : 0;
+                value = nullReturn;
 
-                ErrorLogger.LogError(String.Format("DoubleParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError(string.Format("DoubleParse: string [{0}] not in proper format", number));
             }
 
             return value;
@@ -70,18 +70,18 @@ namespace OFrameLibrary.Util
 
         public static float FloatParse(this string number)
         {
-            return FloatParse(number, false);
+            return FloatParse(number, 0);
         }
 
-        public static float FloatParse(this string number, bool returnOne)
+        public static float FloatParse(this string number, float nullReturn)
         {
             float value;
 
             if (!float.TryParse(number, out value))
             {
-                value = (returnOne) ? 1 : 0;
+                value = nullReturn;
 
-                ErrorLogger.LogError(String.Format("FloatParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError(string.Format("FloatParse: string [{0}] not in proper format", number));
             }
 
             return value;
@@ -152,10 +152,10 @@ namespace OFrameLibrary.Util
 
         public static int IntParse(this string number)
         {
-            return IntParse(number, false);
+            return IntParse(number, 0);
         }
 
-        public static int IntParse(this string number, bool returnOne)
+        public static int IntParse(this string number, int nullReturn)
         {
             int value;
 
@@ -168,9 +168,9 @@ namespace OFrameLibrary.Util
 
             if (!int.TryParse(number, out value))
             {
-                value = (returnOne) ? 1 : 0;
+                value = nullReturn;
 
-                ErrorLogger.LogError(String.Format("IntParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError(string.Format("IntParse: string [{0}] not in proper format", number));
             }
 
             return value;
@@ -178,18 +178,18 @@ namespace OFrameLibrary.Util
 
         public static long LongParse(this string number)
         {
-            return LongParse(number, false);
+            return LongParse(number, 0);
         }
 
-        public static long LongParse(this string number, bool returnOne)
+        public static long LongParse(this string number, long nullReturn)
         {
             long value;
 
             if (!long.TryParse(number, out value))
             {
-                value = (returnOne) ? 1 : 0;
+                value = nullReturn;
 
-                ErrorLogger.LogError(String.Format("LongParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError(string.Format("LongParse: string [{0}] not in proper format", number));
             }
 
             return value;
@@ -206,7 +206,7 @@ namespace OFrameLibrary.Util
 
             if (!DateTime.TryParse(text, out value))
             {
-                ErrorLogger.LogError(String.Format("NullableDateTimeParse: string [{0}] not in proper format", text));
+                ErrorLogger.LogError(string.Format("NullableDateTimeParse: string [{0}] not in proper format", text));
                 return null;
             }
 
@@ -220,7 +220,7 @@ namespace OFrameLibrary.Util
                 return null;
             }
 
-            return DoubleParse(number, false);
+            return DoubleParse(number, 0);
         }
 
         public static float? NullableFloatParse(this string number)
@@ -230,7 +230,7 @@ namespace OFrameLibrary.Util
                 return null;
             }
 
-            return FloatParse(number, false);
+            return FloatParse(number, 0);
         }
 
         public static int? NullableIntParse(this string number)
@@ -240,7 +240,7 @@ namespace OFrameLibrary.Util
                 return null;
             }
 
-            return IntParse(number, false);
+            return IntParse(number, 0);
         }
 
         public static long? NullableLongParse(this string number)
@@ -250,7 +250,7 @@ namespace OFrameLibrary.Util
                 return null;
             }
 
-            return LongParse(number, false);
+            return LongParse(number, 0);
         }
     }
 }

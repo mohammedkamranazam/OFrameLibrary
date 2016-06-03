@@ -45,13 +45,13 @@ namespace OFrameLibrary.Helpers
             // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
             {
-                MessageFormat = "Your OFrameLibrary security code is {0}"
+                MessageFormat = "{0}"
             });
 
             manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationUser>
             {
                 Subject = "Security Code",
-                BodyFormat = "Your OFrameLibrary security code is {0}"
+                BodyFormat = "{0}"
             });
 
             manager.EmailService = new EmailService();

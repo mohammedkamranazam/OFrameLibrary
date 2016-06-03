@@ -59,12 +59,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             return success;
         }
-
-        private static string GetAbsolutePath(this string path)
-        {
-            return HttpContext.Current.Server.MapPath(path);
-        }
-
+               
         private static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
@@ -75,7 +70,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void AddStoragePath(string name, string path)
         {
-            if (!StoragePathExists(name) && path.CheckPathFormat().GetAbsolutePath().CreateDirectory())
+            if (!StoragePathExists(name) && path.CheckPathFormat().MapPath().CreateDirectory())
             {
                 var xmlDoc = new XmlDocument();
 
@@ -104,7 +99,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 foreach (XmlNode storage in storages)
                 {
-                    if (name == storage.Attributes["name"].Value && storage.Attributes["path"].Value.CheckPathFormat().GetAbsolutePath().DeleteDirectory())
+                    if (name == storage.Attributes["name"].Value && storage.Attributes["path"].Value.CheckPathFormat().MapPath().DeleteDirectory())
                     {
                         storage.ParentNode.RemoveChild(storage);
 
@@ -154,7 +149,7 @@ namespace OFrameLibrary.SettingsHelpers
                 }
             }
 
-            HttpContext.Current.Server.MapPath(path).CreateDirectory();
+            path.MapPath().CreateDirectory();
 
             return path;
         }

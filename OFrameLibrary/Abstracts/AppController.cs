@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using OFrameLibrary.Helpers;
-using OFrameLibrary.Helpers;
 using OFrameLibrary.SettingsHelpers;
 using System.Security.Claims;
 using System.Web.Mvc;

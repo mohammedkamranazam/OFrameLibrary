@@ -22,7 +22,7 @@ namespace OFrameLibrary.App_Start
                 bundles.Add(scriptBundle);
             }
 
-            // BundleTable.EnableOptimizations = true;
+            BundleTable.EnableOptimizations = AppConfig.EnableBundleOptimization;
         }
     }
 }

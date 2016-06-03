@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Web;
+using OFrameLibrary.Util;
 
 namespace OFrameLibrary.Helpers
 {
@@ -9,14 +10,14 @@ namespace OFrameLibrary.Helpers
     {
         public static IEnumerable<string> GetThemeDirectories()
         {
-            return Directory.EnumerateDirectories(HttpContext.Current.Server.MapPath("~/Content/Themes/"), "*", SearchOption.TopDirectoryOnly).Select(c => new DirectoryInfo(c).Name);
+            return Directory.EnumerateDirectories("~/Content/Themes/".MapPath(), "*", SearchOption.TopDirectoryOnly).Select(c => new DirectoryInfo(c).Name);
         }
 
         public static string GetTheme(string theme)
         {
             var layoutPath = "~/Views/Layouts/FallBack.cshtml";
 
-            if (File.Exists(HttpContext.Current.Server.MapPath(layoutPath)))
+            if (File.Exists(layoutPath.MapPath()))
             {
                 layoutPath = string.Format("~/Content/Themes/{0}/Layout.cshtml", theme);
             }

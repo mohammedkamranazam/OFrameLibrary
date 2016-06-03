@@ -8,42 +8,55 @@ namespace OFrameLibrary
 {
     public static class AppConfig
     {
-        //public static string XXXXXX
-        //{
-        //    get
-        //    {
-        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
-        //    }
+        public static string AppDBContext
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("AppDBContext");
+            }
 
-        //    set
-        //    {
-        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
-        //    }
-        //}
-        //public static string XXXXXX
-        //{
-        //    get
-        //    {
-        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
-        //    }
+            set
+            {
+                KeywordsHelper.SetKeywordValue("AppDBContext", value);
+            }
+        }
+        public static bool EnableBundleOptimization
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("EnableBundleOptimization").BoolParse();
+            }
 
-        //    set
-        //    {
-        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
-        //    }
-        //}
-        //public static string XXXXXX
-        //{
-        //    get
-        //    {
-        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
-        //    }
+            set
+            {
+                KeywordsHelper.SetKeywordValue("EnableBundleOptimization", value.ToString());
+            }
+        }
+        public static int TwoFactorAuthWaitTime
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("TwoFactorAuthWaitTime").IntParse();
+            }
 
-        //    set
-        //    {
-        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
-        //    }
-        //}
+            set
+            {
+                KeywordsHelper.SetKeywordValue("TwoFactorAuthWaitTime", value.ToString());
+            }
+        }
+
+        public static int CookieExpireTimeSpan
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("CookieExpireTimeSpan").IntParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("CookieExpireTimeSpan", value.ToString());
+            }
+        }
         //public static string XXXXXX
         //{
         //    get
@@ -241,7 +254,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("MailLabel", value);
             }
         }
-        
+
         public static string LoginPath
         {
             get
@@ -958,7 +971,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.IntParse(KeywordsHelper.GetKeywordValue("MailServerPort"), true);
+                return DataParser.IntParse(KeywordsHelper.GetKeywordValue("MailServerPort"), 25);
             }
         }
 

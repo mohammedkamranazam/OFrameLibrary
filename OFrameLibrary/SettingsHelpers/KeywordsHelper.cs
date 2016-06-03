@@ -83,7 +83,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKeywordValueFromSettings(string keyName)
         {
-            var KeyValue = string.Format("KEY_[{0}]_NOT_DEFINED", keyName);
+            var KeyValue = string.Format("KEY_[{0}]_UNDEFINED", keyName);
 
             var xmlDoc = new XmlDocument();
 

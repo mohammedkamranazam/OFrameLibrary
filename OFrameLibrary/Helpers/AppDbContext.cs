@@ -5,7 +5,7 @@ namespace OFrameLibrary.Helpers
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext()
-            : base("DefaultConnection")
+            : base(AppConfig.AppDBContext)
         {
         }
 

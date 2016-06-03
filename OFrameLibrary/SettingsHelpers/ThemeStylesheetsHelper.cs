@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Web;
 using System.Xml;
+using OFrameLibrary.Util;
 
 namespace OFrameLibrary.SettingsHelpers
 {
@@ -10,7 +11,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string[] GetPathsFromSettings(string themeName)
         {
-            var fileName = HttpContext.Current.Server.MapPath(string.Format("~/Themes/{0}/CSS.xml", themeName));
+            var fileName = string.Format("~/Themes/{0}/CSS.xml", themeName).MapPath();
 
             var paths = new List<string>();
 

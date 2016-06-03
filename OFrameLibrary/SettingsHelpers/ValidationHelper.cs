@@ -248,7 +248,7 @@ namespace OFrameLibrary.SettingsHelpers
         public static string GetMessage(string name, string locale, PerformanceMode performanceMode)
         {
             var keyValue = string.Empty;
-            var performanceKey = String.Format("{0}{1}_{2}", messageUniqueKey, name, locale);
+            var performanceKey = string.Format("{0}{1}_{2}", messageUniqueKey, name, locale);
 
             Func<string, string, string> fnc = GetMessageFromSettings;
 

@@ -145,7 +145,7 @@ namespace OFrameLibrary.SettingsHelpers
         public static string GetKey(string name, string locale, PerformanceMode performanceMode)
         {
             var keyValue = string.Empty;
-            var performanceKey = String.Format("{0}{1}_{2}", uniqueKey, name, locale);
+            var performanceKey = string.Format("{0}{1}_{2}", uniqueKey, name, locale);
 
             Func<string, string, string> fnc = GetKeyFromSettings;
 
@@ -234,6 +234,24 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetLocaleDirection(string locale)
         {
+            return GetLocaleDirection(locale, AppConfig.PerformanceMode);
+        }
+
+        public static string GetLocaleDirection(string locale, PerformanceMode performanceMode)
+        {
+            var keyValue = "ltr";
+            var performanceKey = string.Format("{0}_{1}_LocaleDirection", uniqueKey, locale);
+
+            Func<string, string> fnc = GetLocaleDirectionFromSettings;
+
+            var args = new object[] { locale };
+
+            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+        public static string GetLocaleDirectionFromSettings(string locale)
+        {
             var directionValue = "ltr";
 
             var xmlDoc = new XmlDocument();
@@ -256,6 +274,25 @@ namespace OFrameLibrary.SettingsHelpers
         }
 
         public static bool KeyExists(string name, string locale)
+        {
+            return KeyExists(name, locale, AppConfig.PerformanceMode);
+        }
+
+        public static bool KeyExists(string name, string locale, PerformanceMode performanceMode)
+        {
+            var keyValue = false;
+            var performanceKey = string.Format("{0}{1}_{2}_KeyExistance", uniqueKey, name, locale);
+
+            Func<string, string, bool> fnc = KeyExistsFromSettings;
+
+            var args = new object[] { name, locale };
+
+            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+
+        public static bool KeyExistsFromSettings(string name, string locale)
         {
             var present = false;
 
@@ -288,6 +325,25 @@ namespace OFrameLibrary.SettingsHelpers
         }
 
         public static bool LanguageExists(string locale)
+        {
+            return LanguageExists(locale, AppConfig.PerformanceMode);
+        }
+
+        public static bool LanguageExists(string locale, PerformanceMode performanceMode)
+        {
+            var keyValue = false;
+            var performanceKey = string.Format("{0}_{1}_LanguageExistance", uniqueKey, locale);
+
+            Func<string, bool> fnc = LanguageExistsFromSettings;
+
+            var args = new object[] { locale };
+
+            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+
+        public static bool LanguageExistsFromSettings(string locale)
         {
             var present = false;
 

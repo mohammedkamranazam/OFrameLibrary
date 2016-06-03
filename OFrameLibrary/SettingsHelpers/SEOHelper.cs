@@ -103,7 +103,7 @@ namespace OFrameLibrary.SettingsHelpers
         public static SEO GetPageSEO(string id, PerformanceMode performanceMode)
         {
             var keyValue = new SEO();
-            var performanceKey = String.Format("{0}_{1}", uniqueKey, id);
+            var performanceKey = string.Format("{0}_{1}", uniqueKey, id);
 
             Func<string, SEO> fnc = GetPageSEOFromSettings;
 

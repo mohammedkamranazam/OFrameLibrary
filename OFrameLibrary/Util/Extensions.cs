@@ -13,6 +13,11 @@ namespace OFrameLibrary.Util
 {
     public static class Extensions
     {
+        public static string MapPath(this string path)
+        {
+            return HttpContext.Current.Server.MapPath(path);
+        }
+
         /// <summary>
         /// Gets the SelectListItem Collection from the enum.
         /// </summary>
@@ -82,7 +87,7 @@ namespace OFrameLibrary.Util
 
         public static void DeleteFile(this string fileName)
         {
-            fileName = HttpContext.Current.Server.MapPath(fileName);
+            fileName = fileName.MapPath();
 
             if (File.Exists(fileName))
             {

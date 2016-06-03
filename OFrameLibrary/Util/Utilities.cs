@@ -104,7 +104,7 @@ namespace OFrameLibrary.Util
                 {
                     string fileName = string.Format("{0}{1}", Guid.NewGuid().ToString().Replace("-", "").ToLower(), Path.GetExtension(content.FileName));
                     string relativePath = fs.StoragePath + fileName;
-                    string absolutePath = HttpContext.Current.Server.MapPath(relativePath);
+                    string absolutePath = relativePath.MapPath();
 
                     try
                     {
@@ -266,7 +266,7 @@ namespace OFrameLibrary.Util
         //                {
         //                    sb.Append(Utilities.GetFancyBoxHTML(galleryPhoto.ImageID, string.Empty, true, string.Empty,
         //                        string.Format("title='{0}'",
-        //                        String.Format("{0}: {1}",
+        //                        string.Format("{0}: {1}",
         //                        galleryPhoto.Title,
         //                        galleryPhoto.Description))));
         //                }
@@ -285,7 +285,7 @@ namespace OFrameLibrary.Util
         //            var photo = await PhotosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
         //            if (photo != null)
         //            {
-        //                return Utilities.GetFancyBoxHTML(photo.ImageID, string.Empty, true, string.Empty, string.Format("title='{0}'", String.Format("{0}: {1}", photo.Title, photo.Description)));
+        //                return Utilities.GetFancyBoxHTML(photo.ImageID, string.Empty, true, string.Empty, string.Format("title='{0}'", string.Format("{0}: {1}", photo.Title, photo.Description)));
         //            }
         //            else
         //            {
@@ -602,17 +602,17 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                //case "RedisCache":
-                //    if (RedisCacheHelper.Exists(performanceKey))
-                //    {
-                //        RedisCacheHelper.Get<T>(performanceKey, out keyValue);
-                //    }
-                //    else
-                //    {
-                //        keyValue = (T)func.DynamicInvoke(args);
-                //        RedisCacheHelper.Add<T>(performanceKey, keyValue);
-                //    }
-                //    break;
+                case "RedisCache":
+                    if (RedisCacheHelper.Exists(performanceKey))
+                    {
+                        RedisCacheHelper.Get<T>(performanceKey, out keyValue);
+                    }
+                    else
+                    {
+                        keyValue = (T)func.DynamicInvoke(args);
+                        RedisCacheHelper.Add<T>(performanceKey, keyValue);
+                    }
+                    break;
 
                 case "None":
                     keyValue = (T)func.DynamicInvoke(args);
@@ -657,12 +657,12 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                //case "RedisCache":
-                //    if (RedisCacheHelper.Exists(performanceKey))
-                //    {
-                //        RedisCacheHelper.Clear(performanceKey);
-                //    }
-                //    break;
+                case "RedisCache":
+                    if (RedisCacheHelper.Exists(performanceKey))
+                    {
+                        RedisCacheHelper.Clear(performanceKey);
+                    }
+                    break;
 
                 case "None":
                     break;
@@ -686,7 +686,7 @@ namespace OFrameLibrary.Util
                 return;
             }
 
-            filename = String.Format("{0}_{1}.xls", filename, Utilities.DateTimeNow());
+            filename = string.Format("{0}_{1}.xls", filename, Utilities.DateTimeNow());
 
             var response = HttpContext.Current.Response;
             response.Clear();
