@@ -65,7 +65,7 @@ namespace OFrameLibrary.Helpers
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create(AppConfig.SiteName))
                 {
                     TokenLifespan = TimeSpan.FromDays(1)
-                };
+                };                               
             }
 
             return manager;

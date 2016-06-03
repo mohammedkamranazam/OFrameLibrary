@@ -18,7 +18,7 @@ namespace OFrameLibrary.Helpers
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, new StringReader(HTML));
             }
 
-            return "~/Storage/Resources/Temp/" + filename;
+            return LocalStorages.Storage + filename;
         }
 
         public static void WriteDataToPdf(string path, string filename)
