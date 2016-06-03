@@ -62,9 +62,9 @@ namespace OFrameLibrary.Helpers
 
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("OFrameLibrary"))
+                manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create(AppConfig.SiteName))
                 {
-                    TokenLifespan = TimeSpan.FromHours(3)
+                    TokenLifespan = TimeSpan.FromDays(1)
                 };
             }
 
