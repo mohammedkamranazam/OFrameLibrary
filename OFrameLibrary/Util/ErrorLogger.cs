@@ -52,7 +52,7 @@ namespace OFrameLibrary.Util
 
                 string mydocpath = LocalStorages.Storage_Logs.MapPath();
 
-                string fileName = string.Format("{0}.txt", Utilities.DateTimeNow().ToShortDateString());
+                string fileName = string.Format("{0}.txt", Utilities.DateTimeNow().ToString("dd-MM-yyyy"));
 
                 // Write the text asynchronously to a new file named "WriteTextAsync.txt".
                 using (StreamWriter outputFile = new StreamWriter(mydocpath + fileName, true))
