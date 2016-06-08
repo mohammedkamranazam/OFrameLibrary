@@ -144,7 +144,8 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKey(string name, string locale, PerformanceMode performanceMode)
         {
-            var keyValue = string.Empty;
+            var keyValue = string.Format("LANGUAGE_KEY_[{0}]_NOT_FOUND", name);
+
             var performanceKey = string.Format("{0}{1}_{2}", uniqueKey, name, locale);
 
             Func<string, string, string> fnc = GetKeyFromSettings;

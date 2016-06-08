@@ -19,9 +19,9 @@ namespace OFrameLibrary.SettingsHelpers
             xmlTextWriter.Close();
         }
 
-        public static void AddKeyword(string keyName, string keyValue)
+        public static void AddKeyword(string name, string value)
         {
-            if (!IsKeywordPresent(keyName))
+            if (!IsKeywordPresent(name))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -29,8 +29,8 @@ namespace OFrameLibrary.SettingsHelpers
 
                 var newKey = xmlDoc.CreateElement("key");
 
-                newKey.SetAttribute("name", keyName);
-                newKey.SetAttribute("value", keyValue);
+                newKey.SetAttribute("name", name);
+                newKey.SetAttribute("value", value);
 
                 xmlDoc.SelectSingleNode(xPath).ParentNode.AppendChild(newKey);
 
@@ -38,9 +38,9 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        public static void DeleteKeyword(string keyName)
+        public static void DeleteKeyword(string name)
         {
-            if (IsKeywordPresent(keyName))
+            if (IsKeywordPresent(name))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -50,7 +50,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 foreach (XmlNode key in keys)
                 {
-                    if (keyName == key.Attributes["name"].Value)
+                    if (name == key.Attributes["name"].Value)
                     {
                         key.ParentNode.RemoveChild(key);
 
@@ -69,7 +69,8 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKeywordValue(string name, PerformanceMode performanceMode)
         {
-            var keyValue = string.Empty;
+            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
+
             var performanceKey = uniqueKey + name;
 
             Func<string, string> fnc = GetKeywordValueFromSettings;
@@ -81,9 +82,9 @@ namespace OFrameLibrary.SettingsHelpers
             return keyValue;
         }
 
-        public static string GetKeywordValueFromSettings(string keyName)
+        public static string GetKeywordValueFromSettings(string name)
         {
-            var KeyValue = string.Format("KEY_[{0}]_UNDEFINED", keyName);
+            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
 
             var xmlDoc = new XmlDocument();
 
@@ -93,17 +94,17 @@ namespace OFrameLibrary.SettingsHelpers
 
             foreach (XmlNode key in keys)
             {
-                if (keyName == key.Attributes["name"].Value)
+                if (name == key.Attributes["name"].Value)
                 {
-                    KeyValue = key.Attributes["value"].Value;
+                    keyValue = key.Attributes["value"].Value;
                     break;
                 }
             }
 
-            return KeyValue;
+            return keyValue;
         }
 
-        public static bool IsKeywordPresent(string keyName)
+        public static bool IsKeywordPresent(string name)
         {
             var present = false;
 
@@ -115,7 +116,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             foreach (XmlNode key in keys)
             {
-                if (keyName == key.Attributes["name"].Value)
+                if (name == key.Attributes["name"].Value)
                 {
                     present = true;
                     break;
@@ -125,9 +126,9 @@ namespace OFrameLibrary.SettingsHelpers
             return present;
         }
 
-        public static void SetKeywordValue(string keyName, string keyValue)
+        public static void SetKeywordValue(string name, string value)
         {
-            if (IsKeywordPresent(keyName))
+            if (IsKeywordPresent(name))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -137,9 +138,9 @@ namespace OFrameLibrary.SettingsHelpers
 
                 foreach (XmlNode key in keys)
                 {
-                    if (keyName == key.Attributes["name"].Value)
+                    if (name == key.Attributes["name"].Value)
                     {
-                        key.Attributes["value"].Value = keyValue;
+                        key.Attributes["value"].Value = value;
 
                         SaveXml(xmlDoc);
 
