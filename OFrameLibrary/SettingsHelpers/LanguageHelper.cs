@@ -131,7 +131,7 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                     else
                     {
-                        return string.Empty;
+                        return string.Format("LANGUAGE_KEY_[{0}]_NOT_FOUND", name);
                     }
                 }
             }
