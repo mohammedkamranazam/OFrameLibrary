@@ -131,7 +131,7 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                     else
                     {
-                        return string.Format("LANGUAGE_KEY_[{0}]_NOT_FOUND", name);
+                        return string.Format("KEY_[{0}]_UNDEFINED", name);
                     }
                 }
             }
@@ -144,7 +144,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKey(string name, string locale, PerformanceMode performanceMode)
         {
-            var keyValue = string.Format("LANGUAGE_KEY_[{0}]_NOT_FOUND", name);
+            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
 
             var performanceKey = string.Format("{0}{1}_{2}", uniqueKey, name, locale);
 
@@ -159,7 +159,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKeyFromSettings(string name, string locale)
         {
-            var keyValue = string.Format("LANGUAGE_KEY_[{0}]_NOT_FOUND", name);
+            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
 
             var xmlDoc = new XmlDocument();
 
