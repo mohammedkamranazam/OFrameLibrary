@@ -8,5 +8,7 @@
         public int MaxSize { get; set; }
 
         public string StoragePath { get; set; }
+
+        public FileUploadMessageSettings Messages { get; set; }
     }
 }
