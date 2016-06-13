@@ -329,7 +329,6 @@
       <LastGenOutput>Reference1.cs</LastGenOutput>
     </Content>
     <Content Include="Storage\TextFile.txt" />
-    <Content Include="Storage\TextFile1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

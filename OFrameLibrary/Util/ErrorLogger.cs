@@ -42,13 +42,17 @@ namespace OFrameLibrary.Util
             }
             catch (Exception mailException)
             {
-                errorMessage += "<hr />";
+                errorMessage += "--- --- --- --- ---";
                 errorMessage += "<br /><br /> Mail Exception";
                 errorMessage += "<br /><br /> Inner Exception: " + mailException.InnerException;
                 errorMessage += "<br /><br /> Message: " + mailException.Message;
                 errorMessage += "<br /><br /> Source: " + mailException.Source;
                 errorMessage += "<br /><br /> Method: " + mailException.TargetSite;
                 errorMessage += "<br /><br /> Stack Trace: <br /><br />" + mailException.StackTrace;
+                errorMessage += "<hr /><br />";
+
+                errorMessage.Replace("<br />", "\n");
+                errorMessage.Replace("<hr />", "__________________________________________________________________________________________________");
 
                 string mydocpath = LocalStorages.Storage_Logs.MapPath();
 
