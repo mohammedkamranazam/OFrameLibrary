@@ -253,6 +253,7 @@
     <Compile Include="Helpers\ThemeScriptsHelper.cs" />
     <Compile Include="Helpers\ThemeStylesheetsHelper.cs" />
     <Compile Include="ILL\EmailPlaceHolder.cs" />
+    <Compile Include="Models\FileUploadMessageSettings.cs" />
     <Compile Include="Models\FileUploadResult.cs" />
     <Compile Include="Models\FileUploadSettings.cs" />
     <Compile Include="Models\IDUpdater.cs" />
