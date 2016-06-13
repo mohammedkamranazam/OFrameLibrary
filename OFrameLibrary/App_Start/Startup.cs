@@ -3,12 +3,13 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using OFrameLibrary;
 using OFrameLibrary.Helpers;
 using Owin;
 using System;
 using System.Diagnostics;
 
-[assembly: OwinStartup(typeof(OFrameLibrary.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
 namespace OFrameLibrary
 {

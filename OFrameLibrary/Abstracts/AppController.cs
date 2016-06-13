@@ -24,7 +24,7 @@ namespace OFrameLibrary.Abstracts
         {
             get
             {
-                return CookiesHelper.GetCookie(OFrameLibrary.Constants.Keys.CurrentCultureCookieKey);
+                return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey);
             }
         }
 
@@ -32,7 +32,7 @@ namespace OFrameLibrary.Abstracts
         {
             get
             {
-                return CookiesHelper.GetCookie(OFrameLibrary.Constants.Keys.CurrentCultureDirectionCookieKey);
+                return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureDirectionCookieKey);
             }
         }
 

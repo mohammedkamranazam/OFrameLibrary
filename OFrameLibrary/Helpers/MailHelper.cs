@@ -54,7 +54,7 @@ namespace OFrameLibrary.Helpers
         {
             var myMessage = new SendGridMessage();
             myMessage.AddTo(message.Destination);
-            myMessage.From = new System.Net.Mail.MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
+            myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
             myMessage.Subject = message.Subject;
             myMessage.Text = message.Body;
             myMessage.Html = message.Body;
@@ -75,7 +75,7 @@ namespace OFrameLibrary.Helpers
         {
             var myMessage = new SendGridMessage();
             myMessage.AddTo(message.Destination);
-            myMessage.From = new System.Net.Mail.MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
+            myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
             myMessage.Subject = message.Subject;
             myMessage.Text = message.Body;
             myMessage.Html = message.Body;
