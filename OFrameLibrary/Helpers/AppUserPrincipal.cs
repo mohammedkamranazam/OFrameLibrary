@@ -32,5 +32,13 @@ namespace OFrameLibrary.Helpers
                 return this.FindFirst(ClaimTypes.UserData).Value;
             }
         }
+
+        public string ID
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+        }
     }
 }

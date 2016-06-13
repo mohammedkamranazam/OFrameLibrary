@@ -14,8 +14,6 @@ namespace OFrameLibrary
 {
     public class Startup
     {
-        // public static Func<UserManager<AppUser>> UserManagerFactory { get; private set; }
-
         public void Configuration(IAppBuilder app)
         {
             app.CreatePerOwinContext(AppDbContext.Create);
@@ -31,49 +29,19 @@ namespace OFrameLibrary
                 {
                     OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>
                     (
-                        validateInterval: TimeSpan.FromMinutes(0),
+                        validateInterval: TimeSpan.FromMinutes(AppConfig.CookieValidateInterval),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager)
                     )
                 },
                 ExpireTimeSpan = TimeSpan.FromDays(AppConfig.CookieExpireTimeSpan),
-                SlidingExpiration = true
+                SlidingExpiration = AppConfig.CookieSlidingExpiration
             });
-
-            //UserManagerFactory = () =>
-            //{
-            //    var usermanager = new UserManager<AppUser>(new UserStore<AppUser>(new AppDbContext()));
-
-            //    usermanager.PasswordValidator = new PasswordValidator()
-            //    {
-            //        RequireDigit = false,
-            //        RequiredLength = 1,
-            //        RequireLowercase = false,
-            //        RequireNonLetterOrDigit = false,
-            //        RequireUppercase = false
-            //    };
-
-            //    usermanager.UserValidator = new UserValidator<AppUser>(usermanager)
-            //    {
-            //        AllowOnlyAlphanumericUserNames = false,
-            //        RequireUniqueEmail = true
-            //    };
-
-            //    usermanager.ClaimsIdentityFactory = new AppUserClaimsIdentityFactory();
-
-            //    return usermanager;
-            //};
-
+            
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
             app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(AppConfig.TwoFactorAuthWaitTime));
 
-            // Enables the application to remember the second login verification factor such as phone or email.
-            // Once you check this option, your second step of verification during the login process will be remembered on the device where you logged in from.
-            // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
-
-            //Uncomment the following lines to enable logging in with third party login providers
 
             app.UseMicrosoftAccountAuthentication(
                 clientId: AppConfig.MicrosoftAPIKey,
@@ -104,8 +72,6 @@ namespace OFrameLibrary
             go.Scope.Add("email");
 
             app.UseGoogleAuthentication(go);
-
-
         }
     }
 }

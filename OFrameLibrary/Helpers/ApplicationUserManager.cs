@@ -17,32 +17,28 @@ namespace OFrameLibrary.Helpers
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
         {
             var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<AppDbContext>()));
-            // Configure validation logic for usernames
+
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                AllowOnlyAlphanumericUserNames = AppConfig.AllowAlphaNumericUserNames,
+                RequireUniqueEmail = AppConfig.RequireUniqueEmail
             };
 
-            // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 1,
-                RequireDigit = false,
-                RequireLowercase = false,
-                RequireNonLetterOrDigit = false,
-                RequireUppercase = false
+                RequiredLength = AppConfig.PasswordRequiredLength,
+                RequireDigit = AppConfig.RequireDigit,
+                RequireLowercase = AppConfig.RequireLowerCase,
+                RequireNonLetterOrDigit = AppConfig.RequireNonLetterOrDigit,
+                RequireUppercase = AppConfig.RequireUpperCase
             };
 
             manager.ClaimsIdentityFactory = new AppUserClaimsIdentityFactory();
 
-            // Configure user lockout defaults
-            manager.UserLockoutEnabledByDefault = true;
-            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 50;
+            manager.UserLockoutEnabledByDefault = AppConfig.UserLockoutEnabledByDefault;
+            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(AppConfig.DefaultAccountLockoutTimeSpan);
+            manager.MaxFailedAccessAttemptsBeforeLockout = AppConfig.MaxFailedAccessAttemptsBeforeLockout;
 
-            // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
-            // You can write your own provider and plug it in here.
             manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
             {
                 MessageFormat = "{0}"
@@ -64,8 +60,8 @@ namespace OFrameLibrary.Helpers
             {
                 manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create(AppConfig.SiteName))
                 {
-                    TokenLifespan = TimeSpan.FromDays(1)
-                };                               
+                    TokenLifespan = TimeSpan.FromMinutes(AppConfig.TokenLifeSpan)
+                };
             }
 
             return manager;

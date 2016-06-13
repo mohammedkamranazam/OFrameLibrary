@@ -21,6 +21,19 @@
   <key name="LoginPath" value="/Authentication/Login" />
   <key name="TwoFactorAuthWaitTime" value="60" />
   <key name="CookieExpireTimeSpan" value="365" />
+  <key name="CookieValidateInterval" value="0" />
+  <key name="CookieSlidingExpiration" value="true" />  
+  <key name="AllowAlphaNumericUserNames" value="false" />
+  <key name="RequireUniqueEmail" value="true" />
+  <key name="PasswordRequiredLength" value="1" />
+  <key name="RequireDigit" value="false" />
+  <key name="RequireLowerCase" value="false" />
+  <key name="RequireNonLetterOrDigit" value="false" />
+  <key name="RequireUpperCase" value="false" />
+  <key name="UserLockoutEnabledByDefault" value="true" />
+  <key name="DefaultAccountLockoutTimeSpan" value="5" />
+  <key name="MaxFailedAccessAttemptsBeforeLockout" value="50" />
+  <key name="TokenLifeSpan" value="1" />
   <!--__________________________________________________Performance Configuration Section________________________________________________________________________________________-->
   <key name="PerformanceMode" value="None" />
   <!--None, ApplicationState, Cache, MemoryCache, Session (do not use Session performance mode when application state is set to use SQL Server Session State Database)-->

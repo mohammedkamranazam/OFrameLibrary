@@ -57,18 +57,162 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("CookieExpireTimeSpan", value.ToString());
             }
         }
-        //public static string XXXXXX
-        //{
-        //    get
-        //    {
-        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
-        //    }
+        public static int CookieValidateInterval
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("CookieValidateInterval").IntParse();
+            }
 
-        //    set
-        //    {
-        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
-        //    }
-        //}
+            set
+            {
+                KeywordsHelper.SetKeywordValue("CookieValidateInterval", value.ToString());
+            }
+        }
+        public static bool CookieSlidingExpiration
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("CookieSlidingExpiration").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("CookieSlidingExpiration", value.ToString());
+            }
+        }
+        public static bool AllowAlphaNumericUserNames
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("AllowAlphaNumericUserNames").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("AllowAlphaNumericUserNames", value.ToString());
+            }
+        }
+        public static bool RequireUniqueEmail
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("RequireUniqueEmail").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("RequireUniqueEmail", value.ToString());
+            }
+        }
+        public static int PasswordRequiredLength
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("PasswordRequiredLength").IntParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("PasswordRequiredLength", value.ToString());
+            }
+        }
+        public static bool RequireDigit
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("RequireDigit").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("RequireDigit", value.ToString());
+            }
+        }
+        public static bool RequireLowerCase
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("RequireLowerCase").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("RequireLowerCase", value.ToString());
+            }
+        }
+        public static bool RequireNonLetterOrDigit
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("RequireNonLetterOrDigit").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("RequireNonLetterOrDigit", value.ToString());
+            }
+        }
+        public static bool RequireUpperCase
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("RequireUpperCase").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("RequireUpperCase", value.ToString());
+            }
+        }
+        public static bool UserLockoutEnabledByDefault
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("UserLockoutEnabledByDefault").BoolParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("UserLockoutEnabledByDefault", value.ToString());
+            }
+        }
+        public static int DefaultAccountLockoutTimeSpan
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("DefaultAccountLockoutTimeSpan").IntParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("DefaultAccountLockoutTimeSpan", value.ToString());
+            }
+        }
+        public static int MaxFailedAccessAttemptsBeforeLockout
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("MaxFailedAccessAttemptsBeforeLockout").IntParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("MaxFailedAccessAttemptsBeforeLockout", value.ToString());
+            }
+        }
+        public static int TokenLifeSpan
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("TokenLifeSpan").IntParse();
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("TokenLifeSpan", value.ToString());
+            }
+        }
         //public static string XXXXXX
         //{
         //    get
