@@ -12,11 +12,69 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Linq.Dynamic;
 
 namespace OFrameLibrary.Util
 {
     public static class Utilities
     {
+        public static GridModel<T> GetGridModel<T>(
+            PagerArgs args,
+            string DefaultSortKey)
+        {
+            GridModel<T> gm = new GridModel<T>();
+
+            gm.Pager = new GridPager();
+            gm.Pager.Pages = new List<GridPage>();
+
+            if (string.IsNullOrWhiteSpace(args.CurrentPage))
+            {
+                gm.Pager.CurrentPage = 1;
+            }
+            else
+            {
+                gm.Pager.CurrentPage = DataParser.IntParse(args.CurrentPage);
+            }
+
+            if (string.IsNullOrWhiteSpace(args.PageSize))
+            {
+                gm.Pager.PageSize = 10;
+            }
+            else
+            {
+                gm.Pager.PageSize = DataParser.IntParse(args.PageSize);
+            }
+
+            if (string.IsNullOrWhiteSpace(args.PagerCount))
+            {
+                gm.Pager.PagerCount = 5;
+            }
+            else
+            {
+                gm.Pager.PagerCount = DataParser.IntParse(args.PagerCount);
+            }
+
+            if (string.IsNullOrWhiteSpace(args.SortKey))
+            {
+                gm.SortKey = DefaultSortKey;
+            }
+            else
+            {
+                gm.SortKey = args.SortKey;
+            }
+
+            if (string.IsNullOrWhiteSpace(args.SortDirection))
+            {
+                gm.SortDirection = "DESC";
+            }
+            else
+            {
+                gm.SortDirection = args.SortDirection;
+            }
+
+            return gm;
+        }
+
         public static string RenderPartialViewToString(Controller controller, string viewName, object model)
         {
             controller.ViewData.Model = model;
