@@ -11,7 +11,7 @@ namespace OFrameLibrary.Abstracts
         public AppController()
         {
         }
-        
+
         public AppUserPrincipal CurrentUser
         {
             get

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace OFrameLibrary.Models
 {
@@ -27,7 +23,6 @@ namespace OFrameLibrary.Models
         /// Number of Pager buttons to show
         /// </summary>
         public int PagerCount { get; set; }
-
 
         public int StartPage { get; set; }
 

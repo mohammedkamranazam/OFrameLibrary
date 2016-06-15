@@ -7,7 +7,6 @@ using OFrameLibrary;
 using OFrameLibrary.Helpers;
 using Owin;
 using System;
-using System.Diagnostics;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -37,7 +36,7 @@ namespace OFrameLibrary
                 ExpireTimeSpan = TimeSpan.FromDays(AppConfig.CookieExpireTimeSpan),
                 SlidingExpiration = AppConfig.CookieSlidingExpiration
             });
-            
+
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             app.UseTwoFactorSignInCookie(DefaultAuthenticationTypes.TwoFactorCookie, TimeSpan.FromMinutes(AppConfig.TwoFactorAuthWaitTime));

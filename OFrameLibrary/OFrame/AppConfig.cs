@@ -8,6 +8,14 @@ namespace OFrameLibrary
 {
     public static class AppConfig
     {
+        public static string PageCacheFile
+        {
+            get
+            {
+                return HttpRuntime.AppDomainAppPath + KeywordsHelper.GetKeywordValue("PageCacheFile");
+            }
+        }
+
         public static string AppDBContext
         {
             get
@@ -20,6 +28,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("AppDBContext", value);
             }
         }
+
         public static bool EnableBundleOptimization
         {
             get
@@ -32,6 +41,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("EnableBundleOptimization", value.ToString());
             }
         }
+
         public static int TwoFactorAuthWaitTime
         {
             get
@@ -57,6 +67,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("CookieExpireTimeSpan", value.ToString());
             }
         }
+
         public static int CookieValidateInterval
         {
             get
@@ -69,6 +80,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("CookieValidateInterval", value.ToString());
             }
         }
+
         public static bool CookieSlidingExpiration
         {
             get
@@ -81,6 +93,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("CookieSlidingExpiration", value.ToString());
             }
         }
+
         public static bool AllowAlphaNumericUserNames
         {
             get
@@ -93,6 +106,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("AllowAlphaNumericUserNames", value.ToString());
             }
         }
+
         public static bool RequireUniqueEmail
         {
             get
@@ -105,6 +119,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("RequireUniqueEmail", value.ToString());
             }
         }
+
         public static int PasswordRequiredLength
         {
             get
@@ -117,6 +132,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("PasswordRequiredLength", value.ToString());
             }
         }
+
         public static bool RequireDigit
         {
             get
@@ -129,6 +145,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("RequireDigit", value.ToString());
             }
         }
+
         public static bool RequireLowerCase
         {
             get
@@ -141,6 +158,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("RequireLowerCase", value.ToString());
             }
         }
+
         public static bool RequireNonLetterOrDigit
         {
             get
@@ -153,6 +171,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("RequireNonLetterOrDigit", value.ToString());
             }
         }
+
         public static bool RequireUpperCase
         {
             get
@@ -165,6 +184,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("RequireUpperCase", value.ToString());
             }
         }
+
         public static bool UserLockoutEnabledByDefault
         {
             get
@@ -177,6 +197,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("UserLockoutEnabledByDefault", value.ToString());
             }
         }
+
         public static int DefaultAccountLockoutTimeSpan
         {
             get
@@ -189,6 +210,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("DefaultAccountLockoutTimeSpan", value.ToString());
             }
         }
+
         public static int MaxFailedAccessAttemptsBeforeLockout
         {
             get
@@ -201,6 +223,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("MaxFailedAccessAttemptsBeforeLockout", value.ToString());
             }
         }
+
         public static int TokenLifeSpan
         {
             get
@@ -213,6 +236,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("TokenLifeSpan", value.ToString());
             }
         }
+
         //public static string XXXXXX
         //{
         //    get
@@ -237,6 +261,7 @@ namespace OFrameLibrary
                 KeywordsHelper.SetKeywordValue("EventLogSourceName", value);
             }
         }
+
         public static string SMSServiceName
         {
             get

@@ -18,9 +18,10 @@ namespace OFrameLibrary.Helpers
                     var result = Twilio.SendMessage(AppConfig.SMSAccountFrom, message.Destination, message.Body);
                     //Status is one of Queued, Sending, Sent, Failed or null if the number is not valid
                     Trace.TraceInformation(result.Status);
-                    //Twilio doesn't currently have an async API, so return success.                    
+                    //Twilio doesn't currently have an async API, so return success.
                     // Twilio End
                     break;
+
                 case "ASPSMS":
                     //// ASPSMS Begin
                     //var soapSms = new ASPSMSX2.ASPSMSX2SoapClient("ASPSMSX2Soap");

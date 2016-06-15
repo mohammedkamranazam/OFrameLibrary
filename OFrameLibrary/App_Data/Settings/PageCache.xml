@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<pages>
+  <page id="HomePage" duration="10" location="Client" />
+  <page id="AboutUsPage" duration="60" location="Server" />
+  <page id="AlbumsPage" duration="60" location="Both" />
+  <page id="AudioPage" duration="5" location="None" />
+  <!--Client, Server, None, Both-->
+</pages>

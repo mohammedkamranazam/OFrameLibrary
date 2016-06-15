@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -12,7 +13,6 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using System.Linq.Dynamic;
 
 namespace OFrameLibrary.Util
 {
@@ -1318,32 +1318,6 @@ namespace OFrameLibrary.Util
         //    }
         //}
 
-        //public static void SetPageCache(PageCache entity)
-        //{
-        //    switch (entity.Location)
-        //    {
-        //        case "Both":
-        //        case "Server":
-        //            var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
-        //            var now = DateTime.Now;
-        //            HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
-        //            HttpContext.Current.Response.Cache.SetMaxAge(freshness);
-        //            HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
-        //            HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
-        //            break;
-
-        //        case "Client":
-        //            HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
-        //            HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
-        //            break;
-
-        //        case "None":
-        //        default:
-        //            HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
-        //            break;
-        //    }
-        //}
-
         public static void SetPageSEO(Page page, SEO seo)
         {
             var title = seo.Title;
@@ -1620,6 +1594,32 @@ namespace OFrameLibrary.Util
                 "Zambia",
                 "Zimbabwe",
             };
+        }
+
+        public static void SetPageCache(PageCache entity)
+        {
+            switch (entity.Location)
+            {
+                case "Both":
+                case "Server":
+                    TimeSpan freshness = new TimeSpan(0, 0, 0, entity.Minutes);
+                    DateTime now = DateTime.Now;
+                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
+                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
+                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
+                    break;
+
+                case "Client":
+                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
+                    break;
+
+                case "None":
+                default:
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
+                    break;
+            }
         }
     }
 }

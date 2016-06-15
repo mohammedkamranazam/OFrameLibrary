@@ -2,7 +2,9 @@
 {
     public class JSONConfirmation
     {
-        public JSONConfirmation() { }
+        public JSONConfirmation()
+        {
+        }
 
         public JSONConfirmation(bool isSuccess, string message)
         {

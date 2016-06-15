@@ -248,6 +248,7 @@
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\MailHelper.cs" />
     <Compile Include="Helpers\MembershipHelper.cs" />
+    <Compile Include="SettingsHelpers\PageCacheHelper.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\PdfHelper.cs" />
     <Compile Include="Helpers\PrintHelper.cs" />
@@ -268,6 +269,7 @@
     <Compile Include="Models\JSONConfirmation.cs" />
     <Compile Include="Models\Language.cs" />
     <Compile Include="Models\PageArgs.cs" />
+    <Compile Include="Models\PageCache.cs" />
     <Compile Include="Models\PrintSettings.cs" />
     <Compile Include="Models\SearchItems.cs" />
     <Compile Include="Models\SEO.cs" />
@@ -327,6 +329,7 @@
     <Content Include="App_Data\Settings\KeyWords.xml" />
     <Content Include="App_Data\Settings\Languages.xml" />
     <Content Include="App_Data\Settings\LocalStorages.xml" />
+    <Content Include="App_Data\Settings\PageCache.xml" />
     <Content Include="App_Data\Settings\PageSEO.xml" />
     <Content Include="App_Data\Settings\RemoteServers.xml" />
     <Content Include="App_Data\Settings\ValidationSettings.xml" />

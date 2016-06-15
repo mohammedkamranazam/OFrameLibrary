@@ -1,7 +1,4 @@
 ﻿using Microsoft.AspNet.Identity;
-using SendGrid;
-using System.Configuration;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace OFrameLibrary.Helpers

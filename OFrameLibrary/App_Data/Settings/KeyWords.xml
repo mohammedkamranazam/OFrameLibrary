@@ -2,6 +2,7 @@
 <keys>
   <!--__________________________________________________Settings File Section________________________________________________________________________________________-->
 
+  <key name="PageCacheFile" value="App_Data/Settings/PageCache.xml" />
   <key name="ValidationSettingsFile" value="App_Data/Settings/ValidationSettings.xml" />
   <key name="RemoteServersFile" value="App_Data/Settings/RemoteServers.xml" />
   <key name="LanguagesFile" value="App_Data/Settings/Languages.xml" />
@@ -22,7 +23,7 @@
   <key name="TwoFactorAuthWaitTime" value="60" />
   <key name="CookieExpireTimeSpan" value="365" />
   <key name="CookieValidateInterval" value="0" />
-  <key name="CookieSlidingExpiration" value="true" />  
+  <key name="CookieSlidingExpiration" value="true" />
   <key name="AllowAlphaNumericUserNames" value="false" />
   <key name="RequireUniqueEmail" value="true" />
   <key name="PasswordRequiredLength" value="1" />

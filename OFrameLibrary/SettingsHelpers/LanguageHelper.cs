@@ -251,6 +251,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             return keyValue;
         }
+
         public static string GetLocaleDirectionFromSettings(string locale)
         {
             var directionValue = "ltr";

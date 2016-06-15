@@ -1,7 +1,6 @@
 ﻿using OFrameLibrary.Util;
 using System;
 using System.IO;
-using System.Web;
 using System.Xml;
 
 namespace OFrameLibrary.SettingsHelpers
@@ -59,7 +58,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             return success;
         }
-               
+
         private static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
