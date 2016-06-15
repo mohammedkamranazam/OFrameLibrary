@@ -1,4 +1,6 @@
-﻿namespace OFrameLibrary.Models
+﻿using System.Web;
+
+namespace OFrameLibrary.Models
 {
     public class PageCache
     {
@@ -8,7 +10,7 @@
             set;
         }
 
-        public string Location
+        public HttpCacheability Location
         {
             get;
             set;

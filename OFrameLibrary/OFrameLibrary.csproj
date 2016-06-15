@@ -255,8 +255,8 @@
     <Compile Include="Helpers\QRCodeHelper.cs" />
     <Compile Include="Helpers\SmsService.cs" />
     <Compile Include="Helpers\ThemeHelper.cs" />
-    <Compile Include="Helpers\ThemeScriptsHelper.cs" />
-    <Compile Include="Helpers\ThemeStylesheetsHelper.cs" />
+    <Compile Include="SettingsHelpers\MvcThemeScriptsHelper.cs" />
+    <Compile Include="SettingsHelpers\MvcThemeStylesheetsHelper.cs" />
     <Compile Include="ILL\EmailPlaceHolder.cs" />
     <Compile Include="Models\FileUploadMessageSettings.cs" />
     <Compile Include="Models\FileUploadResult.cs" />
@@ -333,6 +333,7 @@
     <Content Include="App_Data\Settings\PageSEO.xml" />
     <Content Include="App_Data\Settings\RemoteServers.xml" />
     <Content Include="App_Data\Settings\ValidationSettings.xml" />
+    <Content Include="Content\Plugins\OFrameLibrary\oframe.js" />
     <Content Include="Service References\ASPSMSX2\configuration.svcinfo" />
     <Content Include="Service References\ASPSMSX2\configuration91.svcinfo" />
     <Content Include="Service References\ASPSMSX2\Reference.svcmap">
@@ -341,9 +342,7 @@
     </Content>
     <Content Include="Storage\TextFile.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\Plugins\OFrameLibrary\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

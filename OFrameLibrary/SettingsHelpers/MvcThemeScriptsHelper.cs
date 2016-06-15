@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Xml;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.SettingsHelpers
 {
-    public static class ThemeStylesheetsHelper
+    public static class MvcThemeScriptsHelper
     {
-        private const string xPath = "stylesheets/stylesheet";
+        private const string xPath = "scripts/script";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
-            var fileName = string.Format("~/Content/Themes/{0}/CSS.xml", themeName).MapPath();
+            var fileName = string.Format("~/Content/Themes/{0}/Scripts.xml", themeName).MapPath();
 
             var paths = new List<string>();
 

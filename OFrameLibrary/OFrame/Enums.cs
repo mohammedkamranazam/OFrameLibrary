@@ -1,5 +1,13 @@
 ﻿namespace OFrameLibrary
 {
+    public enum FileType
+    {
+        Image,
+        Document,
+        PDF,
+        All
+    }
+
     public enum ManageMessageId
     {
         AddPhoneSuccess,
@@ -86,6 +94,7 @@
         Cache = 2,
         MemoryCache = 3,
         Session = 4,
+        Redis = 5
     }
 
     public enum StatusMessageType

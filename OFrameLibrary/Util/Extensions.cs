@@ -362,23 +362,6 @@ namespace OFrameLibrary.Util
         //    }
         //}
 
-        public static HttpCacheability ToCacheType(this string location)
-        {
-            switch (location)
-            {
-                case "Server":
-                    return HttpCacheability.Server;
-
-                case "Client":
-                    return HttpCacheability.Private;
-
-                case "Both":
-                    return HttpCacheability.ServerAndPrivate;
-
-                case "None":
-                default:
-                    return HttpCacheability.NoCache;
-            }
-        }
+        
     }
 }

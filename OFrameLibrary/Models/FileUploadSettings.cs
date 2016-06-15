@@ -10,5 +10,7 @@
         public string StoragePath { get; set; }
 
         public FileUploadMessageSettings Messages { get; set; }
+
+        public FileType FileType { get; set; } = FileType.All;
     }
 }

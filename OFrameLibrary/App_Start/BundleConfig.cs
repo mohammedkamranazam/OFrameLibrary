@@ -1,4 +1,5 @@
 ﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.SettingsHelpers;
 using System.Web.Optimization;
 
 namespace OFrameLibrary.App_Start
@@ -11,13 +12,13 @@ namespace OFrameLibrary.App_Start
             {
                 var cssBundle = new StyleBundle(string.Format("~/Theme_{0}", directory));
 
-                cssBundle.Include(ThemeStylesheetsHelper.GetPathsFromSettings(directory));
+                cssBundle.Include(MvcThemeStylesheetsHelper.GetPathsFromSettings(directory));
 
                 bundles.Add(cssBundle);
 
                 var scriptBundle = new ScriptBundle(string.Format("~/Script_{0}", directory));
 
-                scriptBundle.Include(ThemeScriptsHelper.GetPathsFromSettings(directory));
+                scriptBundle.Include(MvcThemeScriptsHelper.GetPathsFromSettings(directory));
 
                 bundles.Add(scriptBundle);
             }

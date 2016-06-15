@@ -37,7 +37,7 @@
   <key name="TokenLifeSpan" value="1" />
   <!--__________________________________________________Performance Configuration Section________________________________________________________________________________________-->
   <key name="PerformanceMode" value="None" />
-  <!--None, ApplicationState, Cache, MemoryCache, Session (do not use Session performance mode when application state is set to use SQL Server Session State Database)-->
+  <!--None, ApplicationState, Cache, MemoryCache, Redis, Session (do not use Session performance mode when application state is set to use SQL Server Session State Database)-->
   <key name="MemoryCacheItemPriority" value="Default" />
   <!--Default, NotRemovable-->
   <key name="PerformanceTimeOutMinutes" value="1440" />
@@ -115,7 +115,7 @@
   <key name="DiscussCode" value="" />
   <!--__________________________________________________________________________________________________________________________________________-->
   <key name="Countries" value="Afghanistan;Albania;Algeria;American Samoa;Andorra;Angola;Anguilla;Antarctica;Antigua and Barbuda;Argentina;Armenia;Aruba;Australia;Austria;Azerbaijan;Bahamas;Bahrain;Bangladesh;Barbados;Belarus;Belgium;Belize;Benin;Bermuda;Bhutan;Bolivia;Bosnia and Herzegovina;Botswana;Bouvet Island;Brazil;British Indian Ocean Territory;Brunei Darussalam;Bulgaria;Burkina Faso;Burundi;Cambodia;Cameroon;Canada;Cape Verde;Cayman Islands;Central African Republic;Chad;Chile;China;Christmas Island;Cocos (Keeling) Islands;Colombia;Comoros;Congo;Congo, The Democratic Republic of The;Cook Islands;Costa Rica;Cote D'ivoire;Croatia;Cuba;Cyprus;Czech Republic;Denmark;Djibouti;Dominica;Dominican Republic;Ecuador;Egypt;El Salvador;Equatorial Guinea;Eritrea;Estonia;Ethiopia;Falkland Islands (Malvinas);Faroe Islands;Fiji;Finland;France;French Guiana;French Polynesia;French Southern Territories;Gabon;Gambia;Georgia;Germany;Ghana;Gibraltar;Greece;Greenland;Grenada;Guadeloupe;Guam;Guatemala;Guinea;Guinea-bissau;Guyana;Haiti;Heard Island and Mcdonald Islands;Holy See (Vatican City State);Honduras;Hong Kong;Hungary;Iceland;India;Indonesia;Iran, Islamic Republic of;Iraq;Ireland;Israel;Italy;Jamaica;Japan;Jordan;Kazakhstan;Kenya;Kiribati;Korea, Democratic People's Republic of;Korea, Republic of;Kuwait;Kyrgyzstan;Lao People's Democratic Republic;Latvia;Lebanon;Lesotho;Liberia;Libyan Arab Jamahiriya;Liechtenstein;Lithuania;Luxembourg;Macao;Macedonia, The Former Yugoslav Republic of;Madagascar;Malawi;Malaysia;Maldives;Mali;Malta;Marshall Islands;Martinique;Mauritania;Mauritius;Mayotte;Mexico;Micronesia, Federated States of;Moldova, Republic of;Monaco;Mongolia;Montenegro;Montserrat;Morocco;Mozambique;Myanmar;Namibia;Nauru;Nepal;Netherlands;Netherlands Antilles;New Caledonia;New Zealand;Nicaragua;Niger;Nigeria;Niue;Norfolk Island;Northern Mariana Islands;Norway;Oman;Pakistan;Palau;Palestinian Territory, Occupied;Panama;Papua New Guinea;Paraguay;Peru;Philippines;Pitcairn;Poland;Portugal;Puerto Rico;Qatar;Reunion;Romania;Russian Federation;Rwanda;Saint Helena;Saint Kitts and Nevis;Saint Lucia;Saint Pierre and Miquelon;Saint Vincent and The Grenadines;Samoa;San Marino;Sao Tome and Principe;Saudi Arabia;Senegal;Serbia;Seychelles;Sierra Leone;Singapore;Slovakia;Slovenia;Solomon Islands;Somalia;South Africa;South Georgia and The South Sandwich Islands;South Sudan;Spain;Sri Lanka;Sudan;Suriname;Svalbard and Jan Mayen;Swaziland;Sweden;Switzerland;Syrian Arab Republic;Taiwan, Republic of China;Tajikistan;Tanzania, United Republic of;Thailand;Timor-leste;Togo;Tokelau;Tonga;Trinidad and Tobago;Tunisia;Turkey;Turkmenistan;Turks and Caicos Islands;Tuvalu;Uganda;Ukraine;United Arab Emirates;United Kingdom;United States;United States Minor Outlying Islands;Uruguay;Uzbekistan;Vanuatu;Venezuela;Viet Nam;Virgin Islands, British;Virgin Islands, U.S.;Wallis and Futuna;Western Sahara;Yemen;Zambia;Zimbabwe;" />
-  <key name="FileEditorSearchPatterns" value="*.aspx;*.ascx;*.css;*.js;*.html;*.htm;*.Master;*.master;*.xml;*.config;" />
+  <key name="FileEditorSearchPatterns" value="*.aspx;*.ascx;*.css;*.js;*.html;*.htm;*.Master;*.master;*.xml;*.config;*.cshtml;*.json;" />
   <!--__________________________________________________Email Template Section________________________________________________________________________________________-->
   <!--UNDER TEST OBSERVATION-->
   <key name="MaxPlaceHoldersCount" value="20000" />
@@ -141,104 +141,5 @@
   <key name="SiteName" value="" />
   <key name="WebsiteMainEmail" value="" />
   <key name="WebsiteAdminEmail" value="" />
-  <key name="ErrorAdminEmail" value="" />
-  <!--_________________________________________________________________________________________________________________________________________-->
-  <key name="delay" value="9000" />
-  <key name="startwidth" value="1200" />
-  <key name="startheight" value="400" />
-  <key name="autoHeight" value="on" />
-  <!--on, off-->
-  <key name="parallaxDisableOnMobile" value="off" />
-  <!--on, off-->
-  <key name="fullScreenOffset" value="0px" />
-  <!--%, pixels-->
-  <key name="fullScreenAlignForce" value="on" />
-  <!--on, off-->
-  <key name="onHoverStop" value="on" />
-  <!--on, off-->
-  <key name="thumbWidth" value="100" />
-  <!--pixels-->
-  <key name="thumbHeight" value="100" />
-  <!--pixels-->
-  <key name="thumbAmount" value="3" />
-  <!--count-->
-  <key name="hideThumbsOnMobile" value="off" />
-  <!--on, off-->
-  <key name="hideBulletsOnMobile" value="off" />
-  <!--on, off-->
-  <key name="hideArrowsOnMobile" value="off" />
-  <!--on, off-->
-  <key name="hideThumbsUnderResoluition" value="0" />
-  <!--0px to 1900px (only if hideThumbonMobile set to off)-->
-  <key name="hideThumbs" value="1000" />
-  <!--0 - Never hide Thumbs.  1000- 100000 (ms) hide thumbs and navigation arrows, bullets after the predefined ms-->
-  <key name="navigationType" value="bullet" />
-  <!--bullet, thumb, none-->
-  <key name="navigationArrows" value="solo" />
-  <!--nexttobullets, solo-->
-  <key name="navigationStyle" value="preview4" />
-  <!--round, square, round-old, square-old, navbar-old, preview1, preview2, preview3, preview4-->
-  <key name="navigationHAlign" value="center" />
-  <!--left, center, right-->
-  <key name="navigationVAlign" value="bottom" />
-  <!--top, center, bottom-->
-  <key name="navigationHOffset" value="0" />
-  <!---1000px to 1000px-->
-  <key name="navigationVOffset" value="10" />
-  <!---1000px to 1000px-->
-  <key name="soloArrowLeftHalign" value="left" />
-  <!--left, center, right-->
-  <key name="soloArrowLeftValign" value="center" />
-  <!--top, center, bottom-->
-  <key name="soloArrowLeftHOffset" value="20" />
-  <!---1000px to 1000px-->
-  <key name="soloArrowLeftVOffset" value="0" />
-  <!---1000px to 1000px-->
-  <key name="soloArrowRightHalign" value="right" />
-  <!--left, center, right-->
-  <key name="soloArrowRightValign" value="center" />
-  <!--top, center, bottom-->
-  <key name="soloArrowRightHOffset" value="20" />
-  <!---1000px to 1000px-->
-  <key name="soloArrowRightVOffset" value="0" />
-  <!---1000px to 1000px-->
-  <key name="touchenabled" value="on" />
-  <!--on, off-->
-  <key name="stopAtSlide" value="-1" />
-  <!--Stop Timer if Slide "x" has been Reached. If stopAfterLoops set to 0, then it stops already in the first Loop at slide X which defined. -1 means do not stop at any slide. stopAfterLoops has no sign in this case-->
-  <key name="stopAfterLoops" value="-1" />
-  <!--Stop Timer if All slides has been played "x" times. It will stop at The slide which is defined via stopAtSlide:x, if set to -1 slide never stop automatic-->
-  <key name="hideCaptionAtLimit" value="0" />
-  <!--pixels-->
-  <key name="hideAllCaptionAtLilmit" value="0" />
-  <!--pixels-->
-  <key name="hideSliderAtLimit" value="0" />
-  <!--pixels-->
-  <key name="dottedOverlay" value="threexthreewhite" />
-  <!--none, twoxtwo, threexthree, twoxtwowhite, threexthreewhite-->
-  <key name="fullWidth" value="off" />
-  <!--on, off-->
-  <key name="forceFullWidth" value="off" />
-  <!--on, off-->
-  <key name="fullScreen" value="off" />
-  <!--on, off-->
-  <key name="fullScreenOffsetContainer" value="#MenuUL" />
-  <!--The value is a Container ID or Class i.e. "#topheader"  - The Height of Fullheight will be increased with this Container height !-->
-  <key name="shadow" value="0" />
-  <!--0, 1, 2, 3-->
-  <key name="videoJsPath" value="Scripts/RevolutionSlider/js/videojs/" />
-  <!--path to videojs javascript file-->
-  <key name="lazyLoad" value="on" />
-  <!--on, off-->
-  <key name="shuffle" value="off" />
-  <!--on, off-->
-  <key name="bannerTimerClass" value="tp-bannertimer tp-bottom" />
-  <!--tp-bannertimer tp-bottom, tp-bannertimer, tp-none-->
-  <key name="spinner" value="spinner4" />
-  <!--spinner0, spinner1, spinner2, spinner3, spinner4, -->
-  <key name="minFullScreenHeight" value="0" />
-  <!--pixels-->
-  <key name="keyboardNavigation" value="on" />
-  <!--on, off-->
-  <key name="revolutionSliderCaptionClasses" value="medium_grey;small_text;medium_text;large_text;very_large_text;very_big_white;very_big_black;modern_medium_fat;modern_medium_fat_white;modern_medium_light;modern_big_bluebg;modern_big_redbg;modern_small_text_dark;boxshadow;black;noshadow;thinheadline_dark;thintext_dark;largeblackbg;largepinkbg;largewhitebg;largegreenbg;excerpt;large_bold_grey;medium_thin_grey;small_thin_grey;lightgrey_divider;large_bold_darkblue;medium_bg_darkblue;medium_bold_red;medium_light_red;medium_bg_red;medium_bold_orange;medium_bg_orange;grassfloor;large_bold_white;medium_light_white;mediumlarge_light_white;mediumlarge_light_white_center;medium_bg_asbestos;medium_light_black;large_bold_black;mediumlarge_light_darkblue;small_light_white;roundedimage;large_bg_black;mediumwhitebg;" />
+  <key name="ErrorAdminEmail" value="" /> 
 </keys>

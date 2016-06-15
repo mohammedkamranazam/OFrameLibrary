@@ -149,6 +149,7 @@ namespace OFrameLibrary.Util
             fr.IsSuccess = false;
             fr.NoFileSelected = true;
             fr.FileSizeInvalid = true;
+            fr.InvalidFileType = true;
             fr.Message = fs.Messages.Failed;
 
             var maxFileSizeBytes = (fs.MaxSize * 1024) * 1024;
@@ -166,21 +167,32 @@ namespace OFrameLibrary.Util
                 {
                     fr.FileSizeInvalid = false;
 
-                    string fileName = string.Format("{0}{1}", Guid.NewGuid().ToString().Replace("-", "").ToLower(), Path.GetExtension(content.FileName));
-                    string relativePath = fs.StoragePath + fileName;
-                    string absolutePath = relativePath.MapPath();
+                    var extension = Path.GetExtension(content.FileName);
 
-                    try
+                    if (ValidateFileType(extension, fs.FileType))
                     {
-                        content.SaveAs(absolutePath);
+                        fr.InvalidFileType = false;
 
-                        fr.IsSuccess = true;
-                        fr.Result = relativePath;
-                        fr.Message = fs.Messages.Success;
+                        string fileName = string.Format("{0}{1}", Guid.NewGuid().ToString().Replace("-", "").ToLower(), extension);
+                        string relativePath = fs.StoragePath + fileName;
+                        string absolutePath = relativePath.MapPath();
+
+                        try
+                        {
+                            content.SaveAs(absolutePath);
+
+                            fr.IsSuccess = true;
+                            fr.Result = relativePath;
+                            fr.Message = fs.Messages.Success;
+                        }
+                        catch (Exception ex)
+                        {
+                            fr.Message = ExceptionHelper.GetExceptionMessage(ex);
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        fr.Message = ExceptionHelper.GetExceptionMessage(ex);
+                        fr.Message = fs.Messages.InvalidFileType;
                     }
                 }
             }
@@ -190,6 +202,37 @@ namespace OFrameLibrary.Util
             }
 
             return fr;
+        }
+
+        public static bool ValidateFileType(string extension, FileType fileType)
+        {
+            string[] imageExtensions = new string[] { ".png", ".bmp", ".jpeg", ".jpg", ".gif" };
+
+            string[] docExtensions = new string[] { ".pdf", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".pps", ".ppsx" };
+
+            string[] pdfExtensions = new string[] { ".pdf" };
+
+            string[] extensions = new string[] { };
+
+            switch (fileType)
+            {
+                case FileType.All:
+                    return true;
+
+                case FileType.Document:
+                    extensions = docExtensions;
+                    break;
+
+                case FileType.Image:
+                    extensions = imageExtensions;
+                    break;
+
+                case FileType.PDF:
+                    extensions = pdfExtensions;
+                    break;
+            }
+
+            return extensions.Contains(extension.ToLower());
         }
 
         public static string GenerateSlug(string phrase)
@@ -226,21 +269,6 @@ namespace OFrameLibrary.Util
 
             return actionName;
         }
-
-        //public static RouteValueDictionary GetCurrentRouteValuesWithLocale(string key, object arg)
-        //{
-        //    HttpContext.Current.Request.RequestContext.RouteData.Values.Add(key, arg);
-
-        //    var queryStrings = HttpContext.Current.Request.QueryString.Keys;
-
-        //    foreach (var queryString in queryStrings)
-        //    {
-        //        if()
-        //        {
-        //        yield return HttpContext.Current.Request.RequestContext.RouteData.Values.Add();
-        //        }
-        //    }
-        //}
 
         public static string GetCurrentControllerName()
         {
@@ -283,210 +311,6 @@ namespace OFrameLibrary.Util
 
             return sb.ToString();
         }
-
-        //public static async Task<string> GetHyperHTMLAsync(string content, GalleryEntities context, Page page)
-        //{
-        //    MatchCollection mc = StringHelper.GetMatchCollection(content);
-
-        //    if (mc == null)
-        //    {
-        //        return content;
-        //    }
-
-        //    foreach (Match m in mc)
-        //    {
-        //        content = content.Replace(m.Value, await GetKeyHTMLAsync(StringHelper.GetKey(m), context, page));
-        //    }
-
-        //    return content;
-        //}
-
-        //public static async Task<string> GetKeyHTMLAsync(ListItem key, GalleryEntities context, Page page)
-        //{
-        //    switch (key.Text)
-        //    {
-        //        case "EventID":
-        //            return "EVENT HTML";
-
-        //        #region ALBUM
-
-        //        case "AlbumID":
-        //            var album = await AlbumsBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (album != null)
-        //            {
-        //                return AlbumsBL.GetAlbumHTML(album, LanguageHelper.GetLocaleDirection(album.Locale), page, LanguageHelper.GetKey("Photos", album.Locale));
-        //            }
-        //            else
-        //            {
-        //                return "Album Does Not Exists";
-        //            }
-
-        //        #endregion ALBUM
-
-        //        #region PHOTOS
-
-        //        case "GalleryID":
-        //            var gallery = await AlbumsBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (gallery != null)
-        //            {
-        //                StringBuilder sb = new StringBuilder();
-        //                foreach (var galleryPhoto in gallery.GY_Photos)
-        //                {
-        //                    sb.Append(Utilities.GetFancyBoxHTML(galleryPhoto.ImageID, string.Empty, true, string.Empty,
-        //                        string.Format("title='{0}'",
-        //                        string.Format("{0}: {1}",
-        //                        galleryPhoto.Title,
-        //                        galleryPhoto.Description))));
-        //                }
-        //                return sb.ToString();
-        //            }
-        //            else
-        //            {
-        //                return "Gallery Does Not Exists";
-        //            }
-
-        //        #endregion PHOTOS
-
-        //        #region PHOTO
-
-        //        case "PhotoID":
-        //            var photo = await PhotosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (photo != null)
-        //            {
-        //                return Utilities.GetFancyBoxHTML(photo.ImageID, string.Empty, true, string.Empty, string.Format("title='{0}'", string.Format("{0}: {1}", photo.Title, photo.Description)));
-        //            }
-        //            else
-        //            {
-        //                return "Photo Does Not Exists";
-        //            }
-
-        //        #endregion PHOTO
-
-        //        #region FILE
-
-        //        case "FileID":
-        //            var file = await FilesBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (file != null)
-        //            {
-        //                return FilesBL.GetFileHTML(file, LanguageHelper.GetKey(file.Locale), page);
-        //            }
-        //            else
-        //            {
-        //                return "File Does Not Exists";
-        //            }
-
-        //        #endregion FILE
-
-        //        #region FOLDER
-
-        //        case "FolderID":
-        //            var folder = await FoldersBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (folder != null)
-        //            {
-        //                return FoldersBL.GetFolderHTML(folder, LanguageHelper.GetKey(folder.Locale), page);
-        //            }
-        //            else
-        //            {
-        //                return "Folder Does Not Exists";
-        //            }
-
-        //        #endregion FOLDER
-
-        //        #region DRIVE
-
-        //        case "DriveID":
-        //            var drive = await DrivesBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (drive != null)
-        //            {
-        //                return DrivesBL.GetDrivesHTML(drive, LanguageHelper.GetKey(drive.Locale), page);
-        //            }
-        //            else
-        //            {
-        //                return "Drive Does Not Exists";
-        //            }
-
-        //        #endregion DRIVE
-
-        //        case "VideoSectionID":
-        //            return "VIDEO SECTION HTML";
-
-        //        case "VideoCategoryID":
-        //            return "VIDEO CATEGORY HTML";
-
-        //        case "VideoSetID":
-        //            return "VIDEO SET HTML";
-
-        //        #region VIDEO
-
-        //        case "VideoID":
-        //            var video = await VideosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (video != null)
-        //            {
-        //                return await VideosBL.GetVideoHTML(video, LanguageHelper.GetKey(video.Locale), context, page);
-        //            }
-        //            else
-        //            {
-        //                return "Video Does Not Exists";
-        //            }
-
-        //        #endregion VIDEO
-
-        //        case "AudioSectionID":
-        //            return "AUDIO SECTION HTML";
-
-        //        case "AudioCategoryID":
-        //            return "AUDIO CATEGORY HTML";
-
-        //        case "AudioSetID":
-        //            return "AUDIO SET HTML";
-
-        //        #region AUDIO
-
-        //        case "AudioID":
-        //            var audio = await AudiosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
-        //            if (audio != null)
-        //            {
-        //                return await AudiosBL.GetAudioHTML(audio, LanguageHelper.GetKey(audio.Locale), page, context);
-        //            }
-        //            else
-        //            {
-        //                return "Audio Does Not Exists";
-        //            }
-
-        //        #endregion AUDIO
-
-        //        case "Clear":
-        //            return "<div class='Clear'></div>";
-
-        //        default:
-        //            return "NOT DEFINED";
-        //    }
-        //}
-
-        //public static string GetMainThemeFile()
-        //{
-        //    return string.Format(UserRoleHelper.GetRoleMasterPage(UserRoles.AnonymousRole), AppConfig.MainTheme);
-        //}
-
-        //public static string GetPopUpThemeFile()
-        //{
-        //    return string.Format(UserRoleHelper.GetRoleMasterPage(UserRoles.AnonymousRole), AppConfig.PopUpTheme);
-        //}
-
-        //public static string GetCheckOutThemeFile()
-        //{
-        //    return string.Format(UserRoleHelper.GetRoleMasterPage(UserRoles.AnonymousRole), AppConfig.CheckOutTheme);
-        //}
-
-        //public static string GetZiceThemeFile()
-        //{
-        //    return string.Format("~/Themes/{0}/Main.Master", AppConfig.ZiceTheme);
-        //}
-
-        //public static string GetRoleThemeFile()
-        //{
-        //    return string.Format("~/Themes/{0}/Main.Master", UserRoleHelper.GetRoleSetting(UserBL.GetUserRole()).Theme);
-        //}
 
         private static void ClearControls(Control control)
         {
@@ -611,18 +435,40 @@ namespace OFrameLibrary.Util
             TraverseTree(rootDir, rootNode, patterns);
         }
 
-        public static void ClearOldPerformanceKeys()
+        public static void SetPageCache(PageCache entity)
         {
-            //ClearPerformance(Constants.Keys.AvatarPathPerformanceKey, PerformanceMode.Session);
+            switch (entity.Location)
+            {
+                case HttpCacheability.Public:
+                case HttpCacheability.ServerAndPrivate:
+                case HttpCacheability.Server:
+                    TimeSpan freshness = new TimeSpan(0, 0, 0, entity.Minutes);
+                    DateTime now = DateTime.Now;
+                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
+                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
+                    break;
+
+                case HttpCacheability.Private:
+                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+
+                case HttpCacheability.NoCache:
+                default:
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+            }
         }
 
         public static void GetPerformance<T>(PerformanceMode performanceMode, string performanceKey, out T keyValue, Delegate func, params object[] args)
         {
             keyValue = default(T);
 
-            switch (GetEnumName(performanceMode))
+            switch (performanceMode)
             {
-                case "ApplicationState":
+                case PerformanceMode.ApplicationState:
                     if (ApplicationStateHelper.Exists(performanceKey))
                     {
                         ApplicationStateHelper.Get<T>(performanceKey, out keyValue);
@@ -634,7 +480,7 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                case "Cache":
+                case PerformanceMode.Cache:
                     if (CacheHelper.Exists(performanceKey))
                     {
                         CacheHelper.Get<T>(performanceKey, out keyValue);
@@ -646,7 +492,7 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                case "MemoryCache":
+                case PerformanceMode.MemoryCache:
                     if (MemoryCacheHelper.Exists(performanceKey))
                     {
                         MemoryCacheHelper.Get<T>(performanceKey, out keyValue);
@@ -658,7 +504,7 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                case "Session":
+                case PerformanceMode.Session:
                     if (SessionHelper.Exists(performanceKey))
                     {
                         SessionHelper.Get<T>(performanceKey, out keyValue);
@@ -670,7 +516,7 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                case "RedisCache":
+                case PerformanceMode.Redis:
                     if (RedisCacheHelper.Exists(performanceKey))
                     {
                         RedisCacheHelper.Get<T>(performanceKey, out keyValue);
@@ -682,7 +528,7 @@ namespace OFrameLibrary.Util
                     }
                     break;
 
-                case "None":
+                case PerformanceMode.None:
                     keyValue = (T)func.DynamicInvoke(args);
                     break;
             }
@@ -690,49 +536,49 @@ namespace OFrameLibrary.Util
 
         public static void ClearPerformance(string performanceKey)
         {
-            ClearPerformance(performanceKey, GetEnumName(AppConfig.PerformanceMode));
+            ClearPerformance(performanceKey, AppConfig.PerformanceMode);
         }
 
-        public static void ClearPerformance(string performanceKey, string performanceMode)
+        public static void ClearPerformance(string performanceKey, PerformanceMode performanceMode)
         {
             switch (performanceMode)
             {
-                case "ApplicationState":
+                case PerformanceMode.ApplicationState:
                     if (ApplicationStateHelper.Exists(performanceKey))
                     {
                         ApplicationStateHelper.Clear(performanceKey);
                     }
                     break;
 
-                case "Cache":
+                case PerformanceMode.Cache:
                     if (CacheHelper.Exists(performanceKey))
                     {
                         CacheHelper.Clear(performanceKey);
                     }
                     break;
 
-                case "MemoryCache":
+                case PerformanceMode.MemoryCache:
                     if (MemoryCacheHelper.Exists(performanceKey))
                     {
                         MemoryCacheHelper.Clear(performanceKey);
                     }
                     break;
 
-                case "Session":
+                case PerformanceMode.Session:
                     if (SessionHelper.Exists(performanceKey))
                     {
                         SessionHelper.Clear(performanceKey);
                     }
                     break;
 
-                case "RedisCache":
+                case PerformanceMode.Redis:
                     if (RedisCacheHelper.Exists(performanceKey))
                     {
                         RedisCacheHelper.Clear(performanceKey);
                     }
                     break;
 
-                case "None":
+                case PerformanceMode.None:
                     break;
             }
         }
@@ -853,75 +699,6 @@ namespace OFrameLibrary.Util
             return Encoding.UTF8.GetString(Convert.FromBase64String(encodedText));
         }
 
-        //public static string GetFancyBoxHTML(int? imageID, string cssClass, bool isGrouped, string imgExtra)
-        //{
-        //    return GetFancyBoxHTML(imageID, cssClass, isGrouped, imgExtra, string.Empty);
-        //}
-
-        //public static string GetFancyBoxHTML(int? imageID, string cssClass, bool isGrouped, string imgExtra, string anchorExtra)
-        //{
-        //    using (var context = new OWDAROEntities())
-        //    {
-        //        if (imageID != null)
-        //        {
-        //            var entity = (from set in context.OW_Images
-        //                          where set.ImageID == imageID
-        //                          select set).FirstOrDefault();
-
-        //            if (entity != null)
-        //            {
-        //                return GetFancyBoxHTML(entity, cssClass, isGrouped, imgExtra, anchorExtra);
-        //            }
-        //        }
-
-        //        var fancyBox = "class='fancybox'";
-
-        //        if (isGrouped)
-        //        {
-        //            fancyBox = "rel='fancybox'";
-        //        }
-
-        //        var anchorTag = "<a {2} href='{0}' {3}>{1}</a>";
-        //        var imgTag = "<img src='{0}' alt='{1}' class='{2}' {3} />";
-
-        //        var anchorURL = AppConfig.NoImage.Remove(0, 1);
-        //        var imgTagURL = anchorURL;
-        //        var imgAlt = "no image";
-
-        //        imgTag = string.Format(imgTag, imgTagURL, imgAlt, cssClass, imgExtra);
-
-        //        anchorTag = string.Format(anchorTag, anchorURL, imgTag, fancyBox, anchorExtra);
-
-        //        return anchorTag;
-        //    }
-        //}
-
-        //public static string GetFancyBoxHTML(OW_Images entity, string cssClass, bool isGrouped, string imgExtra, string anchorExtra)
-        //{
-        //    var fancyBox = "class='fancybox'";
-
-        //    if (isGrouped)
-        //    {
-        //        fancyBox = "rel='fancybox'";
-        //    }
-
-        //    var anchorTag = "<a {2} href='{0}' {3} >{1}</a>";
-        //    var imgTag = "<img src='{0}' alt='{1}' class='{2}' {3} />";
-
-        //    var anchorURL = string.Empty;
-        //    var imgTagURL = string.Empty;
-        //    var imgAlt = entity.Title;
-
-        //    anchorURL = GetImageURL(entity);
-        //    imgTagURL = GetImageThumbURL(entity);
-
-        //    imgTag = string.Format(imgTag, imgTagURL, imgAlt, cssClass, imgExtra);
-
-        //    anchorTag = string.Format(anchorTag, anchorURL, imgTag, fancyBox, anchorExtra);
-
-        //    return anchorTag;
-        //}
-
         public static string GetHTML(Control ctrl, string Script)
         {
             HtmlForm frm = new HtmlForm();
@@ -954,282 +731,6 @@ namespace OFrameLibrary.Util
                 return strHTML;
             }
         }
-
-        //public static string GetImageThumbURL(int? imageID)
-        //{
-        //    if (imageID == null)
-        //    {
-        //        return AppConfig.NoImage;
-        //    }
-
-        //    using (var context = new OWDAROEntities())
-        //    {
-        //        var imageQuery = (from set in context.OW_Images
-        //                          where set.ImageID == imageID
-        //                          select set).FirstOrDefault();
-
-        //        if (imageQuery != null)
-        //        {
-        //            return GetImageThumbURL(imageQuery);
-        //        }
-        //        else
-        //        {
-        //            return AppConfig.NoImage;
-        //        }
-        //    }
-        //}
-
-        //public static string GetImageThumbURL(OW_Images entity)
-        //{
-        //    return GetImageThumbURL(entity, null, null);
-        //}
-
-        //public static string GetImageThumbURL(OW_Images entity, int? maxWidth, int? maxHeight)
-        //{
-        //    if (entity.ShowWebImage)
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(entity.WebImageURL))
-        //        {
-        //            return GetWebImageThumbURLCodified(entity, maxWidth, maxHeight);
-        //        }
-        //        else
-        //        {
-        //            return AppConfig.NoImage.Remove(0, 1);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(entity.ImageURL))
-        //        {
-        //            return GetImageThumbURLCodified(entity, maxWidth, maxHeight).Remove(0, 1);
-        //        }
-        //        else
-        //        {
-        //            return AppConfig.NoImage.Remove(0, 1);
-        //        }
-        //    }
-        //}
-
-        //public static string GetWebImageThumbURLCodified(OW_Images entity)
-        //{
-        //    return GetWebImageThumbURLCodified(entity, null, null);
-        //}
-
-        //public static string GetWebImageThumbURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
-        //{
-        //    var maxWidthValue = entity.MaxWidth;
-        //    var maxHeightValue = entity.MaxHeight;
-
-        //    if (maxWidth != null)
-        //    {
-        //        maxWidthValue = (int)maxWidth;
-        //    }
-
-        //    if (maxHeight != null)
-        //    {
-        //        maxHeightValue = (int)maxHeight;
-        //    }
-
-        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&mode={6}&scale={7}&404=default",
-        //                                                    entity.WebImageURL,
-        //                                                    entity.ThumbWidth,
-        //                                                    entity.ThumbHeight,
-        //                                                    entity.ThumbQuality,
-        //                                                    maxWidthValue,
-        //                                                    maxHeightValue,
-        //                                                    entity.ThumbMode,
-        //                                                    entity.ThumbScale);
-        //}
-
-        //public static string GetImageThumbURLCodified(OW_Images entity)
-        //{
-        //    return GetImageThumbURLCodified(entity, null, null);
-        //}
-
-        //public static string GetImageThumbURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
-        //{
-        //    var maxWidthValue = entity.MaxWidth;
-        //    var maxHeightValue = entity.MaxHeight;
-
-        //    if (maxWidth != null)
-        //    {
-        //        maxWidthValue = (int)maxWidth;
-        //    }
-
-        //    if (maxHeight != null)
-        //    {
-        //        maxHeightValue = (int)maxHeight;
-        //    }
-
-        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&mode={6}&scale={7}&404=default",
-        //                                                    entity.ImageURL,
-        //                                                    entity.ThumbWidth,
-        //                                                    entity.ThumbHeight,
-        //                                                    entity.ThumbQuality,
-        //                                                    maxWidthValue,
-        //                                                    maxHeightValue,
-        //                                                    entity.ThumbMode,
-        //                                                    entity.ThumbScale);
-        //}
-
-        //public static string GetFocusPointImage(int? imageID, string frameClass, string altText, string imageClass, Page page)
-        //{
-        //    if (imageID == null)
-        //    {
-        //        return string.Empty;
-        //    }
-
-        //    using (var context = new OWDAROEntities())
-        //    {
-        //        var imageQuery = (from set in context.OW_Images
-        //                          where set.ImageID == imageID
-        //                          select set).FirstOrDefault();
-
-        //        const string tag = "<div class='focuspoint' id='{0}' data-focus-x='{1}' data-focus-y='{2}' data-image-w='{3}' data-image-h='{4}'><img src='{5}' alt='{6}' class='{7}' /></div>";
-
-        //        if (imageQuery != null)
-        //        {
-        //            return string.Format(tag,
-        //                frameClass, imageQuery.FocusPointX, imageQuery.FocusPointY,
-        //                imageQuery.Width, imageQuery.Height,
-        //                page.ResolveClientUrl(GetImageURL(imageQuery)),
-        //                altText, imageClass);
-        //        }
-        //        else
-        //        {
-        //            return string.Format(tag, frameClass, 0, 0, 300, 300, page.ResolveClientUrl(AppConfig.NoImage), altText, imageClass);
-        //        }
-        //    }
-        //}
-
-        //public static string GetImageURL(int? imageID)
-        //{
-        //    if (imageID == null)
-        //    {
-        //        return string.Empty;
-        //    }
-
-        //    using (var context = new OWDAROEntities())
-        //    {
-        //        var imageQuery = (from set in context.OW_Images
-        //                          where set.ImageID == imageID
-        //                          select set).FirstOrDefault();
-
-        //        if (imageQuery != null)
-        //        {
-        //            return GetImageURL(imageQuery);
-        //        }
-        //        else
-        //        {
-        //            return AppConfig.NoImage;
-        //        }
-        //    }
-        //}
-
-        //public static string GetImageURL(OW_Images entity)
-        //{
-        //    return GetImageURL(entity, null, null);
-        //}
-
-        //public static string GetImageURL(OW_Images entity, int? maxWidth, int? maxHeight)
-        //{
-        //    if (entity.ShowWebImage)
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(entity.WebImageURL))
-        //        {
-        //            return GetWebImageURLCodified(entity, maxWidth, maxHeight);
-        //        }
-        //        else
-        //        {
-        //            return AppConfig.NoImage.Remove(0, 1);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (!string.IsNullOrWhiteSpace(entity.ImageURL))
-        //        {
-        //            return GetImageURLCodified(entity, maxWidth, maxHeight).Remove(0, 1);
-        //        }
-        //        else
-        //        {
-        //            return AppConfig.NoImage.Remove(0, 1);
-        //        }
-        //    }
-        //}
-
-        //public static string GetWebImageURLCodified(OW_Images entity)
-        //{
-        //    return GetWebImageURLCodified(entity, null, null);
-        //}
-
-        //public static string GetWebImageURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
-        //{
-        //    var maxWidthValue = entity.MaxWidth;
-        //    var maxHeightValue = entity.MaxHeight;
-
-        //    if (maxWidth != null)
-        //    {
-        //        maxWidthValue = (int)maxWidth;
-        //    }
-
-        //    if (maxHeight != null)
-        //    {
-        //        maxHeightValue = (int)maxHeight;
-        //    }
-
-        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&cropxunits={6}&cropyunits={7}&crop=({8},{9},{10},{11})&mode={12}&scale={13}&404=default",
-        //                                                    entity.WebImageURL,
-        //                                                    entity.Width,
-        //                                                    entity.Height,
-        //                                                    entity.Quality,
-        //                                                    maxWidthValue,
-        //                                                    maxHeightValue,
-        //                                                    entity.XUnit,
-        //                                                    entity.YUnit,
-        //                                                    entity.X1,
-        //                                                    entity.Y1,
-        //                                                    entity.X2,
-        //                                                    entity.Y2,
-        //                                                    entity.Mode,
-        //                                                    entity.Scale);
-        //}
-
-        //public static string GetImageURLCodified(OW_Images entity)
-        //{
-        //    return GetImageURLCodified(entity, null, null);
-        //}
-
-        //public static string GetImageURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
-        //{
-        //    var maxWidthValue = entity.MaxWidth;
-        //    var maxHeightValue = entity.MaxHeight;
-
-        //    if (maxWidth != null)
-        //    {
-        //        maxWidthValue = (int)maxWidth;
-        //    }
-
-        //    if (maxHeight != null)
-        //    {
-        //        maxHeightValue = (int)maxHeight;
-        //    }
-
-        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&cropxunits={6}&cropyunits={7}&crop=({8},{9},{10},{11})&mode={12}&scale={13}&404=default",
-        //                                                    entity.ImageURL,
-        //                                                    entity.Width,
-        //                                                    entity.Height,
-        //                                                    entity.Quality,
-        //                                                    maxWidthValue,
-        //                                                    maxHeightValue,
-        //                                                    entity.XUnit,
-        //                                                    entity.YUnit,
-        //                                                    entity.X1,
-        //                                                    entity.Y1,
-        //                                                    entity.X2,
-        //                                                    entity.Y2,
-        //                                                    entity.Mode,
-        //                                                    entity.Scale);
-        //}
 
         public static string GetIPAddress()
         {
@@ -1307,16 +808,6 @@ namespace OFrameLibrary.Util
                 return false;
             }
         }
-
-        //public static void RegisterAsyncPostBackControl(Page page, Control control)
-        //{
-        //    var currPageScriptManager = ScriptManager.GetCurrent(page) as ScriptManager;
-
-        //    if (currPageScriptManager != null)
-        //    {
-        //        currPageScriptManager.RegisterAsyncPostBackControl(control);
-        //    }
-        //}
 
         public static void SetPageSEO(Page page, SEO seo)
         {
@@ -1596,30 +1087,578 @@ namespace OFrameLibrary.Util
             };
         }
 
-        public static void SetPageCache(PageCache entity)
-        {
-            switch (entity.Location)
-            {
-                case "Both":
-                case "Server":
-                    TimeSpan freshness = new TimeSpan(0, 0, 0, entity.Minutes);
-                    DateTime now = DateTime.Now;
-                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
-                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
-                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
-                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
-                    break;
+        //public static RouteValueDictionary GetCurrentRouteValuesWithLocale(string key, object arg)
+        //{
+        //    HttpContext.Current.Request.RequestContext.RouteData.Values.Add(key, arg);
 
-                case "Client":
-                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
-                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
-                    break;
+        //    var queryStrings = HttpContext.Current.Request.QueryString.Keys;
 
-                case "None":
-                default:
-                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location.ToCacheType());
-                    break;
-            }
-        }
+        //    foreach (var queryString in queryStrings)
+        //    {
+        //        if()
+        //        {
+        //        yield return HttpContext.Current.Request.RequestContext.RouteData.Values.Add();
+        //        }
+        //    }
+        //}
+
+        //public static async Task<string> GetHyperHTMLAsync(string content, GalleryEntities context, Page page)
+        //{
+        //    MatchCollection mc = StringHelper.GetMatchCollection(content);
+
+        //    if (mc == null)
+        //    {
+        //        return content;
+        //    }
+
+        //    foreach (Match m in mc)
+        //    {
+        //        content = content.Replace(m.Value, await GetKeyHTMLAsync(StringHelper.GetKey(m), context, page));
+        //    }
+
+        //    return content;
+        //}
+
+        //public static async Task<string> GetKeyHTMLAsync(ListItem key, GalleryEntities context, Page page)
+        //{
+        //    switch (key.Text)
+        //    {
+        //        case "EventID":
+        //            return "EVENT HTML";
+
+        //        #region ALBUM
+
+        //        case "AlbumID":
+        //            var album = await AlbumsBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (album != null)
+        //            {
+        //                return AlbumsBL.GetAlbumHTML(album, LanguageHelper.GetLocaleDirection(album.Locale), page, LanguageHelper.GetKey("Photos", album.Locale));
+        //            }
+        //            else
+        //            {
+        //                return "Album Does Not Exists";
+        //            }
+
+        //        #endregion ALBUM
+
+        //        #region PHOTOS
+
+        //        case "GalleryID":
+        //            var gallery = await AlbumsBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (gallery != null)
+        //            {
+        //                StringBuilder sb = new StringBuilder();
+        //                foreach (var galleryPhoto in gallery.GY_Photos)
+        //                {
+        //                    sb.Append(Utilities.GetFancyBoxHTML(galleryPhoto.ImageID, string.Empty, true, string.Empty,
+        //                        string.Format("title='{0}'",
+        //                        string.Format("{0}: {1}",
+        //                        galleryPhoto.Title,
+        //                        galleryPhoto.Description))));
+        //                }
+        //                return sb.ToString();
+        //            }
+        //            else
+        //            {
+        //                return "Gallery Does Not Exists";
+        //            }
+
+        //        #endregion PHOTOS
+
+        //        #region PHOTO
+
+        //        case "PhotoID":
+        //            var photo = await PhotosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (photo != null)
+        //            {
+        //                return Utilities.GetFancyBoxHTML(photo.ImageID, string.Empty, true, string.Empty, string.Format("title='{0}'", string.Format("{0}: {1}", photo.Title, photo.Description)));
+        //            }
+        //            else
+        //            {
+        //                return "Photo Does Not Exists";
+        //            }
+
+        //        #endregion PHOTO
+
+        //        #region FILE
+
+        //        case "FileID":
+        //            var file = await FilesBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (file != null)
+        //            {
+        //                return FilesBL.GetFileHTML(file, LanguageHelper.GetKey(file.Locale), page);
+        //            }
+        //            else
+        //            {
+        //                return "File Does Not Exists";
+        //            }
+
+        //        #endregion FILE
+
+        //        #region FOLDER
+
+        //        case "FolderID":
+        //            var folder = await FoldersBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (folder != null)
+        //            {
+        //                return FoldersBL.GetFolderHTML(folder, LanguageHelper.GetKey(folder.Locale), page);
+        //            }
+        //            else
+        //            {
+        //                return "Folder Does Not Exists";
+        //            }
+
+        //        #endregion FOLDER
+
+        //        #region DRIVE
+
+        //        case "DriveID":
+        //            var drive = await DrivesBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (drive != null)
+        //            {
+        //                return DrivesBL.GetDrivesHTML(drive, LanguageHelper.GetKey(drive.Locale), page);
+        //            }
+        //            else
+        //            {
+        //                return "Drive Does Not Exists";
+        //            }
+
+        //        #endregion DRIVE
+
+        //        case "VideoSectionID":
+        //            return "VIDEO SECTION HTML";
+
+        //        case "VideoCategoryID":
+        //            return "VIDEO CATEGORY HTML";
+
+        //        case "VideoSetID":
+        //            return "VIDEO SET HTML";
+
+        //        #region VIDEO
+
+        //        case "VideoID":
+        //            var video = await VideosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (video != null)
+        //            {
+        //                return await VideosBL.GetVideoHTML(video, LanguageHelper.GetKey(video.Locale), context, page);
+        //            }
+        //            else
+        //            {
+        //                return "Video Does Not Exists";
+        //            }
+
+        //        #endregion VIDEO
+
+        //        case "AudioSectionID":
+        //            return "AUDIO SECTION HTML";
+
+        //        case "AudioCategoryID":
+        //            return "AUDIO CATEGORY HTML";
+
+        //        case "AudioSetID":
+        //            return "AUDIO SET HTML";
+
+        //        #region AUDIO
+
+        //        case "AudioID":
+        //            var audio = await AudiosBL.GetObjectByIDAsync(key.Value.IntParse(), context);
+        //            if (audio != null)
+        //            {
+        //                return await AudiosBL.GetAudioHTML(audio, LanguageHelper.GetKey(audio.Locale), page, context);
+        //            }
+        //            else
+        //            {
+        //                return "Audio Does Not Exists";
+        //            }
+
+        //        #endregion AUDIO
+
+        //        case "Clear":
+        //            return "<div class='Clear'></div>";
+
+        //        default:
+        //            return "NOT DEFINED";
+        //    }
+        //}
+
+        //public static string GetMainThemeFile()
+        //{
+        //    return string.Format(UserRoleHelper.GetRoleMasterPage(UserRoles.AnonymousRole), AppConfig.MainTheme);
+        //}
+
+        //public static string GetPopUpThemeFile()
+        //{
+        //    return string.Format(UserRoleHelper.GetRoleMasterPage(UserRoles.AnonymousRole), AppConfig.PopUpTheme);
+        //}
+
+        //public static string GetCheckOutThemeFile()
+        //{
+        //    return string.Format(UserRoleHelper.GetRoleMasterPage(UserRoles.AnonymousRole), AppConfig.CheckOutTheme);
+        //}
+
+        //public static string GetZiceThemeFile()
+        //{
+        //    return string.Format("~/Themes/{0}/Main.Master", AppConfig.ZiceTheme);
+        //}
+
+        //public static string GetRoleThemeFile()
+        //{
+        //    return string.Format("~/Themes/{0}/Main.Master", UserRoleHelper.GetRoleSetting(UserBL.GetUserRole()).Theme);
+        //}
+
+        //public static string GetFancyBoxHTML(int? imageID, string cssClass, bool isGrouped, string imgExtra)
+        //{
+        //    return GetFancyBoxHTML(imageID, cssClass, isGrouped, imgExtra, string.Empty);
+        //}
+
+        //public static string GetFancyBoxHTML(int? imageID, string cssClass, bool isGrouped, string imgExtra, string anchorExtra)
+        //{
+        //    using (var context = new OWDAROEntities())
+        //    {
+        //        if (imageID != null)
+        //        {
+        //            var entity = (from set in context.OW_Images
+        //                          where set.ImageID == imageID
+        //                          select set).FirstOrDefault();
+
+        //            if (entity != null)
+        //            {
+        //                return GetFancyBoxHTML(entity, cssClass, isGrouped, imgExtra, anchorExtra);
+        //            }
+        //        }
+
+        //        var fancyBox = "class='fancybox'";
+
+        //        if (isGrouped)
+        //        {
+        //            fancyBox = "rel='fancybox'";
+        //        }
+
+        //        var anchorTag = "<a {2} href='{0}' {3}>{1}</a>";
+        //        var imgTag = "<img src='{0}' alt='{1}' class='{2}' {3} />";
+
+        //        var anchorURL = AppConfig.NoImage.Remove(0, 1);
+        //        var imgTagURL = anchorURL;
+        //        var imgAlt = "no image";
+
+        //        imgTag = string.Format(imgTag, imgTagURL, imgAlt, cssClass, imgExtra);
+
+        //        anchorTag = string.Format(anchorTag, anchorURL, imgTag, fancyBox, anchorExtra);
+
+        //        return anchorTag;
+        //    }
+        //}
+
+        //public static string GetFancyBoxHTML(OW_Images entity, string cssClass, bool isGrouped, string imgExtra, string anchorExtra)
+        //{
+        //    var fancyBox = "class='fancybox'";
+
+        //    if (isGrouped)
+        //    {
+        //        fancyBox = "rel='fancybox'";
+        //    }
+
+        //    var anchorTag = "<a {2} href='{0}' {3} >{1}</a>";
+        //    var imgTag = "<img src='{0}' alt='{1}' class='{2}' {3} />";
+
+        //    var anchorURL = string.Empty;
+        //    var imgTagURL = string.Empty;
+        //    var imgAlt = entity.Title;
+
+        //    anchorURL = GetImageURL(entity);
+        //    imgTagURL = GetImageThumbURL(entity);
+
+        //    imgTag = string.Format(imgTag, imgTagURL, imgAlt, cssClass, imgExtra);
+
+        //    anchorTag = string.Format(anchorTag, anchorURL, imgTag, fancyBox, anchorExtra);
+
+        //    return anchorTag;
+        //}
+
+        //public static string GetImageThumbURL(int? imageID)
+        //{
+        //    if (imageID == null)
+        //    {
+        //        return AppConfig.NoImage;
+        //    }
+
+        //    using (var context = new OWDAROEntities())
+        //    {
+        //        var imageQuery = (from set in context.OW_Images
+        //                          where set.ImageID == imageID
+        //                          select set).FirstOrDefault();
+
+        //        if (imageQuery != null)
+        //        {
+        //            return GetImageThumbURL(imageQuery);
+        //        }
+        //        else
+        //        {
+        //            return AppConfig.NoImage;
+        //        }
+        //    }
+        //}
+
+        //public static string GetImageThumbURL(OW_Images entity)
+        //{
+        //    return GetImageThumbURL(entity, null, null);
+        //}
+
+        //public static string GetImageThumbURL(OW_Images entity, int? maxWidth, int? maxHeight)
+        //{
+        //    if (entity.ShowWebImage)
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(entity.WebImageURL))
+        //        {
+        //            return GetWebImageThumbURLCodified(entity, maxWidth, maxHeight);
+        //        }
+        //        else
+        //        {
+        //            return AppConfig.NoImage.Remove(0, 1);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(entity.ImageURL))
+        //        {
+        //            return GetImageThumbURLCodified(entity, maxWidth, maxHeight).Remove(0, 1);
+        //        }
+        //        else
+        //        {
+        //            return AppConfig.NoImage.Remove(0, 1);
+        //        }
+        //    }
+        //}
+
+        //public static string GetWebImageThumbURLCodified(OW_Images entity)
+        //{
+        //    return GetWebImageThumbURLCodified(entity, null, null);
+        //}
+
+        //public static string GetWebImageThumbURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
+        //{
+        //    var maxWidthValue = entity.MaxWidth;
+        //    var maxHeightValue = entity.MaxHeight;
+
+        //    if (maxWidth != null)
+        //    {
+        //        maxWidthValue = (int)maxWidth;
+        //    }
+
+        //    if (maxHeight != null)
+        //    {
+        //        maxHeightValue = (int)maxHeight;
+        //    }
+
+        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&mode={6}&scale={7}&404=default",
+        //                                                    entity.WebImageURL,
+        //                                                    entity.ThumbWidth,
+        //                                                    entity.ThumbHeight,
+        //                                                    entity.ThumbQuality,
+        //                                                    maxWidthValue,
+        //                                                    maxHeightValue,
+        //                                                    entity.ThumbMode,
+        //                                                    entity.ThumbScale);
+        //}
+
+        //public static string GetImageThumbURLCodified(OW_Images entity)
+        //{
+        //    return GetImageThumbURLCodified(entity, null, null);
+        //}
+
+        //public static string GetImageThumbURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
+        //{
+        //    var maxWidthValue = entity.MaxWidth;
+        //    var maxHeightValue = entity.MaxHeight;
+
+        //    if (maxWidth != null)
+        //    {
+        //        maxWidthValue = (int)maxWidth;
+        //    }
+
+        //    if (maxHeight != null)
+        //    {
+        //        maxHeightValue = (int)maxHeight;
+        //    }
+
+        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&mode={6}&scale={7}&404=default",
+        //                                                    entity.ImageURL,
+        //                                                    entity.ThumbWidth,
+        //                                                    entity.ThumbHeight,
+        //                                                    entity.ThumbQuality,
+        //                                                    maxWidthValue,
+        //                                                    maxHeightValue,
+        //                                                    entity.ThumbMode,
+        //                                                    entity.ThumbScale);
+        //}
+
+        //public static string GetFocusPointImage(int? imageID, string frameClass, string altText, string imageClass, Page page)
+        //{
+        //    if (imageID == null)
+        //    {
+        //        return string.Empty;
+        //    }
+
+        //    using (var context = new OWDAROEntities())
+        //    {
+        //        var imageQuery = (from set in context.OW_Images
+        //                          where set.ImageID == imageID
+        //                          select set).FirstOrDefault();
+
+        //        const string tag = "<div class='focuspoint' id='{0}' data-focus-x='{1}' data-focus-y='{2}' data-image-w='{3}' data-image-h='{4}'><img src='{5}' alt='{6}' class='{7}' /></div>";
+
+        //        if (imageQuery != null)
+        //        {
+        //            return string.Format(tag,
+        //                frameClass, imageQuery.FocusPointX, imageQuery.FocusPointY,
+        //                imageQuery.Width, imageQuery.Height,
+        //                page.ResolveClientUrl(GetImageURL(imageQuery)),
+        //                altText, imageClass);
+        //        }
+        //        else
+        //        {
+        //            return string.Format(tag, frameClass, 0, 0, 300, 300, page.ResolveClientUrl(AppConfig.NoImage), altText, imageClass);
+        //        }
+        //    }
+        //}
+
+        //public static string GetImageURL(int? imageID)
+        //{
+        //    if (imageID == null)
+        //    {
+        //        return string.Empty;
+        //    }
+
+        //    using (var context = new OWDAROEntities())
+        //    {
+        //        var imageQuery = (from set in context.OW_Images
+        //                          where set.ImageID == imageID
+        //                          select set).FirstOrDefault();
+
+        //        if (imageQuery != null)
+        //        {
+        //            return GetImageURL(imageQuery);
+        //        }
+        //        else
+        //        {
+        //            return AppConfig.NoImage;
+        //        }
+        //    }
+        //}
+
+        //public static string GetImageURL(OW_Images entity)
+        //{
+        //    return GetImageURL(entity, null, null);
+        //}
+
+        //public static string GetImageURL(OW_Images entity, int? maxWidth, int? maxHeight)
+        //{
+        //    if (entity.ShowWebImage)
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(entity.WebImageURL))
+        //        {
+        //            return GetWebImageURLCodified(entity, maxWidth, maxHeight);
+        //        }
+        //        else
+        //        {
+        //            return AppConfig.NoImage.Remove(0, 1);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (!string.IsNullOrWhiteSpace(entity.ImageURL))
+        //        {
+        //            return GetImageURLCodified(entity, maxWidth, maxHeight).Remove(0, 1);
+        //        }
+        //        else
+        //        {
+        //            return AppConfig.NoImage.Remove(0, 1);
+        //        }
+        //    }
+        //}
+
+        //public static string GetWebImageURLCodified(OW_Images entity)
+        //{
+        //    return GetWebImageURLCodified(entity, null, null);
+        //}
+
+        //public static string GetWebImageURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
+        //{
+        //    var maxWidthValue = entity.MaxWidth;
+        //    var maxHeightValue = entity.MaxHeight;
+
+        //    if (maxWidth != null)
+        //    {
+        //        maxWidthValue = (int)maxWidth;
+        //    }
+
+        //    if (maxHeight != null)
+        //    {
+        //        maxHeightValue = (int)maxHeight;
+        //    }
+
+        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&cropxunits={6}&cropyunits={7}&crop=({8},{9},{10},{11})&mode={12}&scale={13}&404=default",
+        //                                                    entity.WebImageURL,
+        //                                                    entity.Width,
+        //                                                    entity.Height,
+        //                                                    entity.Quality,
+        //                                                    maxWidthValue,
+        //                                                    maxHeightValue,
+        //                                                    entity.XUnit,
+        //                                                    entity.YUnit,
+        //                                                    entity.X1,
+        //                                                    entity.Y1,
+        //                                                    entity.X2,
+        //                                                    entity.Y2,
+        //                                                    entity.Mode,
+        //                                                    entity.Scale);
+        //}
+
+        //public static string GetImageURLCodified(OW_Images entity)
+        //{
+        //    return GetImageURLCodified(entity, null, null);
+        //}
+
+        //public static string GetImageURLCodified(OW_Images entity, int? maxWidth, int? maxHeight)
+        //{
+        //    var maxWidthValue = entity.MaxWidth;
+        //    var maxHeightValue = entity.MaxHeight;
+
+        //    if (maxWidth != null)
+        //    {
+        //        maxWidthValue = (int)maxWidth;
+        //    }
+
+        //    if (maxHeight != null)
+        //    {
+        //        maxHeightValue = (int)maxHeight;
+        //    }
+
+        //    return string.Format("{0}?width={1}&height={2}&quality={3}&maxwidth={4}&maxheight={5}&cropxunits={6}&cropyunits={7}&crop=({8},{9},{10},{11})&mode={12}&scale={13}&404=default",
+        //                                                    entity.ImageURL,
+        //                                                    entity.Width,
+        //                                                    entity.Height,
+        //                                                    entity.Quality,
+        //                                                    maxWidthValue,
+        //                                                    maxHeightValue,
+        //                                                    entity.XUnit,
+        //                                                    entity.YUnit,
+        //                                                    entity.X1,
+        //                                                    entity.Y1,
+        //                                                    entity.X2,
+        //                                                    entity.Y2,
+        //                                                    entity.Mode,
+        //                                                    entity.Scale);
+        //}
+
+        //public static void RegisterAsyncPostBackControl(Page page, Control control)
+        //{
+        //    var currPageScriptManager = ScriptManager.GetCurrent(page) as ScriptManager;
+
+        //    if (currPageScriptManager != null)
+        //    {
+        //        currPageScriptManager.RegisterAsyncPostBackControl(control);
+        //    }
+        //}
     }
 }

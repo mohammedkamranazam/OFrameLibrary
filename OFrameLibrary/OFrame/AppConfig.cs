@@ -8,6 +8,19 @@ namespace OFrameLibrary
 {
     public static class AppConfig
     {
+        //public static string XXXXXX
+        //{
+        //    get
+        //    {
+        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
+        //    }
+
+        //    set
+        //    {
+        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
+        //    }
+        //}
+
         public static string PageCacheFile
         {
             get
@@ -237,18 +250,6 @@ namespace OFrameLibrary
             }
         }
 
-        //public static string XXXXXX
-        //{
-        //    get
-        //    {
-        //        return KeywordsHelper.GetKeywordValue("XXXXXX");
-        //    }
-
-        //    set
-        //    {
-        //        KeywordsHelper.SetKeywordValue("XXXXXX", value);
-        //    }
-        //}
         public static string EventLogSourceName
         {
             get
@@ -1164,35 +1165,100 @@ namespace OFrameLibrary
         {
             set
             {
-                var cacheItemPriority = string.Empty;
+                //var cacheItemPriority = string.Empty;
 
-                switch (value)
-                {
-                    case CacheItemPriority.Default:
-                        cacheItemPriority = "Default";
-                        break;
+                //switch (value)
+                //{
+                //    case CacheItemPriority.Default:
+                //        cacheItemPriority = "Default";
+                //        break;
 
-                    case CacheItemPriority.NotRemovable:
-                        cacheItemPriority = "NotRemovable";
-                        break;
-                }
+                //    case CacheItemPriority.NotRemovable:
+                //        cacheItemPriority = "NotRemovable";
+                //        break;
+                //}
 
-                KeywordsHelper.SetKeywordValue("MemoryCacheItemPriority", cacheItemPriority);
+                KeywordsHelper.SetKeywordValue("MemoryCacheItemPriority", value.ToString());
             }
 
             get
             {
-                switch (KeywordsHelper.GetKeywordValue("MemoryCacheItemPriority"))
-                {
-                    case "Default":
-                        return CacheItemPriority.Default;
+                //switch (KeywordsHelper.GetKeywordValue("MemoryCacheItemPriority"))
+                //{
+                //    case "Default":
+                //        return CacheItemPriority.Default;
 
-                    case "NotRemovable":
-                        return CacheItemPriority.NotRemovable;
+                //    case "NotRemovable":
+                //        return CacheItemPriority.NotRemovable;
 
-                    default:
-                        return CacheItemPriority.Default;
-                }
+                //    default:
+                //        return CacheItemPriority.Default;
+                //}
+
+                return Utilities.GetEnumByName<CacheItemPriority>(KeywordsHelper.GetKeywordValue("MemoryCacheItemPriority"));
+            }
+        }
+
+        public static PerformanceMode PerformanceMode
+        {
+            set
+            {
+                //var performanceMode = string.Empty;
+
+                //switch (value)
+                //{
+                //    case PerformanceMode.None:
+                //        performanceMode = "None";
+                //        break;
+
+                //    case PerformanceMode.ApplicationState:
+                //        performanceMode = "ApplicationState";
+                //        break;
+
+                //    case PerformanceMode.Cache:
+                //        performanceMode = "Cache";
+                //        break;
+
+                //    case PerformanceMode.MemoryCache:
+                //        performanceMode = "MemoryCache";
+                //        break;
+
+                //    case PerformanceMode.Session:
+                //        performanceMode = "Session";
+                //        break;
+
+                //    case PerformanceMode.Redis:
+                //        performanceMode = "Redis";
+                //        break;
+                //}
+
+                KeywordsHelper.SetKeywordValue("PerformanceMode", value.ToString());
+            }
+
+            get
+            {
+                //switch (KeywordsHelper.GetKeywordValue("PerformanceMode"))
+                //{
+                //    case "ApplicationState":
+                //        return PerformanceMode.ApplicationState;
+
+                //    case "Cache":
+                //        return PerformanceMode.Cache;
+
+                //    case "MemoryCache":
+                //        return PerformanceMode.MemoryCache;
+
+                //    case "Session":
+                //        return PerformanceMode.Session;
+
+                //    case "Redis":
+                //        return PerformanceMode.Redis;
+
+                //    default:
+                //        return PerformanceMode.None;
+                //}
+
+                return Utilities.GetEnumByName<PerformanceMode>(KeywordsHelper.GetKeywordValue("PerformanceMode"));
             }
         }
 
@@ -1201,60 +1267,6 @@ namespace OFrameLibrary
             get
             {
                 return string.Format(KeywordsHelper.GetKeywordValue("NoImage"), MainTheme);
-            }
-        }
-
-        public static PerformanceMode PerformanceMode
-        {
-            set
-            {
-                var performanceMode = string.Empty;
-
-                switch (value)
-                {
-                    case OFrameLibrary.PerformanceMode.None:
-                        performanceMode = "None";
-                        break;
-
-                    case OFrameLibrary.PerformanceMode.ApplicationState:
-                        performanceMode = "ApplicationState";
-                        break;
-
-                    case OFrameLibrary.PerformanceMode.Cache:
-                        performanceMode = "Cache";
-                        break;
-
-                    case OFrameLibrary.PerformanceMode.MemoryCache:
-                        performanceMode = "MemoryCache";
-                        break;
-
-                    case OFrameLibrary.PerformanceMode.Session:
-                        performanceMode = "Session";
-                        break;
-                }
-
-                KeywordsHelper.SetKeywordValue("PerformanceMode", performanceMode);
-            }
-
-            get
-            {
-                switch (KeywordsHelper.GetKeywordValue("PerformanceMode"))
-                {
-                    case "ApplicationState":
-                        return PerformanceMode.ApplicationState;
-
-                    case "Cache":
-                        return PerformanceMode.Cache;
-
-                    case "MemoryCache":
-                        return PerformanceMode.MemoryCache;
-
-                    case "Session":
-                        return PerformanceMode.Session;
-
-                    default:
-                        return PerformanceMode.None;
-                }
             }
         }
 

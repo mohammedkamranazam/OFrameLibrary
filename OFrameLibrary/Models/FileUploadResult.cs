@@ -5,6 +5,7 @@
         public bool NoFileSelected { get; set; }
         public bool FileSizeInvalid { get; set; }
         public bool IsSuccess { get; set; }
+        public bool InvalidFileType { get; set; }
 
         public string Message { get; set; }
         public object Result { get; set; }

@@ -1,6 +1,7 @@
 ﻿using OFrameLibrary.Models;
 using OFrameLibrary.Util;
 using System;
+using System.Web;
 using System.Xml;
 
 namespace OFrameLibrary.SettingsHelpers
@@ -23,7 +24,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 newPage.SetAttribute("id", entity.ID);
                 newPage.SetAttribute("duration", entity.Minutes.ToString());
-                newPage.SetAttribute("location", entity.Location);
+                newPage.SetAttribute("location", entity.Location.ToString());
 
                 xmlDoc.SelectSingleNode(xPath).ParentNode.AppendChild(newPage);
 
@@ -75,7 +76,7 @@ namespace OFrameLibrary.SettingsHelpers
                 if (id == page.Attributes["id"].Value)
                 {
                     entity.ID = page.Attributes["id"].Value;
-                    entity.Location = page.Attributes["location"].Value;
+                    entity.Location = Utilities.ParseEnum<HttpCacheability>(page.Attributes["location"].Value);
                     entity.Minutes = int.Parse(page.Attributes["duration"].Value);
                     break;
                 }
@@ -134,7 +135,7 @@ namespace OFrameLibrary.SettingsHelpers
                 {
                     if (entity.ID == page.Attributes["id"].Value)
                     {
-                        page.Attributes["location"].Value = entity.Location;
+                        page.Attributes["location"].Value = entity.Location.ToString();
                         page.Attributes["duration"].Value = entity.Minutes.ToString();
 
                         SaveXml(xmlDoc);
