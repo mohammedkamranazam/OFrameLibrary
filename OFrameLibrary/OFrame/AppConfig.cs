@@ -284,7 +284,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -294,7 +294,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -312,7 +312,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -322,7 +322,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -392,7 +392,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -402,7 +402,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -446,7 +446,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -456,7 +456,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -498,7 +498,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -508,7 +508,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -646,7 +646,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -656,7 +656,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1099,7 +1099,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1109,7 +1109,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1430,7 +1430,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1440,7 +1440,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1458,7 +1458,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1468,7 +1468,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1486,7 +1486,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1496,7 +1496,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1514,7 +1514,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1524,7 +1524,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1542,7 +1542,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1552,7 +1552,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1570,7 +1570,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1580,7 +1580,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1598,7 +1598,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1608,7 +1608,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1626,7 +1626,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1636,7 +1636,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1654,7 +1654,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1664,7 +1664,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1682,7 +1682,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1692,7 +1692,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set
@@ -1710,7 +1710,7 @@ namespace OFrameLibrary
 
                 if (string.IsNullOrWhiteSpace(value))
                 {
-                    return "KEYWORD_VALUE_NULL";
+                    return string.Empty;
                 }
 
                 try
@@ -1720,7 +1720,7 @@ namespace OFrameLibrary
                 }
                 catch
                 {
-                    return "DECRYPT_FAILED";
+                    return string.Empty;
                 }
             }
             set

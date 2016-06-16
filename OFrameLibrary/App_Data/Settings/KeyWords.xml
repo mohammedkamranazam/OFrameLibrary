@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <keys>
   <!--__________________________________________________Settings File Section________________________________________________________________________________________-->
-
   <key name="PageCacheFile" value="App_Data/Settings/PageCache.xml" />
   <key name="ValidationSettingsFile" value="App_Data/Settings/ValidationSettings.xml" />
   <key name="RemoteServersFile" value="App_Data/Settings/RemoteServers.xml" />

@@ -231,7 +231,6 @@
     <Compile Include="Abstracts\AppViewPage.cs" />
     <Compile Include="Abstracts\AuthController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Helpers\AppDbContext.cs" />
     <Compile Include="Helpers\ApplicationRoleManager.cs" />
     <Compile Include="Helpers\ApplicationSignInManager.cs" />
@@ -248,6 +247,7 @@
     <Compile Include="Helpers\JsonHelper.cs" />
     <Compile Include="Helpers\MailHelper.cs" />
     <Compile Include="Helpers\MembershipHelper.cs" />
+    <Compile Include="Helpers\StartupHelper.cs" />
     <Compile Include="SettingsHelpers\PageCacheHelper.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\PdfHelper.cs" />

@@ -69,7 +69,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKeywordValue(string name, PerformanceMode performanceMode)
         {
-            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
+            var keyValue = string.Empty;
 
             var performanceKey = uniqueKey + name;
 
@@ -84,7 +84,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKeywordValueFromSettings(string name)
         {
-            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
+            var keyValue = string.Empty;
 
             var xmlDoc = new XmlDocument();
 
