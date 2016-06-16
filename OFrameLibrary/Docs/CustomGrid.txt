@@ -1,0 +1,82 @@
+﻿
+@if (Model != null && Model.ListData.Any())
+{
+    <div class="row">
+        <div class="col-md-6">
+            <a href="@Url.Action("Test", "Menus", new
+                {
+                    SortKey = "TitleEn",
+                    SortDirection = Model.SortDirection,
+                    PageSize = Model.Pager.PageSize
+                })">
+                Title
+            </a>
+        </div>
+        <div class="col-md-6">
+            <a href="@Url.Action("Test", "Menus", new
+                {
+                    SortKey = "Price",
+                    SortDirection = Model.SortDirection,
+                    PageSize = Model.Pager.PageSize
+                })">
+                Price
+            </a>
+        </div>
+    </div>
+
+    foreach (var item in Model.ListData)
+    {
+        <div class="row">
+            <div class="col-md-6">
+                @item.TitleEn
+            </div>
+            <div class="col-md-6">
+                @item.Price
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        @if (Model.Pager.Pages != null)
+        {
+            foreach (var page in Model.Pager.Pages)
+            {
+                <text>
+                    <a href="@Url.Action("Test", "Menus", new
+                        {
+                            CurrentPage = page.PageNumber,
+                            SortKey = page.SortKey,
+                            SortDirection = page.SortDirection,
+                            PageSize = Model.Pager.PageSize
+                        })"
+                    class="@page.CssClass">
+                    @page.Text
+                    </a>
+                </text>
+            }
+        }
+    </div>
+}
+
+
+
+public ActionResult Test(string CategoryID, PagerArgs args)
+        {
+            using (var context = new IstikanaEntities())
+            {
+                var gm = Utilities.GetGridModel<Menu>(args, "MenuID");
+
+                if (string.IsNullOrWhiteSpace(CategoryID))
+                {
+                    gm.ListData = context.Menus.UpdateGridModelList<Menu>(gm).ToList();
+                }
+                else
+                {
+                    var categoryID = DataParser.LongParse(CategoryID);
+
+                    gm.ListData = context.Menus.Where(c => c.CategoryID == categoryID).UpdateGridModelList<Menu>(gm).ToList();
+                }
+
+                return View(gm);
+            }
+        }

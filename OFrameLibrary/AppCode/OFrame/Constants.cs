@@ -12,6 +12,7 @@
             public const string GridViewSortExpression = "_GridViewSortExpression__";
             public const string GuestEmailIDCookieKey = "_GuestEmailID__";
             public const string PrintSettingsKey = "_PrintSettings__";
+            public const string CurrentCultureSessionKey = "_CurrentCultureSessionKey__";
         }
 
         public static class Messages

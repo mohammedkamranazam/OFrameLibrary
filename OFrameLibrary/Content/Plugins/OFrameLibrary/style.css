@@ -1,0 +1,115 @@
+﻿
+@media (max-width: 600px) {
+    /* CSS Responsive table */
+    table.responsive,
+    table.responsive thead,
+    table.responsive tbody,
+    table.responsive th,
+    table.responsive td,
+    table.responsive tr {
+        display: block;
+    }
+
+        table.responsive thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+
+        table.responsive tr {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        table.responsive td {
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 50%;
+        }
+
+            table.responsive td:before {
+                top: 6px;
+                left: 6px;
+                width: 40%;
+                padding-right: 10px;
+                text-align: left;
+                word-wrap: break-word;
+                font-weight: bold;
+            }
+
+        table.responsive tr:first-child {
+            /*position: absolute;
+            top: -9999px;
+            left: -9999px;*/
+        }
+
+        table.responsive td:before {
+            content: attr(data-content);
+            height: 50px;
+        }
+
+        table.responsive td.small-padding {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        table.responsive td.medium-padding {
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        table.responsive td.large-padding {
+            padding-top: 25px;
+            padding-bottom: 25px;
+        }
+}
+
+
+.loader {
+    margin: 0px auto;
+    font-size: 10px;
+    position: relative;
+    text-indent: -9999em;
+    border-top: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-right: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
+    border-left: 1.1em solid #ffffff;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 1.1s infinite linear;
+    animation: load8 1.1s infinite linear;
+    top: 50%;
+}
+
+    .loader,
+    .loader:after {
+        border-radius: 50%;
+        width: 10em;
+        height: 10em;
+    }
+
+@-webkit-keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load8 {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}

@@ -1,0 +1,41 @@
+﻿
+<div class="btn-group">
+    @{
+        string locale = Session["__CurrentCultureSessionKey__"].ToString();
+    }
+
+    <button class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" type="button">
+        @OFrameLibrary.SettingsHelpers.LanguageHelper.GetLanguages().Where(c => c.Locale == locale).FirstOrDefault().Name
+        <span class="caret"></span>
+    </button>
+
+    <ul class="dropdown-menu">
+        @{
+            var languages = OFrameLibrary.SettingsHelpers.LanguageHelper.GetLanguages().Where(x => x.Locale != locale);
+
+            RouteValueDictionary rtvs = new RouteValueDictionary(ViewContext.RouteData.Values);
+
+            foreach (string key in Request.QueryString.Keys)
+            {
+                if (!rtvs.ContainsKey(key))
+                {
+                    rtvs.Add(key, HttpContext.Current.Request.QueryString[key]);
+                }
+            }
+
+            foreach (var language in languages)
+            {
+                if (!rtvs.ContainsKey("Lang"))
+                {
+                    rtvs.Add("Lang", language.Locale);
+                }
+                else
+                {
+                    rtvs["Lang"] = language.Locale;
+                }
+
+                <li>@Html.ActionLink(language.Name, OFrameLibrary.Util.Utilities.GetCurrentActionName(), routeValues: rtvs)</li>
+            }
+        }
+    </ul>
+</div>
