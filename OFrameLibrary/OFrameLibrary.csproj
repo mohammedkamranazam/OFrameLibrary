@@ -64,6 +64,10 @@
       <HintPath>..\packages\itextsharp.xmlworker.5.5.9\lib\itextsharp.xmlworker.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="JsonDiffPatchDotNet, Version=1.0.5.0, Culture=neutral, PublicKeyToken=a407b9994a6d66d5, processorArchitecture=MSIL">
+      <HintPath>..\packages\JsonDiffPatch.Net.1.0.5.0\lib\net45\JsonDiffPatchDotNet.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MCPG.ASP.net.ENC">
       <HintPath>..\packages\CCAvenue\MCPG.ASP.net.ENC.dll</HintPath>
     </Reference>
