@@ -8,9 +8,9 @@ namespace OFrameLibrary.Helpers
     {
         public static void GenerateQRCode(string code, string path)
         {
-            QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            QRCodeGenerator.QRCode qrCode = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.M);
-            System.Web.UI.WebControls.Image imgBarCode = new System.Web.UI.WebControls.Image();
+            var qrGenerator = new QRCodeGenerator();
+            var qrCode = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.M);
+            var imgBarCode = new System.Web.UI.WebControls.Image();
             imgBarCode.Height = 100;
             imgBarCode.Width = 100;
             using (Bitmap bitMap = qrCode.GetGraphic(20))
