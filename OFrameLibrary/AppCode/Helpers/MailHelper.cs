@@ -98,7 +98,7 @@ namespace OFrameLibrary.Helpers
 
         public static string CleanUpPlaceHolders(string body, int lastCount)
         {
-            var maxCount = DataParser.IntParse(KeywordsHelper.GetKeywordValue("MaxPlaceHoldersCount"));
+            var maxCount = KeywordsHelper.GetKeywordValue("MaxPlaceHoldersCount").IntParse();
 
             for (var xCount = lastCount + 1; xCount < maxCount; xCount++)
             {
