@@ -334,8 +334,8 @@
     <Content Include="App_Data\Settings\PageSEO.xml" />
     <Content Include="App_Data\Settings\RemoteServers.xml" />
     <Content Include="App_Data\Settings\ValidationSettings.xml" />
-    <Content Include="Content\Plugins\OFrameLibrary\oframe.js" />
-    <Content Include="Content\Plugins\OFrameLibrary\style.css" />
+    <Content Include="Content\Plugins\OFrame\oframe.js" />
+    <Content Include="Content\Plugins\OFrame\style.css" />
     <Content Include="Docs\CustomGrid.txt" />
     <Content Include="Docs\LanguageSelector.txt" />
     <Content Include="Service References\ASPSMSX2\configuration.svcinfo" />
