@@ -261,7 +261,7 @@ Array.prototype.clean = function (deleteValue) {
 
 }(jQuery));
 
-(function ($) {
+;(function ($) {
     $.fn.ngResponsiveTables = function (options) {
         var defaults = {
             smallPaddingCharNo: 5,
