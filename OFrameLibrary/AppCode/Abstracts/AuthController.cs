@@ -12,10 +12,10 @@ namespace OFrameLibrary.Abstracts
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
 
-        AuthController()
+        protected AuthController()
         { }
 
-        AuthController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ApplicationRoleManager roleManager)
+        protected AuthController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
