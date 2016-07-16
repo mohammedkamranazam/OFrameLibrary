@@ -204,7 +204,7 @@ namespace OFrameLibrary.Util
             return fr;
         }
 
-        public static bool ValidateFileType(string extension, FileType fileType)
+        public static bool ValidateFileType(string extension, FileType fileType, string customExtensions = "")
         {
             string[] imageExtensions = { ".png", ".bmp", ".jpeg", ".jpg", ".gif" };
 
@@ -229,6 +229,10 @@ namespace OFrameLibrary.Util
 
                 case FileType.PDF:
                     extensions = pdfExtensions;
+                    break;
+
+                case FileType.Custom:
+                    extensions = customExtensions.GetIDList<string>().ToArray();
                     break;
             }
 

@@ -11,7 +11,6 @@ Array.prototype.clean = function (deleteValue) {
     return this;
 };
 
-
 ; (function ($) {
     var toggler = function (opt) {
         var options = $.extend({}, {
@@ -205,13 +204,13 @@ Array.prototype.clean = function (deleteValue) {
     var ajaxForm = function (opt) {
         var options = $.extend({}, {
             Success: function (response, status) {
-                alert(response + " | " + status)
+                //alert(response + " | " + status);
             },
             Error: function (response, status) {
-                alert(response + " | " + status)
+                //alert(response + " | " + status);
             },
-            Begin: function () {
-                alert("Before")
+            Begin: function (formData) {
+                //alert("Before");
             },
             Progress: function (e, object) {
                 if (e.lengthComputable) {
@@ -243,7 +242,9 @@ Array.prototype.clean = function (deleteValue) {
                             }
                             return myXhr;
                         },
-                        beforeSend: options.Begin,
+                        beforeSend: function () {
+                            options.Begin(formData);
+                        },
                         success: options.Success,
                         error: options.Error,
                         data: formData,
@@ -261,7 +262,7 @@ Array.prototype.clean = function (deleteValue) {
 
 }(jQuery));
 
-;(function ($) {
+; (function ($) {
     $.fn.ngResponsiveTables = function (options) {
         var defaults = {
             smallPaddingCharNo: 5,
@@ -312,7 +313,6 @@ Array.prototype.clean = function (deleteValue) {
     };
 
 }(jQuery));
-
 
 
 
