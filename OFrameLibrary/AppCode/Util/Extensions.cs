@@ -1,6 +1,8 @@
-﻿using OFrameLibrary.Models;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
@@ -14,6 +16,34 @@ namespace OFrameLibrary.Util
 {
     public static class Extensions
     {
+        public static List<T> ValidateJsonModel<T>(this string json)
+        {
+            var models = new List<T>();
+            var translationValid = false;
+
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                models = JsonHelper.JsonDeserialize<List<T>>(json);
+
+                foreach (var model in models)
+                {
+                    translationValid = ValidateModel(model);
+
+                    if (!translationValid)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return (translationValid) ? models : null;
+        }
+
+        public static bool ValidateModel<T>(this T model)
+        {
+            return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, serviceProvider: null, items: null), new List<ValidationResult>());
+        }
+
         public static void BuildPager<T>(this GridModel<T> gm)
         {
             gm.Pager.TotalPages = (int)Math.Ceiling(Decimal.Divide(gm.Count, gm.Pager.PageSize));
@@ -362,6 +392,6 @@ namespace OFrameLibrary.Util
         //    }
         //}
 
-        
+
     }
 }

@@ -143,7 +143,7 @@ namespace OFrameLibrary.Util
             return false;
         }
 
-        public static FileUploadResult UploadFile(HttpPostedFileBase content, FileUploadSettings fs)
+        public static FileUploadResult UploadFile(HttpPostedFileBase content, FileUploadSettings fs, string customExtensions = "")
         {
             var fr = new FileUploadResult();
             fr.IsSuccess = false;
@@ -169,7 +169,7 @@ namespace OFrameLibrary.Util
 
                     var extension = Path.GetExtension(content.FileName);
 
-                    if (ValidateFileType(extension, fs.FileType))
+                    if (ValidateFileType(extension, fs.FileType, customExtensions))
                     {
                         fr.InvalidFileType = false;
 
