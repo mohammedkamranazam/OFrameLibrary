@@ -158,11 +158,7 @@ namespace OFrameLibrary.Helpers
 
             token = msg;
 
-            smtp.SendAsync(msg, token);
-
-            msg.Dispose();
-
-            return Task.FromResult(0);
+            return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
         public static void SendUsingRelayWithAttachments(IdentityMessage message, List<Attachment> attachments)
@@ -191,11 +187,7 @@ namespace OFrameLibrary.Helpers
 
             token = msg;
 
-            smtp.SendAsync(msg, token);
-
-            msg.Dispose();
-
-            return Task.FromResult(0);
+            return Task.Run(() => smtp.SendAsync(msg, token));            
         }
 
         public static void SendUsingSmtp(IdentityMessage message)
@@ -232,11 +224,7 @@ namespace OFrameLibrary.Helpers
 
             token = msg;
 
-            smtp.SendAsync(msg, token);
-
-            msg.Dispose();
-
-            return Task.FromResult(0);
+            return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
         public static void SendUsingSmtpWithAttachments(IdentityMessage message, List<Attachment> attachments)
@@ -277,11 +265,7 @@ namespace OFrameLibrary.Helpers
 
             token = msg;
 
-            smtp.SendAsync(msg, token);
-
-            msg.Dispose();
-
-            return Task.FromResult(0);
+            return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
         public static void smtp_SendCompleted(object sender, AsyncCompletedEventArgs e)
