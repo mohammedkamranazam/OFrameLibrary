@@ -22,7 +22,7 @@ namespace OFrameLibrary.Models
         /// <summary>
         /// The actual list of records returned to the view for rendering
         /// </summary>
-        public List<T> ListData { get; set; }
+        public object ListData { get; set; }
 
         /// <summary>
         /// The pager data
