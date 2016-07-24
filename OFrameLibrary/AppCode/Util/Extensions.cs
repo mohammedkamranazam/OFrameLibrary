@@ -44,7 +44,7 @@ namespace OFrameLibrary.Util
             return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, serviceProvider: null, items: null), new List<ValidationResult>());
         }
 
-        public static void BuildPager<T>(this GridModel<T> gm)
+        public static void BuildPager(this GridModel gm)
         {
             gm.Pager.TotalPages = (int)Math.Ceiling(Decimal.Divide(gm.Count, gm.Pager.PageSize));
 
@@ -141,7 +141,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        public static IQueryable<T> UpdateGridModelList<T>(this IQueryable<T> entitySet, GridModel<T> gm)
+        public static IQueryable<T> UpdateGridModelList<T>(this IQueryable<T> entitySet, GridModel gm)
         {
             gm.Count = entitySet.Count();
 

@@ -18,11 +18,11 @@ namespace OFrameLibrary.Util
 {
     public static class Utilities
     {
-        public static GridModel<T> GetGridModel<T>(
+        public static GridModel GetGridModel(
             PagerArgs args,
             string DefaultSortKey)
         {
-            var gm = new GridModel<T>();
+            var gm = new GridModel();
 
             gm.Pager = new GridPager();
             gm.Pager.Pages = new List<GridPage>();

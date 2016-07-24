@@ -2,7 +2,7 @@
 
 namespace OFrameLibrary.Models
 {
-    public class GridModel<T>
+    public class GridModel
     {
         /// <summary>
         /// Total records In The Database
