@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
+using System.Linq;
 
 namespace OFrameLibrary.Abstracts
 {
@@ -40,6 +41,14 @@ namespace OFrameLibrary.Abstracts
             get
             {
                 return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey);
+            }
+        }
+
+        protected string LocaleName
+        {
+            get
+            {
+                return LanguageHelper.GetLanguages().FirstOrDefault(c => c.Locale == Locale)?.Name;
             }
         }
 
