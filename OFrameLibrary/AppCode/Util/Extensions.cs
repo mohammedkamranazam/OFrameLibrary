@@ -16,32 +16,56 @@ namespace OFrameLibrary.Util
 {
     public static class Extensions
     {
-        public static List<T> ValidateJsonModel<T>(this string json)
+        public static JsonValidationResult<T> ValidateJsonModel<T>(this string json)
         {
-            var models = new List<T>();
-            var translationValid = false;
+            var vr = new JsonValidationResult<T>();
+
+            vr.Model = new List<T>();
 
             if (!string.IsNullOrWhiteSpace(json))
             {
-                models = JsonHelper.JsonDeserialize<List<T>>(json);
+                vr.IsJsonEmpty = false;
 
-                foreach (var model in models)
+                try
                 {
-                    translationValid = ValidateModel(model);
+                    vr.Model = JsonHelper.JsonDeserialize<List<T>>(json);
 
-                    if (!translationValid)
+                    vr.IsJsonDeserialized = true;
+
+                    if (vr.Model.Any())
                     {
-                        break;
+                        vr.IsModelEmpty = false;
+                        vr.Message = "Model Not Empty And Valid";
+
+                        foreach (var model in vr.Model)
+                        {
+                            if (!ValidateModel(model))
+                            {
+                                vr.IsModelValid = false;
+
+                                vr.Message = "Model Not Empty And Invalid";
+
+                                break;
+                            }
+                        }
                     }
+                    else
+                    {
+                        vr.Message = "Model Empty And Valid";
+                    }
+                }
+                catch
+                {
+                    vr.Message = "Json Deserialization Failed";
                 }
             }
 
-            return (translationValid) ? models : null;
+            return vr;
         }
 
         public static bool ValidateModel<T>(this T model)
         {
-            return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, serviceProvider: null, items: null), new List<ValidationResult>());
+            return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, null, null), new List<ValidationResult>());
         }
 
         public static void BuildPager(this GridModel gm)

@@ -413,13 +413,27 @@ namespace OFrameLibrary.SettingsHelpers
             return string.Format("{0}#{1};", locale, GetLocaleName(locale));
         }
 
-        public static string GetLocalesHash(List<Translation> translation)
+        public static string GetLocalesHash(List<Translator> translations)
         {
-            var locales = translation.Select(c => c.Locale).ToList();            
+            var locales = translations.Select(c => c.Locale).ToList();            
 
             locales = locales.Select(c => GetLocaleHash(c)).ToList();
 
             return locales.ToArray<string>().Join("");
+        }
+        
+        public static string GetTranslation(List<Translator> translations, string locale)
+        {
+            var transText = translations.FirstOrDefault(d => d.Locale == locale);
+
+            if (transText != null)
+            {
+                return transText.Text;
+            }
+            else
+            {
+                return string.Format("No Translation Found For Language: {0}", LanguageHelper.GetLocaleName(locale));
+            }
         }
     }
 }
