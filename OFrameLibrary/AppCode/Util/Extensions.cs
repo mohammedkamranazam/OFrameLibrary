@@ -1,6 +1,8 @@
-﻿using OFrameLibrary.Models;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Dynamic;
@@ -14,7 +16,59 @@ namespace OFrameLibrary.Util
 {
     public static class Extensions
     {
-        public static void BuildPager<T>(this GridModel<T> gm)
+        public static JsonValidationResult<T> ValidateJsonModel<T>(this string json)
+        {
+            var vr = new JsonValidationResult<T>();
+
+            vr.Model = new List<T>();
+
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                vr.IsJsonEmpty = false;
+
+                try
+                {
+                    vr.Model = JsonHelper.JsonDeserialize<List<T>>(json);
+
+                    vr.IsJsonDeserialized = true;
+
+                    if (vr.Model.Any())
+                    {
+                        vr.IsModelEmpty = false;
+                        vr.Message = "Model Not Empty And Valid";
+
+                        foreach (var model in vr.Model)
+                        {
+                            if (!ValidateModel(model))
+                            {
+                                vr.IsModelValid = false;
+
+                                vr.Message = "Model Not Empty And Invalid";
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        vr.Message = "Model Empty And Valid";
+                    }
+                }
+                catch
+                {
+                    vr.Message = "Json Deserialization Failed";
+                }
+            }
+
+            return vr;
+        }
+
+        public static bool ValidateModel<T>(this T model)
+        {
+            return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, null, null), new List<ValidationResult>());
+        }
+
+        public static void BuildPager(this GridModel gm)
         {
             gm.Pager.TotalPages = (int)Math.Ceiling(Decimal.Divide(gm.Count, gm.Pager.PageSize));
 
@@ -111,7 +165,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        public static IQueryable<T> UpdateGridModelList<T>(this IQueryable<T> entitySet, GridModel<T> gm)
+        public static IQueryable<T> UpdateGridModelList<T>(this IQueryable<T> entitySet, GridModel gm)
         {
             gm.Count = entitySet.Count();
 
@@ -362,6 +416,6 @@ namespace OFrameLibrary.Util
         //    }
         //}
 
-        
+
     }
 }

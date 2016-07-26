@@ -18,11 +18,11 @@ namespace OFrameLibrary.Util
 {
     public static class Utilities
     {
-        public static GridModel<T> GetGridModel<T>(
+        public static GridModel GetGridModel(
             PagerArgs args,
             string DefaultSortKey)
         {
-            GridModel<T> gm = new GridModel<T>();
+            var gm = new GridModel();
 
             gm.Pager = new GridPager();
             gm.Pager.Pages = new List<GridPage>();
@@ -33,7 +33,7 @@ namespace OFrameLibrary.Util
             }
             else
             {
-                gm.Pager.CurrentPage = DataParser.IntParse(args.CurrentPage);
+                gm.Pager.CurrentPage = args.CurrentPage.IntParse();
             }
 
             if (string.IsNullOrWhiteSpace(args.PageSize))
@@ -42,7 +42,7 @@ namespace OFrameLibrary.Util
             }
             else
             {
-                gm.Pager.PageSize = DataParser.IntParse(args.PageSize);
+                gm.Pager.PageSize = args.PageSize.IntParse();
             }
 
             if (string.IsNullOrWhiteSpace(args.PagerCount))
@@ -51,7 +51,7 @@ namespace OFrameLibrary.Util
             }
             else
             {
-                gm.Pager.PagerCount = DataParser.IntParse(args.PagerCount);
+                gm.Pager.PagerCount = args.PagerCount.IntParse();
             }
 
             if (string.IsNullOrWhiteSpace(args.SortKey))
@@ -80,8 +80,8 @@ namespace OFrameLibrary.Util
             controller.ViewData.Model = model;
             using (StringWriter sw = new StringWriter())
             {
-                ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, viewName);
-                ViewContext viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw);
+                var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, viewName);
+                var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw);
                 viewResult.View.Render(viewContext, sw);
 
                 return sw.ToString();
@@ -107,7 +107,7 @@ namespace OFrameLibrary.Util
 
             if (insertSelect)
             {
-                SelectListItem item = new SelectListItem();
+                var item = new SelectListItem();
                 item.Selected = (string.IsNullOrWhiteSpace(selectedValue) && selected);
                 item.Text = label;
                 item.Value = value;
@@ -143,9 +143,9 @@ namespace OFrameLibrary.Util
             return false;
         }
 
-        public static FileUploadResult UploadFile(HttpPostedFileBase content, FileUploadSettings fs)
+        public static FileUploadResult UploadFile(HttpPostedFileBase content, FileUploadSettings fs, string customExtensions = "")
         {
-            FileUploadResult fr = new FileUploadResult();
+            var fr = new FileUploadResult();
             fr.IsSuccess = false;
             fr.NoFileSelected = true;
             fr.FileSizeInvalid = true;
@@ -169,13 +169,13 @@ namespace OFrameLibrary.Util
 
                     var extension = Path.GetExtension(content.FileName);
 
-                    if (ValidateFileType(extension, fs.FileType))
+                    if (ValidateFileType(extension, fs.FileType, customExtensions))
                     {
                         fr.InvalidFileType = false;
 
-                        string fileName = string.Format("{0}{1}", Guid.NewGuid().ToString().Replace("-", "").ToLower(), extension);
-                        string relativePath = fs.StoragePath + fileName;
-                        string absolutePath = relativePath.MapPath();
+                        var fileName = string.Format("{0}{1}", Guid.NewGuid().ToString().Replace("-", "").ToLower(), extension);
+                        var relativePath = fs.StoragePath + fileName;
+                        var absolutePath = relativePath.MapPath();
 
                         try
                         {
@@ -204,15 +204,15 @@ namespace OFrameLibrary.Util
             return fr;
         }
 
-        public static bool ValidateFileType(string extension, FileType fileType)
+        public static bool ValidateFileType(string extension, FileType fileType, string customExtensions = "")
         {
-            string[] imageExtensions = new string[] { ".png", ".bmp", ".jpeg", ".jpg", ".gif" };
+            string[] imageExtensions = { ".png", ".bmp", ".jpeg", ".jpg", ".gif" };
 
-            string[] docExtensions = new string[] { ".pdf", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".pps", ".ppsx" };
+            string[] docExtensions = { ".pdf", ".txt", ".doc", ".docx", ".xls", ".xlsx", ".pps", ".ppsx" };
 
-            string[] pdfExtensions = new string[] { ".pdf" };
+            string[] pdfExtensions = { ".pdf" };
 
-            string[] extensions = new string[] { };
+            string[] extensions = { };
 
             switch (fileType)
             {
@@ -230,6 +230,10 @@ namespace OFrameLibrary.Util
                 case FileType.PDF:
                     extensions = pdfExtensions;
                     break;
+
+                case FileType.Custom:
+                    extensions = customExtensions.GetIDList<string>().ToArray();
+                    break;
             }
 
             return extensions.Contains(extension.ToLower());
@@ -237,7 +241,7 @@ namespace OFrameLibrary.Util
 
         public static string GenerateSlug(string phrase)
         {
-            string str = RemoveAccent(phrase).ToLower();
+            var str = RemoveAccent(phrase).ToLower();
 
             str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // invalid chars
             str = Regex.Replace(str, @"\s+", " ").Trim(); // convert multiple spaces into one space
@@ -249,7 +253,7 @@ namespace OFrameLibrary.Util
 
         public static string RemoveAccent(string txt)
         {
-            byte[] bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
+            var bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
             return System.Text.Encoding.ASCII.GetString(bytes);
         }
 
@@ -291,7 +295,7 @@ namespace OFrameLibrary.Util
         {
             var tagsList = tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var tag in tagsList)
             {
@@ -393,10 +397,7 @@ namespace OFrameLibrary.Util
 
                 foreach (var pattern in patterns)
                 {
-                    if (dir.GetFiles(pattern, SearchOption.AllDirectories).Length > 0)
-                    {
-                        add = true;
-                    }
+                    add |= dir.GetFiles(pattern, SearchOption.AllDirectories).Length > 0;
                 }
 
                 if (add)
@@ -442,7 +443,7 @@ namespace OFrameLibrary.Util
                 case HttpCacheability.Public:
                 case HttpCacheability.ServerAndPrivate:
                 case HttpCacheability.Server:
-                    TimeSpan freshness = new TimeSpan(0, 0, 0, entity.Minutes);
+                    var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
                     DateTime now = DateTime.Now;
                     HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
                     HttpContext.Current.Response.Cache.SetMaxAge(freshness);
@@ -644,7 +645,7 @@ namespace OFrameLibrary.Util
             return string.Format("http{0}://{1}{2}{3}",
             (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
             HttpContext.Current.Request.Url.Host,
-            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port.ToString()) : "",
+            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
             url);
         }
 
@@ -675,10 +676,10 @@ namespace OFrameLibrary.Util
                 extraPath = RelativePath.Remove(0, 1);
             }
 
-            string AbsoluteReturnUrlPath = string.Format("http{0}://{1}{2}{3}",
+            var AbsoluteReturnUrlPath = string.Format("http{0}://{1}{2}{3}",
             (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
             HttpContext.Current.Request.Url.Host,
-            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port.ToString()) : "",
+            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
             extraPath);
 
             return AbsoluteReturnUrlPath;
@@ -701,7 +702,7 @@ namespace OFrameLibrary.Util
 
         public static string GetHTML(Control ctrl, string Script)
         {
-            HtmlForm frm = new HtmlForm();
+            var frm = new HtmlForm();
             using (Page pg = new Page())
             {
                 HttpContext.Current.Response.Clear();
@@ -751,8 +752,8 @@ namespace OFrameLibrary.Util
 
         public static string GetRandomString(int length)
         {
-            StringBuilder builder = new StringBuilder();
-            Random random = new Random();
+            var builder = new StringBuilder();
+            var random = new Random();
 
             char ch;
 
@@ -1083,7 +1084,7 @@ namespace OFrameLibrary.Util
                 "Western Sahara",
                 "Yemen",
                 "Zambia",
-                "Zimbabwe",
+                "Zimbabwe"
             };
         }
 

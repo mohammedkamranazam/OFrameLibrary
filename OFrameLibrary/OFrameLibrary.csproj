@@ -65,10 +65,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="MCPG.ASP.net.ENC">
-      <HintPath>..\packages\CCAvenue\MCPG.ASP.net.ENC.dll</HintPath>
+      <HintPath>..\packages\Oframe\MCPG.ASP.net.ENC.dll</HintPath>
     </Reference>
     <Reference Include="MCPG.CCA.Util">
-      <HintPath>..\packages\CCAvenue\MCPG.CCA.Util.dll</HintPath>
+      <HintPath>..\packages\Oframe\MCPG.CCA.Util.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -135,10 +135,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="QRCoder">
-      <HintPath>..\packages\QRCoder\QRCoder.dll</HintPath>
+      <HintPath>..\packages\Oframe\QRCoder.dll</HintPath>
     </Reference>
     <Reference Include="Recaptcha">
-      <HintPath>..\packages\Recaptcha\Recaptcha.dll</HintPath>
+      <HintPath>..\packages\Oframe\Recaptcha.dll</HintPath>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
@@ -168,8 +168,9 @@
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
-    <Reference Include="System.Linq.Dynamic">
-      <HintPath>..\..\OFrameCMS - MVC\Code\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+    <Reference Include="System.Linq.Dynamic, Version=1.0.5840.25917, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Linq.Dynamic.1.0.6\lib\net40\System.Linq.Dynamic.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Net" />
     <Reference Include="System.Net.Http" />
@@ -229,6 +230,8 @@
     <Compile Include="AppCode\Abstracts\AppController.cs" />
     <Compile Include="AppCode\Abstracts\AppViewPage.cs" />
     <Compile Include="AppCode\Abstracts\AuthController.cs" />
+    <Compile Include="AppCode\Models\JsonValidationResult.cs" />
+    <Compile Include="AppCode\Models\Translator.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="AppCode\Filters\LanguageSelectorFilter.cs" />
     <Compile Include="AppCode\Helpers\AppDbContext.cs" />
@@ -333,8 +336,8 @@
     <Content Include="App_Data\Settings\PageSEO.xml" />
     <Content Include="App_Data\Settings\RemoteServers.xml" />
     <Content Include="App_Data\Settings\ValidationSettings.xml" />
-    <Content Include="Content\Plugins\OFrameLibrary\oframe.js" />
-    <Content Include="Content\Plugins\OFrameLibrary\style.css" />
+    <Content Include="Content\Plugins\OFrame\oframe.js" />
+    <Content Include="Content\Plugins\OFrame\style.css" />
     <Content Include="Docs\CustomGrid.txt" />
     <Content Include="Docs\LanguageSelector.txt" />
     <Content Include="Service References\ASPSMSX2\configuration.svcinfo" />
