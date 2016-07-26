@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Xml;
+using System.Linq;
+
 
 namespace OFrameLibrary.SettingsHelpers
 {
@@ -399,6 +401,25 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        public static string GetLocaleName(string locale)
+        {
+            return LanguageHelper.GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
+        }
+
+        public static string GetLocaleHash(string locale)
+        {
+            return string.Format("{0}#{1};", locale, GetLocaleName(locale));
+        }
+
+        public static string GetLocalesHash(List<Translation> translation)
+        {
+            var locales = translation.Select(c => c.Locale).ToList();            
+
+            locales = locales.Select(c => GetLocaleHash(c)).ToList();
+
+            return locales.ToArray<string>().Join("");
         }
     }
 }

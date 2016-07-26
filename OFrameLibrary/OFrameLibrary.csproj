@@ -230,6 +230,7 @@
     <Compile Include="AppCode\Abstracts\AppController.cs" />
     <Compile Include="AppCode\Abstracts\AppViewPage.cs" />
     <Compile Include="AppCode\Abstracts\AuthController.cs" />
+    <Compile Include="AppCode\Models\Translation.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="AppCode\Filters\LanguageSelectorFilter.cs" />
     <Compile Include="AppCode\Helpers\AppDbContext.cs" />
