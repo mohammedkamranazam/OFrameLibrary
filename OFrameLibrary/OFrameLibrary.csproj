@@ -287,7 +287,6 @@
     <Compile Include="AppCode\Models\TagCloudItemCollection.cs" />
     <Compile Include="AppCode\OFrame\AppConfig.cs" />
     <Compile Include="AppCode\OFrame\Constants.cs" />
-    <Compile Include="AppCode\OFrame\DynamicLinq.cs" />
     <Compile Include="AppCode\OFrame\Enums.cs" />
     <Compile Include="AppCode\OFrame\LocalStorages.cs" />
     <Compile Include="AppCode\OFrame\TagCloud.cs" />
