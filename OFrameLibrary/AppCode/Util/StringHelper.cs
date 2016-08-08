@@ -10,7 +10,7 @@ namespace OFrameLibrary.Util
     {
         public static string TruncateFromHere(string content)
         {
-            int position = content.IndexOf("{TRUNCATE-HERE}", 0);
+            var position = content.IndexOf("{TRUNCATE-HERE}", 0);
 
             if (position > 0)
             {
@@ -29,9 +29,9 @@ namespace OFrameLibrary.Util
 
         public static ListItem GetKey(Match match)
         {
-            string key = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
+            var key = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
 
-            string[] keyParts = key.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            var keyParts = key.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             return new ListItem(keyParts[0], keyParts[1]);
         }
@@ -40,9 +40,9 @@ namespace OFrameLibrary.Util
         {
             const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
 
-            Regex r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-            MatchCollection mc = r.Matches(content);
+            var mc = r.Matches(content);
 
             if (mc.Count > 0)
             {
@@ -58,7 +58,7 @@ namespace OFrameLibrary.Util
         {
             const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
 
-            Regex r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
             return r.Replace(content, string.Empty);
         }
@@ -149,8 +149,7 @@ namespace OFrameLibrary.Util
                 else if (!ignore)
                     textCount++;
 
-                if (c == '>')
-                    ignore = false;
+                ignore &= c != '>';
 
                 // stop once we hit the limit
                 if (textCount >= maxCharacters)

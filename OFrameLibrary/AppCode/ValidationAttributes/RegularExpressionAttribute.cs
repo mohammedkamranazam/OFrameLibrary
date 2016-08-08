@@ -7,9 +7,9 @@ namespace OFrameLibrary.ValidationAttributes
 {
     public class UniRegularExpressionAttribute : ValidationAttribute, IClientValidatable
     {
-        private string regularExpressionType;
-        private string message;
-        private string expression;
+        string regularExpressionType;
+        readonly string message;
+        readonly string expression;
 
         public UniRegularExpressionAttribute(string regularExpressionType)
         {
@@ -40,9 +40,9 @@ namespace OFrameLibrary.ValidationAttributes
         {
             bool required = metadata.IsRequired;
 
-            string errorMessage = string.Format(message, metadata.DisplayName);
+            var errorMessage = string.Format(message, metadata.DisplayName);
 
-            ModelClientValidationRule clientRule = new ModelClientValidationRule();
+            var clientRule = new ModelClientValidationRule();
             clientRule.ErrorMessage = errorMessage;
             clientRule.ValidationType = "uniregexp";
             clientRule.ValidationParameters.Add("regex", expression);

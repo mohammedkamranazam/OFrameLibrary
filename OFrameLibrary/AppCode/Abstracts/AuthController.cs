@@ -8,9 +8,9 @@ namespace OFrameLibrary.Abstracts
 {
     public abstract class AuthController : AppController
     {
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
-        private ApplicationRoleManager _roleManager;
+        ApplicationSignInManager _signInManager;
+        ApplicationUserManager _userManager;
+        ApplicationRoleManager _roleManager;
 
         protected AuthController()
         { }

@@ -13,7 +13,7 @@ namespace OFrameLibrary.Helpers
         {
             using (Document document = new Document())
             {
-                PdfWriter writer = PdfWriter.GetInstance(document, new FileStream(Path.Combine(path, filename), FileMode.Create));
+                var writer = PdfWriter.GetInstance(document, new FileStream(Path.Combine(path, filename), FileMode.Create));
                 document.Open();
                 XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, new StringReader(HTML));
             }
@@ -23,14 +23,14 @@ namespace OFrameLibrary.Helpers
 
         public static void WriteDataToPdf(string path, string filename)
         {
-            WebClient req = new WebClient();
+            var req = new WebClient();
             HttpResponse response = HttpContext.Current.Response;
             response.Clear();
             response.ClearContent();
             response.ClearHeaders();
             response.Buffer = true;
             response.AddHeader("Content-Disposition", "attachment;filename=\"" + filename);
-            byte[] data = req.DownloadData(path + filename);
+            var data = req.DownloadData(path + filename);
             response.BinaryWrite(data);
             response.End();
         }

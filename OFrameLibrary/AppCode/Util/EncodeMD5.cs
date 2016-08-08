@@ -9,9 +9,9 @@ namespace OFrameLibrary.Util
     {
         public static string Encode(string originalPassword)
         {
-            Byte[] originalBytes = ASCIIEncoding.Default.GetBytes(originalPassword);
+            var originalBytes = ASCIIEncoding.Default.GetBytes(originalPassword);
             MD5 md5 = new MD5CryptoServiceProvider();
-            Byte[] encodedBytes = md5.ComputeHash(originalBytes);
+            var encodedBytes = md5.ComputeHash(originalBytes);
 
             return Regex.Replace(BitConverter.ToString(encodedBytes), "-", string.Empty);
         }

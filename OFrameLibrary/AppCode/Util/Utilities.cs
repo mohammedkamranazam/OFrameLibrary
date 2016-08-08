@@ -119,7 +119,7 @@ namespace OFrameLibrary.Util
             return selectListItems;
         }
 
-        private static bool Select(SelectListItem x, bool takeValue, bool firendlyValue, string selectedValue)
+        static bool Select(SelectListItem x, bool takeValue, bool firendlyValue, string selectedValue)
         {
             if (!string.IsNullOrWhiteSpace(selectedValue))
             {
@@ -316,7 +316,7 @@ namespace OFrameLibrary.Util
             return sb.ToString();
         }
 
-        private static void ClearControls(Control control)
+        static void ClearControls(Control control)
         {
             for (var i = control.Controls.Count - 1; i >= 0; i--)
             {
@@ -354,7 +354,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        private static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode)
+        static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode)
         {
             foreach (var file in currentDir.GetFiles())
             {
@@ -363,7 +363,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        private static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
+        static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
         {
             foreach (var pattern in patterns)
             {
@@ -375,7 +375,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        private static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, bool skipFiles)
+        static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, bool skipFiles)
         {
             foreach (var dir in currentDir.GetDirectories())
             {
@@ -389,7 +389,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        private static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
+        static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
         {
             foreach (var dir in currentDir.GetDirectories())
             {
@@ -842,7 +842,7 @@ namespace OFrameLibrary.Util
             return GetCountriesArray().Select(x => new SelectListItem { Text = x, Value = x });
         }
 
-        private static List<string> GetCountriesArray()
+        static List<string> GetCountriesArray()
         {
             return new List<string>
             {

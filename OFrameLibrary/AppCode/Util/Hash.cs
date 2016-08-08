@@ -6,7 +6,7 @@ namespace OFrameLibrary.Util
 {
     public class Hash : IDisposable
     {
-        private HashAlgorithm mCryptoService;
+        HashAlgorithm mCryptoService;
 
         public void Dispose()
         {
@@ -55,7 +55,7 @@ namespace OFrameLibrary.Util
 
         public virtual string Encrypt(string plainText)
         {
-            byte[] cryptoByte = mCryptoService.ComputeHash(ASCIIEncoding.ASCII.GetBytes(plainText + Salt));
+            var cryptoByte = mCryptoService.ComputeHash(ASCIIEncoding.ASCII.GetBytes(plainText + Salt));
 
             return Convert.ToBase64String(cryptoByte, 0, cryptoByte.Length);
         }

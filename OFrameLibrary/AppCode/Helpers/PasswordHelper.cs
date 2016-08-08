@@ -6,17 +6,17 @@ namespace OFrameLibrary.Helpers
     public static class PasswordHelper
     {
         // Define default min and max password lengths.
-        private static int DEFAULT_MIN_PASSWORD_LENGTH = 8;
+        static int DEFAULT_MIN_PASSWORD_LENGTH = 8;
 
-        private static int DEFAULT_MAX_PASSWORD_LENGTH = 10;
+        static int DEFAULT_MAX_PASSWORD_LENGTH = 10;
 
         // Define supported password characters divided into groups.
         // You can add (or remove) characters to (from) these groups.
-        private static string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
+        static string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
 
-        private static string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
-        private static string PASSWORD_CHARS_NUMERIC = "23456789";
-        private static string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
+        static string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
+        static string PASSWORD_CHARS_NUMERIC = "23456789";
+        static string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
 
         /// <summary>
         /// Generates a random password.
@@ -76,7 +76,7 @@ namespace OFrameLibrary.Helpers
             // Create a local array containing supported password characters
             // grouped by types. You can remove character groups from this
             // array, but doing so will weaken the password strength.
-            char[][] charGroups = new char[][]
+            var charGroups = new char[][]
         {
             PASSWORD_CHARS_LCASE.ToCharArray(),
             PASSWORD_CHARS_UCASE.ToCharArray(),
@@ -109,7 +109,7 @@ namespace OFrameLibrary.Helpers
             byte[] randomBytes = new byte[4];
 
             // Generate 4 random bytes.
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
+            var rng = new RNGCryptoServiceProvider();
             rng.GetBytes(randomBytes);
 
             // Convert 4 bytes into a 32-bit integer value.
@@ -119,7 +119,7 @@ namespace OFrameLibrary.Helpers
                         randomBytes[3];
 
             // Now, this is real randomization.
-            Random random = new Random(seed);
+            var random = new Random(seed);
 
             // This array will hold password characters.
             char[] password = null;

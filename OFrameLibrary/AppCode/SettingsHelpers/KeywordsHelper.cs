@@ -6,12 +6,12 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class KeywordsHelper
     {
-        private const string uniqueKey = "_KeywordsHelper_";
-        private const string xPath = "keys/key";
+        const string uniqueKey = "_KeywordsHelper_";
+        const string keyXPath = "keys/key";
 
-        private readonly static string fileName = AppConfig.KeywordsFile;
+        readonly static string fileName = AppConfig.KeywordsFile;
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;
@@ -32,7 +32,7 @@ namespace OFrameLibrary.SettingsHelpers
                 newKey.SetAttribute("name", name);
                 newKey.SetAttribute("value", value);
 
-                xmlDoc.SelectSingleNode(xPath).ParentNode.AppendChild(newKey);
+                xmlDoc.SelectSingleNode(keyXPath).ParentNode.AppendChild(newKey);
 
                 SaveXml(xmlDoc);
             }
@@ -46,7 +46,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var keys = xmlDoc.SelectNodes(xPath);
+                var keys = xmlDoc.SelectNodes(keyXPath);
 
                 foreach (XmlNode key in keys)
                 {
@@ -90,7 +90,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var keys = xmlDoc.SelectNodes(xPath);
+            var keys = xmlDoc.SelectNodes(keyXPath);
 
             foreach (XmlNode key in keys)
             {
@@ -112,7 +112,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var keys = xmlDoc.SelectNodes(xPath);
+            var keys = xmlDoc.SelectNodes(keyXPath);
 
             foreach (XmlNode key in keys)
             {
@@ -134,7 +134,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var keys = xmlDoc.SelectNodes(xPath);
+                var keys = xmlDoc.SelectNodes(keyXPath);
 
                 foreach (XmlNode key in keys)
                 {
