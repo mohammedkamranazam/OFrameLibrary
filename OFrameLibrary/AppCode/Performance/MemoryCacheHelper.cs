@@ -5,8 +5,8 @@ namespace OFrameLibrary.Performance
 {
     public static class MemoryCacheHelper
     {
-        private static ObjectCache memoryCache = MemoryCache.Default;
-        private static CacheItemPolicy policy;
+        static readonly ObjectCache memoryCache = MemoryCache.Default;
+        static CacheItemPolicy policy;
 
         public static void Add<T>(string key, T o)
         {
@@ -26,7 +26,7 @@ namespace OFrameLibrary.Performance
 
         public static bool Exists(string key)
         {
-            return (memoryCache.Contains(key)) ? true : false;
+            return (memoryCache.Contains(key));
         }
 
         public static bool Get<T>(string key, out T value)

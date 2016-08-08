@@ -8,23 +8,23 @@ namespace OFrameLibrary.Helpers
 {
     public static class FtpHelper
     {
-        private const string FTPProtocol = "ftp://";
+        const string FTPProtocol = "ftp://";
 
         public static void Delete(string filePath, string fileName, string ftpUserId, string ftpPassword, string ftpServerIP)
         {
             try
             {
-                string uri = string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, fileName));
+                var uri = string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, fileName));
 
-                FtpWebRequest reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(uri));
+                var reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(uri));
 
                 reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
                 reqFtp.KeepAlive = false;
                 reqFtp.Method = WebRequestMethods.Ftp.DeleteFile;
 
-                FtpWebResponse response = (FtpWebResponse)reqFtp.GetResponse();
-                Stream datastream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(datastream);
+                var response = (FtpWebResponse)reqFtp.GetResponse();
+                var datastream = response.GetResponseStream();
+                var sr = new StreamReader(datastream);
                 sr.Close();
                 datastream.Close();
                 response.Close();
@@ -41,14 +41,14 @@ namespace OFrameLibrary.Helpers
 
             try
             {
-                FileStream outputStream = new FileStream(Path.Combine(downloadFilePath, newFileName), FileMode.Create);
+                var outputStream = new FileStream(Path.Combine(downloadFilePath, newFileName), FileMode.Create);
 
-                reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(ftpFilePath, fileName))));
+                reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(ftpFilePath, fileName))));
                 reqFtp.Method = WebRequestMethods.Ftp.DownloadFile;
                 reqFtp.UseBinary = true;
                 reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
-                FtpWebResponse response = (FtpWebResponse)reqFtp.GetResponse();
-                Stream ftpStream = response.GetResponseStream();
+                var response = (FtpWebResponse)reqFtp.GetResponse();
+                var ftpStream = response.GetResponseStream();
                 const int bufferSize = 2048;
                 int readCount;
                 byte[] buffer = new byte[bufferSize];
@@ -73,18 +73,18 @@ namespace OFrameLibrary.Helpers
         public static string[] GetFileList(string path, string ftpUserId, string ftpPassword, string ftpServerIP)
         {
             string[] downloadFiles;
-            StringBuilder result = new StringBuilder();
+            var result = new StringBuilder();
             FtpWebRequest reqFtp;
             try
             {
-                reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, path)));
+                reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, path)));
                 reqFtp.UseBinary = true;
                 reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
                 reqFtp.Method = WebRequestMethods.Ftp.ListDirectory;
-                WebResponse response = reqFtp.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream());
+                var response = reqFtp.GetResponse();
+                var reader = new StreamReader(response.GetResponseStream());
 
-                string line = reader.ReadLine();
+                var line = reader.ReadLine();
                 while (line != null)
                 {
                     result.Append(line);
@@ -110,13 +110,13 @@ namespace OFrameLibrary.Helpers
             string[] downloadFiles;
             try
             {
-                StringBuilder result = new StringBuilder();
-                FtpWebRequest ftp = (FtpWebRequest)FtpWebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, path)));
+                var result = new StringBuilder();
+                var ftp = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, path)));
                 ftp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
                 ftp.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-                WebResponse response = ftp.GetResponse();
-                StreamReader reader = new StreamReader(response.GetResponseStream());
-                string line = reader.ReadLine();
+                var response = ftp.GetResponse();
+                var reader = new StreamReader(response.GetResponseStream());
+                var line = reader.ReadLine();
                 while (line != null)
                 {
                     result.Append(line);
@@ -143,12 +143,12 @@ namespace OFrameLibrary.Helpers
             long fileSize = 0;
             try
             {
-                reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, filename))));
+                reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, filename))));
                 reqFtp.Method = WebRequestMethods.Ftp.GetFileSize;
                 reqFtp.UseBinary = true;
                 reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
-                FtpWebResponse response = (FtpWebResponse)reqFtp.GetResponse();
-                Stream ftpStream = response.GetResponseStream();
+                var response = (FtpWebResponse)reqFtp.GetResponse();
+                var ftpStream = response.GetResponseStream();
                 fileSize = response.ContentLength;
 
                 ftpStream.Close();
@@ -169,7 +169,7 @@ namespace OFrameLibrary.Helpers
 
             try
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(path, dirName))));
+                var request = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(path, dirName))));
                 request.Method = WebRequestMethods.Ftp.ListDirectory;
                 request.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
 
@@ -184,7 +184,7 @@ namespace OFrameLibrary.Helpers
 
                 if (ex.Response != null)
                 {
-                    FtpWebResponse response = (FtpWebResponse)ex.Response;
+                    var response = (FtpWebResponse)ex.Response;
 
                     if (response.StatusCode == FtpStatusCode.ActionNotTakenFileUnavailable)
                     {
@@ -200,7 +200,7 @@ namespace OFrameLibrary.Helpers
         {
             bool initialized = true;
 
-            string[] directories = path.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var directories = path.Split(new char[] { '\\', '/' }, StringSplitOptions.RemoveEmptyEntries);
 
             string pathInsideWhichToCheck = string.Empty;
 
@@ -228,12 +228,12 @@ namespace OFrameLibrary.Helpers
             FtpWebRequest reqFtp;
             try
             {
-                reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(path, dirName))));
+                reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(path, dirName))));
                 reqFtp.Method = WebRequestMethods.Ftp.MakeDirectory;
                 reqFtp.UseBinary = true;
                 reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
-                FtpWebResponse response = (FtpWebResponse)reqFtp.GetResponse();
-                Stream ftpStream = response.GetResponseStream();
+                var response = (FtpWebResponse)reqFtp.GetResponse();
+                var ftpStream = response.GetResponseStream();
 
                 ftpStream.Close();
                 response.Close();
@@ -254,13 +254,13 @@ namespace OFrameLibrary.Helpers
             FtpWebRequest reqFtp;
             try
             {
-                reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, currentFilename))));
+                reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, currentFilename))));
                 reqFtp.Method = WebRequestMethods.Ftp.Rename;
                 reqFtp.RenameTo = newFilename;
                 reqFtp.UseBinary = true;
                 reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
-                FtpWebResponse response = (FtpWebResponse)reqFtp.GetResponse();
-                Stream ftpStream = response.GetResponseStream();
+                var response = (FtpWebResponse)reqFtp.GetResponse();
+                var ftpStream = response.GetResponseStream();
 
                 ftpStream.Close();
                 response.Close();
@@ -287,11 +287,11 @@ namespace OFrameLibrary.Helpers
         {
             bool success = false;
 
-            FileInfo fileInf = new FileInfo(filename);
+            var fileInf = new FileInfo(filename);
 
-            string uri = string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, fileInf.Name));
+            var uri = string.Format("{0}{1}/{2}", FTPProtocol, ftpServerIP, Path.Combine(filePath, fileInf.Name));
 
-            FtpWebRequest reqFtp = (FtpWebRequest)FtpWebRequest.Create(new Uri(uri));
+            var reqFtp = (FtpWebRequest)WebRequest.Create(new Uri(uri));
 
             reqFtp.Credentials = new NetworkCredential(ftpUserId, ftpPassword);
 
@@ -307,11 +307,11 @@ namespace OFrameLibrary.Helpers
             byte[] buff = new byte[buffLength];
             int contentLen;
 
-            FileStream fs = fileInf.OpenRead();
+            var fs = fileInf.OpenRead();
 
             try
             {
-                Stream strm = reqFtp.GetRequestStream();
+                var strm = reqFtp.GetRequestStream();
                 contentLen = fs.Read(buff, 0, buffLength);
 
                 while (contentLen != 0)
@@ -334,7 +334,7 @@ namespace OFrameLibrary.Helpers
             return success;
         }
 
-        private static string GetPathTillIndex(int tillIndex, string[] directories)
+        static string GetPathTillIndex(int tillIndex, string[] directories)
         {
             string stringTillIndex = string.Empty;
 

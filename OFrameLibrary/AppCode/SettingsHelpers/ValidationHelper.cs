@@ -8,14 +8,14 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ValidationHelper
     {
-        private const string expressionUniqueKey = "_ValidationExpressionHelper_";
-        private const string expressionXPath = "validationSetting/validationExpressions/validationExpression";
-        private const string messageUniqueKey = "_ValidationMessageHelper_";
-        private const string messageXPath = "validationSetting/validationMessages/language";
+        const string expressionUniqueKey = "_ValidationExpressionHelper_";
+        const string expressionXPath = "validationSetting/validationExpressions/validationExpression";
+        const string messageUniqueKey = "_ValidationMessageHelper_";
+        const string messageXPath = "validationSetting/validationMessages/language";
 
-        private readonly static string fileName = AppConfig.ValidationSettingsFile;
+        readonly static string fileName = AppConfig.ValidationSettingsFile;
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;

@@ -7,10 +7,10 @@ namespace OFrameLibrary.Util
 {
     public class SymCryptography : IDisposable
     {
-        private SymCryptographyServiceProvider mAlgorithm;
-        private SymmetricAlgorithm mCryptoService;
-        private string mKey = string.Empty;
-        private string mSalt = string.Empty;
+        SymCryptographyServiceProvider mAlgorithm;
+        SymmetricAlgorithm mCryptoService;
+        string mKey = string.Empty;
+        string mSalt = string.Empty;
 
         public void Dispose()
         {
@@ -115,7 +115,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        private void SetLegalIV()
+        void SetLegalIV()
         {
             switch (mAlgorithm)
             {

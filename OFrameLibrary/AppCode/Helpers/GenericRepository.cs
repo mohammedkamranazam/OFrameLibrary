@@ -69,7 +69,7 @@ namespace OFrameLibrary.Helpers
         /// <param name="id"></param>
         public virtual void Delete(object id)
         {
-            TEntity entityToDelete = DbSet.Find(id);
+            var entityToDelete = DbSet.Find(id);
             Delete(entityToDelete);
         }
 
@@ -123,7 +123,7 @@ namespace OFrameLibrary.Helpers
         /// <returns></returns>
         public TEntity Get(Func<TEntity, Boolean> where)
         {
-            return DbSet.Where(where).FirstOrDefault<TEntity>();
+            return DbSet.FirstOrDefault<TEntity>(where);
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace OFrameLibrary.Helpers
         /// <returns></returns>
         public void Delete(Func<TEntity, Boolean> where)
         {
-            IQueryable<TEntity> objects = DbSet.Where<TEntity>(where).AsQueryable();
+            var objects = DbSet.Where(where).AsQueryable();
             foreach (TEntity obj in objects)
                 DbSet.Remove(obj);
         }

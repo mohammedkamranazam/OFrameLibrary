@@ -6,7 +6,7 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class MvcThemeScriptsHelper
     {
-        private const string xPath = "scripts/script";
+        const string scriptXPath = "scripts/script";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
@@ -18,7 +18,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pathNodes = xmlDoc.SelectNodes(xPath);
+            var pathNodes = xmlDoc.SelectNodes(scriptXPath);
 
             foreach (XmlNode pathNode in pathNodes)
             {

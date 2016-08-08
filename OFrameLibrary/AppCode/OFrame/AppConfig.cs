@@ -289,7 +289,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -299,7 +299,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("SMSAccountIdentification", sm.Encrypt(value));
             }
         }
@@ -317,7 +317,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -327,7 +327,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("SMSAccountPassword", sm.Encrypt(value));
             }
         }
@@ -397,7 +397,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -407,7 +407,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("SendGridPassword", sm.Encrypt(value));
             }
         }
@@ -451,7 +451,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -461,7 +461,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("ApplicationRedisAuthenticationKey", sm.Encrypt(value));
             }
         }
@@ -482,7 +482,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("RedisIsSsl"));
+                return KeywordsHelper.GetKeywordValue("RedisIsSsl").BoolParse();
             }
             set
             {
@@ -503,7 +503,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -513,7 +513,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("RedisPassword", sm.Encrypt(value));
             }
         }
@@ -522,7 +522,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableBcc"));
+                return KeywordsHelper.GetKeywordValue("DisableBcc").BoolParse();
             }
             set
             {
@@ -534,7 +534,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableBypassListManagement"));
+                return KeywordsHelper.GetKeywordValue("DisableBypassListManagement").BoolParse();
             }
             set
             {
@@ -546,7 +546,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableClickTracking"));
+                return KeywordsHelper.GetKeywordValue("DisableClickTracking").BoolParse();
             }
             set
             {
@@ -558,7 +558,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableFooter"));
+                return KeywordsHelper.GetKeywordValue("DisableFooter").BoolParse();
             }
             set
             {
@@ -570,7 +570,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableGoogleAnalytics"));
+                return KeywordsHelper.GetKeywordValue("DisableGoogleAnalytics").BoolParse();
             }
             set
             {
@@ -582,7 +582,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableGravatar"));
+                return KeywordsHelper.GetKeywordValue("DisableGravatar").BoolParse();
             }
             set
             {
@@ -594,7 +594,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableOpenTracking"));
+                return KeywordsHelper.GetKeywordValue("DisableOpenTracking").BoolParse();
             }
             set
             {
@@ -606,7 +606,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableSpamCheck"));
+                return KeywordsHelper.GetKeywordValue("DisableSpamCheck").BoolParse();
             }
             set
             {
@@ -618,7 +618,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableTemplate"));
+                return KeywordsHelper.GetKeywordValue("DisableTemplate").BoolParse();
             }
             set
             {
@@ -630,7 +630,7 @@ namespace OFrameLibrary
         {
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("DisableUnsubscribe"));
+                return KeywordsHelper.GetKeywordValue("DisableUnsubscribe").BoolParse();
             }
             set
             {
@@ -651,7 +651,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -661,7 +661,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("MAITelemetricKey", sm.Encrypt(value));
             }
         }
@@ -735,7 +735,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("AllowGuestBuy"));
+                return KeywordsHelper.GetKeywordValue("AllowGuestBuy").BoolParse();
             }
         }
 
@@ -748,7 +748,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("AppInstalled"));
+                return KeywordsHelper.GetKeywordValue("AppInstalled").BoolParse();
             }
         }
 
@@ -761,7 +761,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("IsSiteMultiLingual"));
+                return KeywordsHelper.GetKeywordValue("IsSiteMultiLingual").BoolParse();
             }
         }
 
@@ -774,7 +774,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("EnableOAuthRegistration"));
+                return KeywordsHelper.GetKeywordValue("EnableOAuthRegistration").BoolParse();
             }
         }
 
@@ -808,7 +808,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.IntParse(KeywordsHelper.GetKeywordValue("CookieTimeOutMinutes"));
+                return KeywordsHelper.GetKeywordValue("CookieTimeOutMinutes").IntParse();
             }
         }
 
@@ -964,7 +964,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("EnableQA"));
+                return KeywordsHelper.GetKeywordValue("EnableQA").BoolParse();
             }
         }
 
@@ -977,7 +977,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.BoolParse(KeywordsHelper.GetKeywordValue("EnableSsl"));
+                return KeywordsHelper.GetKeywordValue("EnableSsl").BoolParse();
             }
         }
 
@@ -985,7 +985,7 @@ namespace OFrameLibrary
         {
             set
             {
-                KeywordsHelper.SetKeywordValue("ErrorAdminEmail", value.ToString());
+                KeywordsHelper.SetKeywordValue("ErrorAdminEmail", value);
             }
 
             get
@@ -1082,7 +1082,7 @@ namespace OFrameLibrary
         {
             set
             {
-                KeywordsHelper.SetKeywordValue("MailLogOnId", value.ToString());
+                KeywordsHelper.SetKeywordValue("MailLogOnId", value);
             }
 
             get
@@ -1104,7 +1104,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1114,7 +1114,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("MailLogOnPassword", sm.Encrypt(value));
             }
         }
@@ -1123,7 +1123,7 @@ namespace OFrameLibrary
         {
             set
             {
-                KeywordsHelper.SetKeywordValue("MailServer", value.ToString());
+                KeywordsHelper.SetKeywordValue("MailServer", value);
             }
 
             get
@@ -1141,7 +1141,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.IntParse(KeywordsHelper.GetKeywordValue("MailServerPort"), 25);
+                return KeywordsHelper.GetKeywordValue("MailServerPort").IntParse(25);
             }
         }
 
@@ -1279,7 +1279,7 @@ namespace OFrameLibrary
 
             get
             {
-                return DataParser.IntParse(KeywordsHelper.GetKeywordValue("PerformanceTimeOutMinutes"));
+                return KeywordsHelper.GetKeywordValue("PerformanceTimeOutMinutes").IntParse();
             }
         }
 
@@ -1324,7 +1324,7 @@ namespace OFrameLibrary
         {
             set
             {
-                KeywordsHelper.SetKeywordValue("SiteName", value.ToString());
+                KeywordsHelper.SetKeywordValue("SiteName", value);
             }
 
             get
@@ -1379,7 +1379,7 @@ namespace OFrameLibrary
         {
             set
             {
-                KeywordsHelper.SetKeywordValue("WebsiteAdminEmail", value.ToString());
+                KeywordsHelper.SetKeywordValue("WebsiteAdminEmail", value);
             }
 
             get
@@ -1392,7 +1392,7 @@ namespace OFrameLibrary
         {
             set
             {
-                KeywordsHelper.SetKeywordValue("WebsiteMainEmail", value.ToString());
+                KeywordsHelper.SetKeywordValue("WebsiteMainEmail", value);
             }
 
             get
@@ -1435,7 +1435,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1445,7 +1445,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("MicrosoftAPIKey", sm.Encrypt(value));
             }
         }
@@ -1463,7 +1463,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1473,7 +1473,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("MicrosoftSecretKey", sm.Encrypt(value));
             }
         }
@@ -1491,7 +1491,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1501,7 +1501,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("FacebookAPIKey", sm.Encrypt(value));
             }
         }
@@ -1519,7 +1519,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1529,7 +1529,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("FacebookSecretKey", sm.Encrypt(value));
             }
         }
@@ -1547,7 +1547,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1557,7 +1557,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("GoogleAPIKey", sm.Encrypt(value));
             }
         }
@@ -1575,7 +1575,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1585,7 +1585,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("GoogleSecretKey", sm.Encrypt(value));
             }
         }
@@ -1603,7 +1603,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1613,7 +1613,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("TwitterAPIKey", sm.Encrypt(value));
             }
         }
@@ -1631,7 +1631,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1641,7 +1641,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("TwitterSecretKey", sm.Encrypt(value));
             }
         }
@@ -1659,7 +1659,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1669,7 +1669,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("CCAvenueMerchantID", sm.Encrypt(value));
             }
         }
@@ -1687,7 +1687,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1697,7 +1697,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("CCAvenueAccessCode", sm.Encrypt(value));
             }
         }
@@ -1715,7 +1715,7 @@ namespace OFrameLibrary
 
                 try
                 {
-                    SymCryptography sm = new SymCryptography();
+                    var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
                 catch
@@ -1725,7 +1725,7 @@ namespace OFrameLibrary
             }
             set
             {
-                SymCryptography sm = new SymCryptography();
+                var sm = new SymCryptography();
                 KeywordsHelper.SetKeywordValue("CCAvenueWorkingKey", sm.Encrypt(value));
             }
         }

@@ -18,7 +18,7 @@ namespace OFrameLibrary.Helpers
         {
             if (!string.IsNullOrWhiteSpace(AppConfig.GoogleAPIKey) && !string.IsNullOrWhiteSpace(AppConfig.GoogleSecretKey))
             {
-                var go = new GoogleOAuth2AuthenticationOptions()
+                var go = new GoogleOAuth2AuthenticationOptions
                 {
                     ClientId = AppConfig.GoogleAPIKey,
                     ClientSecret = AppConfig.GoogleSecretKey,
@@ -35,7 +35,7 @@ namespace OFrameLibrary.Helpers
         {
             if (!string.IsNullOrWhiteSpace(AppConfig.FacebookAPIKey) && !string.IsNullOrWhiteSpace(AppConfig.FacebookSecretKey))
             {
-                var fo = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions()
+                var fo = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationOptions
                 {
                     AppId = AppConfig.FacebookAPIKey,
                     AppSecret = AppConfig.FacebookSecretKey,

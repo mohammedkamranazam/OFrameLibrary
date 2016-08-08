@@ -7,12 +7,12 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ServerHelper
     {
-        private const string expressionXPath = "servers/server";
-        private const string uniqueKey = "_ServerHelper_";
+         const string expressionXPath = "servers/server";
+         const string uniqueKey = "_ServerHelper_";
 
-        private readonly static string fileName = AppConfig.RemoteServersFile;
+         readonly static string fileName = AppConfig.RemoteServersFile;
 
-        private static void SaveXml(XmlDocument xmlDoc)
+         static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;
@@ -30,7 +30,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 var newExpression = xmlDoc.CreateElement("server");
 
-                SymCryptography smc = new SymCryptography();
+                var smc = new SymCryptography();
 
                 newExpression.SetAttribute("domain", server.Domain);
                 newExpression.SetAttribute("ip", server.IP);
@@ -143,11 +143,11 @@ namespace OFrameLibrary.SettingsHelpers
             {
                 if (name == expression.Attributes["name"].Value)
                 {
-                    SymCryptography smc = new SymCryptography();
+                    var smc = new SymCryptography();
 
                     server.Domain = expression.Attributes["domain"].Value;
                     server.IP = expression.Attributes["ip"].Value;
-                    server.IsHttp = DataParser.BoolParse(expression.Attributes["isHttp"].Value);
+                    server.IsHttp = expression.Attributes["isHttp"].Value.BoolParse();
                     server.Name = expression.Attributes["name"].Value;
                     server.Password = smc.Decrypt(expression.Attributes["password"].Value);
                     server.Path = expression.Attributes["path"].Value;
@@ -190,7 +190,7 @@ namespace OFrameLibrary.SettingsHelpers
                 {
                     if (server.Name == expression.Attributes["name"].Value)
                     {
-                        SymCryptography smc = new SymCryptography();
+                        var smc = new SymCryptography();
 
                         expression.Attributes["domain"].Value = server.Domain;
                         expression.Attributes["ip"].Value = server.IP;

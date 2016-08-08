@@ -7,12 +7,12 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class SEOHelper
     {
-        private const string pagesXPath = "pages/page";
-        private const string uniqueKey = "_PageSEO_";
+        const string pageXPath = "pages/page";
+        const string uniqueKey = "_PageSEO_";
 
-        private readonly static string fileName = AppConfig.SEOFile;
+        readonly static string fileName = AppConfig.SEOFile;
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;
@@ -30,7 +30,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 var page = xmlDoc.CreateElement("page");
                 page.SetAttribute("id", id);
-                xmlDoc.SelectSingleNode(pagesXPath).ParentNode.AppendChild(page);
+                xmlDoc.SelectSingleNode(pageXPath).ParentNode.AppendChild(page);
 
                 SaveXml(xmlDoc);
             }
@@ -54,7 +54,7 @@ namespace OFrameLibrary.SettingsHelpers
             newKeywordMeta.SetAttribute("name", "keywords");
             newKeywordMeta.SetAttribute("content", entity.Keywords);
 
-            var pages = xmlDoc.SelectNodes(pagesXPath);
+            var pages = xmlDoc.SelectNodes(pageXPath);
 
             foreach (XmlNode page in pages)
             {
@@ -79,7 +79,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pagesXPath);
+                var pages = xmlDoc.SelectNodes(pageXPath);
 
                 foreach (XmlNode page in pages)
                 {
@@ -123,7 +123,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pagesXPath);
+            var pages = xmlDoc.SelectNodes(pageXPath);
 
             foreach (XmlNode page in pages)
             {
@@ -164,7 +164,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pagesXPath);
+            var pages = xmlDoc.SelectNodes(pageXPath);
 
             foreach (XmlNode page in pages)
             {
@@ -186,7 +186,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pagesXPath);
+                var pages = xmlDoc.SelectNodes(pageXPath);
 
                 foreach (XmlNode page in pages)
                 {

@@ -8,25 +8,25 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class PageCacheHelper
     {
-        private static string fileName = AppConfig.PageCacheFile;
-        private const string uniqueKey = "_PageCacheHelper_";
-        private const string xPath = "pages/page";
+        static readonly string fileName = AppConfig.PageCacheFile;
+        const string uniqueKey = "_PageCacheHelper_";
+        const string pageXPath = "pages/page";
 
         public static void AddCache(PageCache entity)
         {
             if (!IsPagePresent(entity.ID))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                XmlElement newPage = xmlDoc.CreateElement("page");
+                var newPage = xmlDoc.CreateElement("page");
 
                 newPage.SetAttribute("id", entity.ID);
                 newPage.SetAttribute("duration", entity.Minutes.ToString());
                 newPage.SetAttribute("location", entity.Location.ToString());
 
-                xmlDoc.SelectSingleNode(xPath).ParentNode.AppendChild(newPage);
+                xmlDoc.SelectSingleNode(pageXPath).ParentNode.AppendChild(newPage);
 
                 SaveXml(xmlDoc);
             }
@@ -36,11 +36,11 @@ namespace OFrameLibrary.SettingsHelpers
         {
             if (IsPagePresent(id))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                XmlNodeList pages = xmlDoc.SelectNodes(xPath);
+                var pages = xmlDoc.SelectNodes(pageXPath);
 
                 foreach (XmlNode page in pages)
                 {
@@ -63,13 +63,13 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static PageCache GetCacheFromSettings(string id)
         {
-            PageCache entity = new PageCache();
+            var entity = new PageCache();
 
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            XmlNodeList pages = xmlDoc.SelectNodes(xPath);
+            var pages = xmlDoc.SelectNodes(pageXPath);
 
             foreach (XmlNode page in pages)
             {
@@ -87,10 +87,10 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static PageCache GetCache(string id, PerformanceMode performanceMode)
         {
-            PageCache keyValue = new PageCache();
+            var keyValue = new PageCache();
             string performanceKey = uniqueKey + id;
 
-            Func<string, PageCache> fnc = new Func<string, PageCache>(GetCacheFromSettings);
+            var fnc = new Func<string, PageCache>(GetCacheFromSettings);
 
             object[] args = { id };
 
@@ -103,11 +103,11 @@ namespace OFrameLibrary.SettingsHelpers
         {
             bool present = false;
 
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            XmlNodeList pages = xmlDoc.SelectNodes(xPath);
+            var pages = xmlDoc.SelectNodes(pageXPath);
 
             foreach (XmlNode page in pages)
             {
@@ -125,11 +125,11 @@ namespace OFrameLibrary.SettingsHelpers
         {
             if (IsPagePresent(entity.ID))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                XmlNodeList pages = xmlDoc.SelectNodes(xPath);
+                var pages = xmlDoc.SelectNodes(pageXPath);
 
                 foreach (XmlNode page in pages)
                 {
@@ -146,9 +146,9 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            XmlTextWriter xmlTextWriter = new XmlTextWriter(fileName, null);
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();

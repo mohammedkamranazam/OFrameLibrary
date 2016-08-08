@@ -12,13 +12,13 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class LanguageHelper
     {
-        private const string languagesUniqueKey = "_LanguagesDataSource_";
-        private const string messageXPath = "languages/language";
-        private const string uniqueKey = "_LanguageHelper_";
+        const string languagesUniqueKey = "_LanguagesDataSource_";
+        const string languageXPath = "languages/language";
+        const string uniqueKey = "_LanguageHelper_";
 
-        private readonly static string fileName = AppConfig.LanguagesFile;
+        readonly static string fileName = AppConfig.LanguagesFile;
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;
@@ -39,7 +39,7 @@ namespace OFrameLibrary.SettingsHelpers
                 newKey.SetAttribute("name", name);
                 newKey.SetAttribute("value", value);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
+                var languages = xmlDoc.SelectNodes(languageXPath);
 
                 foreach (XmlNode language in languages)
                 {
@@ -69,7 +69,7 @@ namespace OFrameLibrary.SettingsHelpers
                 newLanguage.SetAttribute("direction", direction);
                 newLanguage.SetAttribute("name", name);
 
-                xmlDoc.SelectSingleNode(messageXPath).ParentNode.AppendChild(newLanguage);
+                xmlDoc.SelectSingleNode(languageXPath).ParentNode.AppendChild(newLanguage);
 
                 SaveXml(xmlDoc);
             }
@@ -83,7 +83,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
+                var languages = xmlDoc.SelectNodes(languageXPath);
 
                 foreach (XmlNode language in languages)
                 {
@@ -141,7 +141,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKey(string name, string locale)
         {
-            return KeyExists(name, locale) ? GetKey(name, locale, AppConfig.PerformanceMode) : string.Empty;
+            return KeyExists(name, locale) ? GetKey(name, locale, AppConfig.PerformanceMode) : string.Format("KEY_[{0}]_UNDEFINED", name);
         }
 
         public static string GetKey(string name, string locale, PerformanceMode performanceMode)
@@ -167,7 +167,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
+            var languages = xmlDoc.SelectNodes(languageXPath);
 
             foreach (XmlNode language in languages)
             {
@@ -217,7 +217,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
+            var languages = xmlDoc.SelectNodes(languageXPath);
 
             Language lang;
 
@@ -262,7 +262,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
+            var languages = xmlDoc.SelectNodes(languageXPath);
 
             foreach (XmlNode language in languages)
             {
@@ -304,7 +304,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
+            var languages = xmlDoc.SelectNodes(languageXPath);
 
             foreach (XmlNode language in languages)
             {
@@ -355,7 +355,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
+            var languages = xmlDoc.SelectNodes(languageXPath);
 
             foreach (XmlNode language in languages)
             {
@@ -377,7 +377,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
+                var languages = xmlDoc.SelectNodes(languageXPath);
 
                 foreach (XmlNode language in languages)
                 {
@@ -405,7 +405,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetLocaleName(string locale)
         {
-            return LanguageHelper.GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
+            return GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
         }
 
         public static string GetLocaleHash(string locale)
@@ -432,7 +432,7 @@ namespace OFrameLibrary.SettingsHelpers
             }
             else
             {
-                return string.Format("No Translation Found For Language: {0}", LanguageHelper.GetLocaleName(locale));
+                return string.Format("No Translation Found For {0} Language", GetLocaleName(locale));
             }
         }
     }

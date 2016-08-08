@@ -7,14 +7,14 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class LocalStoragesHelper
     {
-        private const string localStoragesUniqueKey = "_LocalStoragesHelper_";
-        private const string localStoragesXPath = "storages/storage";
+        const string localStoragesUniqueKey = "_LocalStoragesHelper_";
+        const string localStoragesXPath = "storages/storage";
 
-        private readonly static string fileName = AppConfig.LocalStoragesFile;
+        readonly static string fileName = AppConfig.LocalStoragesFile;
 
-        private static string CheckPathFormat(this string path)
+        static string CheckPathFormat(this string path)
         {
-            if (!path.EndsWith("/"))
+            if (!path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {
                 path += "/";
             }
@@ -22,7 +22,7 @@ namespace OFrameLibrary.SettingsHelpers
             return path;
         }
 
-        private static bool CreateDirectory(this string absPath)
+        static bool CreateDirectory(this string absPath)
         {
             var success = true;
 
@@ -42,7 +42,7 @@ namespace OFrameLibrary.SettingsHelpers
             return success;
         }
 
-        private static bool DeleteDirectory(this string absPath)
+        static bool DeleteDirectory(this string absPath)
         {
             var success = false;
 
@@ -59,7 +59,7 @@ namespace OFrameLibrary.SettingsHelpers
             return success;
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;

@@ -68,7 +68,7 @@ namespace OFrameLibrary.Abstracts
             return Redirect(GetRedirectUrl(url, action, controller));
         }
 
-        private string GetRedirectUrl(string url = "", string action = "Index", string controller = "Home")
+        string GetRedirectUrl(string url = "", string action = "Index", string controller = "Home")
         {
             if (string.IsNullOrWhiteSpace(url) || !Url.IsLocalUrl(url))
             {

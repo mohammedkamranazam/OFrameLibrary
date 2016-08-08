@@ -6,7 +6,7 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class MvcThemeStylesheetsHelper
     {
-        private const string xPath = "stylesheets/stylesheet";
+        const string stylesheetXPath = "stylesheets/stylesheet";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
@@ -18,7 +18,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pathNodes = xmlDoc.SelectNodes(xPath);
+            var pathNodes = xmlDoc.SelectNodes(stylesheetXPath);
 
             foreach (XmlNode pathNode in pathNodes)
             {

@@ -89,7 +89,7 @@ namespace OFrameLibrary.Util
 
         public static string GetDateFormattedString(this DateTime dateTime)
         {
-            string value = dateTime.ToString(Validator.DateParseExpression);
+            var value = dateTime.ToString(Validator.DateParseExpression);
 
             return value;
         }
@@ -110,7 +110,7 @@ namespace OFrameLibrary.Util
 
         public static string GetDateTimeFormattedString(this DateTime dateTime)
         {
-            string value = dateTime.ToString(Validator.DateTimeParseExpression);
+            var value = dateTime.ToString(Validator.DateTimeParseExpression);
 
             return value;
         }
@@ -131,7 +131,7 @@ namespace OFrameLibrary.Util
 
         public static string GetTimeFormattedString(this DateTime dateTime)
         {
-            string value = dateTime.ToString(Validator.TimeParseExpression);
+            var value = dateTime.ToString(Validator.TimeParseExpression);
 
             return value;
         }
