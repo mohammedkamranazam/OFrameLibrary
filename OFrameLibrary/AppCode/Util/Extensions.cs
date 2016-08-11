@@ -16,6 +16,21 @@ namespace OFrameLibrary.Util
 {
     public static class Extensions
     {
+        public static IEnumerable<T> FlattenHierarchy<T>(this T node, Func<T, IEnumerable<T>> getChildEnumerator)
+        {
+            yield return node;
+            if (getChildEnumerator(node) != null)
+            {
+                foreach (var child in getChildEnumerator(node))
+                {
+                    foreach (var childOrDescendant
+                              in child.FlattenHierarchy(getChildEnumerator))
+                    {
+                        yield return childOrDescendant;
+                    }
+                }
+            }
+        }
         public static JsonValidationResult<T> ValidateJsonModel<T>(this string json)
         {
             var vr = new JsonValidationResult<T>();
