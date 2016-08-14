@@ -360,24 +360,13 @@ namespace OFrameLibrary.Util
             {
                 return AppConfig.MaleAvatar;
             }
-            else
+
+            if (gender == Gender.Female)
             {
-                if (gender == Gender.Female)
-                {
-                    return AppConfig.FemaleAvatar;
-                }
-                else
-                {
-                    if (gender == Gender.Unspecified)
-                    {
-                        return AppConfig.UnspecifiedAvatar;
-                    }
-                    else
-                    {
-                        return AppConfig.UnspecifiedAvatar;
-                    }
-                }
+                return AppConfig.FemaleAvatar;
             }
+
+            return AppConfig.UnspecifiedAvatar;
         }
 
         //public static int GetSelectedValue(this DropDownListAdv dropDownList)
