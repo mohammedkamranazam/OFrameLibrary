@@ -62,6 +62,7 @@
   <!--__________________________________________________Email Server Configuration Section________________________________________________________________________________________-->
   <key name="EmailServiceName" value="SENDGRID" />
   <!--SENDGRID, RELAY, SMTP-->
+  <key name="SendGridAPIKey" value=""/>
   <key name="SendGridServer" value="" />
   <key name="SendGridUsername" value="" />
   <key name="SendGridPassword" value="" />

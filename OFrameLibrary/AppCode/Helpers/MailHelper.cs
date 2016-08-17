@@ -3,6 +3,8 @@ using OFrameLibrary.ILL;
 using OFrameLibrary.SettingsHelpers;
 using OFrameLibrary.Util;
 using SendGrid;
+using SendGrid.CSharp.HTTP.Client;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -52,48 +54,68 @@ namespace OFrameLibrary.Helpers
 
         public static void SendUsingSendGrid(IdentityMessage message)
         {
-            var myMessage = new SendGridMessage();
-            myMessage.AddTo(message.Destination);
-            myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
-            myMessage.Subject = message.Subject;
-            myMessage.Text = message.Body;
-            myMessage.Html = message.Body;
+            dynamic sg = new SendGridAPIClient(AppConfig.SendGridAPIKey);
 
-            var credentials = new NetworkCredential(AppConfig.SendGridUsername, AppConfig.SendGridPassword);
+            Email from = new Email(AppConfig.WebsiteMainEmail);
+            string subject = message.Subject;
+            Email to = new Email(message.Destination);
+            Content content = new Content("text/html", message.Body);
+            Mail mail = new Mail(from, subject, to, content);
 
-            // Create a Web transport for sending email.
-            var transportWeb = new Web(credentials);
+            dynamic response = sg.client.mail.send.post(requestBody: mail.Get());
 
-            // Send the email.
-            if (transportWeb != null)
-            {
-                transportWeb.DeliverAsync(myMessage);
-            }
+            //var myMessage = new SendGridMessage();
+            //myMessage.AddTo(message.Destination);
+            //myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
+            //myMessage.Subject = message.Subject;
+            //myMessage.Text = message.Body;
+            //myMessage.Html = message.Body;
+
+            //var credentials = new NetworkCredential(AppConfig.SendGridUsername, AppConfig.SendGridPassword);
+
+            //// Create a Web transport for sending email.
+            //var transportWeb = new Web(credentials);
+
+            //// Send the email.
+            //if (transportWeb != null)
+            //{
+            //    transportWeb.DeliverAsync(myMessage);
+            //}
         }
 
         public static Task SendUsingSendGridAsync(IdentityMessage message)
         {
-            var myMessage = new SendGridMessage();
-            myMessage.AddTo(message.Destination);
-            myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
-            myMessage.Subject = message.Subject;
-            myMessage.Text = message.Body;
-            myMessage.Html = message.Body;
+            dynamic sg = new SendGridAPIClient(AppConfig.SendGridAPIKey);
 
-            var credentials = new NetworkCredential(AppConfig.SendGridUsername, AppConfig.SendGridPassword);
+            Email from = new Email(AppConfig.WebsiteMainEmail);
+            string subject = message.Subject;
+            Email to = new Email(message.Destination);
+            Content content = new Content("text/html", message.Body);
+            Mail mail = new Mail(from, subject, to, content);
 
-            // Create a Web transport for sending email.
-            var transportWeb = new Web(credentials);
+            return sg.client.mail.send.post(requestBody: mail.Get());
 
-            // Send the email.
-            if (transportWeb != null)
-            {
-                return transportWeb.DeliverAsync(myMessage);
-            }
-            else
-            {
-                return Task.FromResult(0);
-            }
+            //var myMessage = new SendGridMessage();
+            //myMessage.AddTo(message.Destination);
+            //myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
+            //myMessage.Subject = message.Subject;
+            //myMessage.Text = message.Body;
+            //myMessage.Html = message.Body;
+
+            //var credentials = new NetworkCredential(AppConfig.SendGridUsername, AppConfig.SendGridPassword);
+
+            //// Create a Web transport for sending email.
+            //var transportWeb = new Web(credentials);
+
+            //// Send the email.
+            //if (transportWeb != null)
+            //{
+            //    return transportWeb.DeliverAsync(myMessage);
+            //}
+            //else
+            //{
+            //    return Task.FromResult(0);
+            //}
         }
 
         public static string CleanUpPlaceHolders(string body, int lastCount)
@@ -110,7 +132,7 @@ namespace OFrameLibrary.Helpers
             return body;
         }
 
-        public static void GetAttachments(List<Attachment> attachments, MailMessage msg)
+        public static void GetAttachments(List<System.Net.Mail.Attachment> attachments, MailMessage msg)
         {
             attachments.ForEach(msg.Attachments.Add);
         }
@@ -161,7 +183,7 @@ namespace OFrameLibrary.Helpers
             return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
-        public static void SendUsingRelayWithAttachments(IdentityMessage message, List<Attachment> attachments)
+        public static void SendUsingRelayWithAttachments(IdentityMessage message, List<System.Net.Mail.Attachment> attachments)
         {
             var msg = GetMessage(message);
 
@@ -175,7 +197,7 @@ namespace OFrameLibrary.Helpers
             msg.Dispose();
         }
 
-        public static Task SendUsingRelayWithAttachmentsAsync(IdentityMessage message, List<Attachment> attachments, object token)
+        public static Task SendUsingRelayWithAttachmentsAsync(IdentityMessage message, List<System.Net.Mail.Attachment> attachments, object token)
         {
             var msg = GetMessage(message);
 
@@ -187,7 +209,7 @@ namespace OFrameLibrary.Helpers
 
             token = msg;
 
-            return Task.Run(() => smtp.SendAsync(msg, token));            
+            return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
         public static void SendUsingSmtp(IdentityMessage message)
@@ -227,7 +249,7 @@ namespace OFrameLibrary.Helpers
             return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
-        public static void SendUsingSmtpWithAttachments(IdentityMessage message, List<Attachment> attachments)
+        public static void SendUsingSmtpWithAttachments(IdentityMessage message, List<System.Net.Mail.Attachment> attachments)
         {
             var msg = GetMessage(message);
 
@@ -247,7 +269,7 @@ namespace OFrameLibrary.Helpers
             msg.Dispose();
         }
 
-        public static Task SendUsingSmtpWithAttachmentsAsync(IdentityMessage message, List<Attachment> attachments, object token)
+        public static Task SendUsingSmtpWithAttachmentsAsync(IdentityMessage message, List<System.Net.Mail.Attachment> attachments, object token)
         {
             var msg = GetMessage(message);
 

@@ -21,11 +21,26 @@ namespace OFrameLibrary
         //    }
         //}
 
+
+
         public static string PageCacheFile
         {
             get
             {
                 return HttpRuntime.AppDomainAppPath + KeywordsHelper.GetKeywordValue("PageCacheFile");
+            }
+        }
+
+        public static string SendGridAPIKey
+        {
+            get
+            {
+                return KeywordsHelper.GetKeywordValue("SendGridAPIKey");
+            }
+
+            set
+            {
+                KeywordsHelper.SetKeywordValue("SendGridAPIKey", value);
             }
         }
 
