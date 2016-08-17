@@ -5,6 +5,7 @@
         Image,
         Document,
         PDF,
+        Custom,
         All
     }
 
