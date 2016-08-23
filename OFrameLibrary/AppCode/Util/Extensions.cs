@@ -226,9 +226,11 @@ namespace OFrameLibrary.Util
               bool selected = true,
               string label = "-- Select --",
               string value = null,
-              bool isSelectItemDisabled = true)
+              bool isSelectItemDisabled = true,
+              bool translate = false,
+              string locale = "en-US")
         {
-            return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled);
+            return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled, translate, locale);
         }
 
         public static string Join<T>(this T[] collection, string delimeter = ";")
