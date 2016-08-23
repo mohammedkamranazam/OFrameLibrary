@@ -1,6 +1,7 @@
 ﻿using OFrameLibrary.Helpers;
 using OFrameLibrary.Models;
 using OFrameLibrary.Performance;
+using OFrameLibrary.SettingsHelpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -89,18 +90,20 @@ namespace OFrameLibrary.Util
         }
 
         public static IEnumerable<SelectListItem> GetSelectList(IList<SelectListItem> selectListItems,
-            bool takeValue = false,
-            bool friendlyValue = false,
-            string selectedValue = null,
-            bool insertSelect = false,
-            bool selected = true,
-            string label = "-- Select --",
-            string value = null,
-            bool isSelectItemDisabled = true)
+           bool takeValue = false,
+           bool friendlyValue = false,
+           string selectedValue = null,
+           bool insertSelect = false,
+           bool selected = true,
+           string label = "-- Select --",
+           string value = null,
+           bool isSelectItemDisabled = true,
+           bool translate = false,
+           string locale = "en-US")
         {
             selectListItems = selectListItems.Select(x => new SelectListItem
             {
-                Text = x.Text.ToFriendlyCase(),
+                Text = (translate) ? LanguageHelper.GetKey(x.Value, locale) : x.Text.ToFriendlyCase(),
                 Value = (takeValue) ? x.Value : (friendlyValue) ? x.Text.ToFriendlyCase() : x.Text,
                 Selected = Select(x, takeValue, friendlyValue, selectedValue)
             }).ToList();
