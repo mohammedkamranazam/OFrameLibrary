@@ -2,6 +2,7 @@
     var length = this.length;
 
     for (var i = 0; i < length; i++) {
+        "ignore";
         if (this[i] == deleteValue) {
             this.splice(i, 1);
             i--;
@@ -222,6 +223,7 @@ var oframe = {
 
                 if (length) {
                     $.each(array, function (index, value) {
+                        "ignore";
                         if (value == data) {
                             remove(data);
                             return false;
@@ -402,6 +404,8 @@ var oframe = {
 
         return this.each(function (index, object) {
             options.Load(object);
+
+            oframe.rebindValidator(options.Selector);
 
             $(object).submit(function () {
                 if ($(object).valid()) {
@@ -785,63 +789,3 @@ var oframe = {
 
     $.fn.LocalizeForm = localizeForm;
 }(jQuery));
-
-
-
-
-////$(document).ready(function () {
-////    $('#fileupload').fileupload({
-////        dataType: 'json',
-////        url: 'URL_GOES_HERE',
-////        autoUpload: true,
-////        done: function (e, data) {
-////            if (data.result.length > 0) {
-////                var imgDiv = document.createElement("div");
-////                imgDiv.setAttribute("id", "Image_" + data.result[0].ImageID);
-
-////                var imgDelSpan = document.createElement("span");
-////                imgDelSpan.setAttribute("onclick", "DeleteImage(this)");
-////                imgDelSpan.setAttribute("class", "DeleteButton");
-////                imgDelSpan.setAttribute("data-imageid", data.result[0].ImageID);
-////                imgDelSpan.innerHTML = "x";
-
-////                var img = document.createElement("img");
-////                img.src = data.result[0].Url;
-
-////                imgDiv.appendChild(imgDelSpan);
-////                imgDiv.appendChild(img);
-
-////                $("#ImageContainer").append(imgDiv);
-////            }
-////            else {
-////                alert("Upload Error");
-////            }
-////        }
-////    }).on('fileuploadprogressall', function (e, data) {
-////        var progress = parseInt(data.loaded / data.total * 100, 10);
-////        $('.progress .progress-bar').css('width', progress + '%');
-////    });
-////});
-////<span class="btn btn-success fileinput-button">
-////<i class="glyphicon glyphicon-plus"></i>
-////<span>Add Images...</span>
-////<input id="fileupload" type="file" name="files[]" multiple>
-////</span>
-////<br /><br />
-////<div class="progress">
-////<div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
-////<span class="sr-only">0% complete</span>
-////</div>
-////</div>
-////<div class="col-md-12" id="ImageContainer">
-////@if (Model != null)
-////{
-////foreach (var img in Model)
-////{
-////<div id="Image_@img.ImageID">
-////<span onclick="DeleteImage(this)" class="DeleteButton" data-imageid="@img.ImageID">x</span>
-////<img src="@Url.Content(img.ImageURL)" />
-////</div>
-////}
-////}
-////</div>
