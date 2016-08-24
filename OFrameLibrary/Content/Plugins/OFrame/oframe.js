@@ -11,6 +11,12 @@
 };
 
 var oframe = {
+    rebindValidator: function (selector) {
+        var form = $("form" + selector);
+        form.removeData('validator');
+        form.removeData('unobtrusiveValidation');
+        $.validator.unobtrusive.parse(form);
+    },
     format: function () {
         // The string containing the format items (e.g. "{0}")
         // will and always has to be the first argument.
