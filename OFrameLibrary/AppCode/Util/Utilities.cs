@@ -128,11 +128,12 @@ namespace OFrameLibrary.Util
            string value = null,
            bool isSelectItemDisabled = true,
            bool translate = false,
-           string locale = "en-US")
+           string locale = "en-US",
+           bool isTextTranslatable = false)
         {
             selectListItems = selectListItems.Select(x => new SelectListItem
             {
-                Text = (translate) ? LanguageHelper.GetKey(x.Value, locale) : x.Text.ToFriendlyCase(),
+                Text = ((isTextTranslatable) ? ((translate) ? LanguageHelper.GetKey(x.Text, locale) : x.Text.ToFriendlyCase()) : x.Text.ToFriendlyCase()), 
                 Value = (takeValue) ? x.Value : (friendlyValue) ? x.Text.ToFriendlyCase() : x.Text,
                 Selected = Select(x, takeValue, friendlyValue, selectedValue)
             }).ToList();

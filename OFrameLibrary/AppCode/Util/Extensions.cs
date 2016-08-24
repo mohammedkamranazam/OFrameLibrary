@@ -230,7 +230,7 @@ namespace OFrameLibrary.Util
               bool translate = false,
               string locale = "en-US")
         {
-            return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled, translate, locale);
+            return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled, translate, locale, true);
         }
 
         public static string Join<T>(this T[] collection, string delimeter = ";")
