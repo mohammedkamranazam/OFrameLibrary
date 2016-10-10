@@ -220,6 +220,7 @@ namespace OFrameLibrary.Util
         /// <returns></returns>
         public static IEnumerable<SelectListItem> GetEnumList(this System.Type type,
               bool takeValue = false,
+              bool friendlyText = true,
               bool friendlyValue = false,
               string selectedValue = null,
               bool insertSelect = false,
@@ -230,7 +231,7 @@ namespace OFrameLibrary.Util
               bool translate = false,
               string locale = "en-US")
         {
-            return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled, translate, locale, true);
+            return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyText, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled, translate, locale, true);
         }
 
         public static string Join<T>(this T[] collection, string delimeter = ";")
