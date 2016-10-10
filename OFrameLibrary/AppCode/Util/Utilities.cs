@@ -120,6 +120,7 @@ namespace OFrameLibrary.Util
 
         public static IEnumerable<SelectListItem> GetSelectList(IList<SelectListItem> selectListItems,
            bool takeValue = false,
+           bool friendlyText = false,
            bool friendlyValue = false,
            string selectedValue = null,
            bool insertSelect = false,
@@ -133,7 +134,9 @@ namespace OFrameLibrary.Util
         {
             selectListItems = selectListItems.Select(x => new SelectListItem
             {
-                Text = ((isTextTranslatable) ? ((translate) ? LanguageHelper.GetKey(x.Text, locale) : x.Text.ToFriendlyCase()) : x.Text.ToFriendlyCase()), 
+                Text = ((isTextTranslatable) ?
+                ((translate) ? LanguageHelper.GetKey(x.Text, locale) : ((friendlyText) ? x.Text.ToFriendlyCase() : x.Text)) : //FirstConditionTrue
+                ((friendlyText) ? x.Text.ToFriendlyCase() : x.Text)), //FirstConditionFalse
                 Value = (takeValue) ? x.Value : (friendlyValue) ? x.Text.ToFriendlyCase() : x.Text,
                 Selected = Select(x, takeValue, friendlyValue, selectedValue)
             }).ToList();
