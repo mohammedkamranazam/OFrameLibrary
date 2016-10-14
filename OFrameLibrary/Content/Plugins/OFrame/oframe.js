@@ -11,7 +11,26 @@
     return this;
 };
 
+Array.prototype.indexOf = function (obj, fromIndex) {
+    if (fromIndex == null) {
+        fromIndex = 0;
+    } else if (fromIndex < 0) {
+        fromIndex = Math.max(0, this.length + fromIndex);
+    }
+    for (var i = fromIndex, j = this.length; i < j; i++) {
+        if (this[i] == obj)
+            return i;
+    }
+    return -1;
+};
+
 var oframe = {
+    getArray: function (field) {
+        var value = $(field).val();
+        var arr = value.split(";");
+        arr.clean("");
+        return arr;
+    },
     rebindValidator: function (selector) {
         var form = $("form" + selector);
         form.removeData('validator');
@@ -90,9 +109,7 @@ var oframe = {
         var value = $(field).val();
         var arr = value.split(";");
         arr.clean("");
-
         var index = arr.indexOf(arg);
-
         if (index === -1) {
             $(field).val(value + arg + ";");
         }
@@ -100,9 +117,8 @@ var oframe = {
     deSelect: function (arg, field) {
         var value = $(field).val();
         var arr = value.split(";");
-
+        arr.clean("");
         var index = arr.indexOf(arg);
-
         if (index !== -1) {
             arr.splice(index, 1);
             $(field).val(arr.join(";"));
