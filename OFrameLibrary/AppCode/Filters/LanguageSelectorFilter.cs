@@ -22,7 +22,9 @@ namespace OFrameLibrary.Filters
             }
             else
             {
-                locale = CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey);
+                var storedLocale = CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey);
+
+                locale = (storedLocale == null) ? AppConfig.DefaultLocale : storedLocale;
             }
 
             CookiesHelper.SetCookie(Constants.Keys.CurrentCultureCookieKey, locale, now.AddYears(1));
