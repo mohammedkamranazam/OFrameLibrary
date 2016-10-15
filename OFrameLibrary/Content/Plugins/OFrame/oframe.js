@@ -25,6 +25,19 @@ Array.prototype.indexOf = function (obj, fromIndex) {
 };
 
 var oframe = {
+    treatAsUTC: function (date) {
+        var result = new Date(date);
+        result.setMinutes(result.getMinutes() - result.getTimezoneOffset());
+        return result;
+    },
+    daysBetween: function (startDate, endDate) {
+        var millisecondsPerDay = 24 * 60 * 60 * 1000;
+        return (this.treatAsUTC(endDate) - this.treatAsUTC(startDate)) / millisecondsPerDay;
+    },
+    clearErrors: function (e) {
+        $(e).removeClass("input-validation-error");
+        $("span[data-valmsg-for='" + e.id + "']").html("");
+    },
     getArray: function (field) {
         var value = $(field).val();
         var arr = value.split(";");
