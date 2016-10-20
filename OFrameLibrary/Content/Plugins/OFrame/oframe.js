@@ -65,10 +65,21 @@ var oframe = {
 
         return theString;
     },
+    createBlockTag: function () {
+        var html = $.parseHTML("<div id='__BlockScreen__' style='background-color:rgba(0,0,0,0.3); position: fixed; width: 100%; height: 100%; top: 0; left: 0; display:none; z-index:9999999;'><div class='loader'></div></div>");
+
+        var blockScreen = $("#__BlockScreen__");
+
+        if (!blockScreen.length) {
+            $("body").append(html);
+        }
+    },
     blockUI: function () {
+        this.createBlockTag();
         document.getElementById("__BlockScreen__").style.display = "block";
     },
     unblockUI: function () {
+        this.createBlockTag();
         document.getElementById("__BlockScreen__").style.display = "none";
     },
     formsValidate: function (selector) {
