@@ -11,6 +11,8 @@ namespace OFrameLibrary.Helpers
             var identity = await base.CreateAsync(manager, user, authenticationType);
 
             identity.AddClaim(new Claim(ClaimTypes.UserData, user.UserType));
+            identity.AddClaim(new Claim(ClaimTypes.Email, user.Email));
+            identity.AddClaim(new Claim(ClaimTypes.MobilePhone, (string.IsNullOrWhiteSpace(user.PhoneNumber)) ? "" : user.PhoneNumber));
 
             return identity;
         }
