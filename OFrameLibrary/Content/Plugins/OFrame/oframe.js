@@ -145,7 +145,8 @@ var oframe = {
         var index = arr.indexOf(arg);
         if (index !== -1) {
             arr.splice(index, 1);
-            $(field).val(arr.join(";"));
+            var val = arr.join(";") + ";";
+            $(field).val(val);
         }
     }
 };
