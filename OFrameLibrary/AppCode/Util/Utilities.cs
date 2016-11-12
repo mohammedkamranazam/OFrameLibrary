@@ -157,6 +157,11 @@ namespace OFrameLibrary.Util
 
         static bool Select(SelectListItem x, bool takeValue, bool firendlyValue, string selectedValue)
         {
+            if (x.Selected)
+            {
+                return x.Selected;
+            }
+
             if (!string.IsNullOrWhiteSpace(selectedValue))
             {
                 if (takeValue)
