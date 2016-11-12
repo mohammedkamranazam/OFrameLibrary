@@ -239,6 +239,12 @@ namespace OFrameLibrary.Util
             return string.Join(delimeter, collection) + delimeter;
         }
 
+        public static string Join<T>(this List<T> collection, string delimeter = ";")
+        {
+            return string.Join(delimeter, collection) + delimeter;
+        }
+
+
         public static List<T> GetIDList<T>(this string ids, string separator = ";")
         {
             if (string.IsNullOrWhiteSpace(ids))
