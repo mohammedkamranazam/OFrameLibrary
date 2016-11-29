@@ -24,6 +24,14 @@ Array.prototype.indexOf = function (obj, fromIndex) {
     return -1;
 };
 
+$.fn.clearErrors = function () {
+    $(this).each(function () {
+        $(this).removeClass("input-validation-error");
+        var span = $("span[data-valmsg-for='" + this.id + "']");
+        $(span).html("");
+    });
+};
+
 var oframe = {
     treatAsUTC: function (date) {
         var result = new Date(date);
@@ -34,15 +42,14 @@ var oframe = {
         var millisecondsPerDay = 24 * 60 * 60 * 1000;
         return (this.treatAsUTC(endDate) - this.treatAsUTC(startDate)) / millisecondsPerDay;
     },
-    clearErrors: function (e) {
-        $(e).removeClass("input-validation-error");
-        $("span[data-valmsg-for='" + e.id + "']").html("");
-    },
     getArray: function (field) {
         var value = $(field).val();
         var arr = value.split(";");
         arr.clean("");
         return arr;
+    },
+    isNumber: function (n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
     },
     rebindValidator: function (selector) {
         var form = $("form" + selector);
@@ -145,7 +152,10 @@ var oframe = {
         var index = arr.indexOf(arg);
         if (index !== -1) {
             arr.splice(index, 1);
-            var val = arr.join(";") + ";";
+            var val = arr.join(";");
+            if (arr.length > 0) {
+                val += ";";
+            }
             $(field).val(val);
         }
     }
@@ -435,9 +445,9 @@ var oframe = {
             },
             Progress: function (e, object) {
                 if (e.lengthComputable) {
-                    var progress = object.getElementsByTagName("progress")[0];
+                    var progress = $(".progressBar");
                     if (progress) {
-                        $(progress).attr({ value: e.loaded, max: e.total });
+                        var per = ((e.loaded * 100) / e.total);
                     }
                 }
             }
@@ -581,7 +591,7 @@ var oframe = {
                     src: $(selector).find(options.PopUpSelector)
                 },
                 type: 'inline',
-                showCloseBtn: true,
+                closeBtnInside: false,
                 midClick: true,
                 callbacks: {
                     open: function () {
