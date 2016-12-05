@@ -396,7 +396,7 @@ var oframe = {
         };
 
         var updateGridCallBack = function (response, status, selector) {
-            $(options.BlockScreenID).css('display', 'none');
+            oframe.unblockUI();
 
             if (status === "error") {
                 window.location.href = options.ErrorUrl;
@@ -410,7 +410,7 @@ var oframe = {
         };
 
         var updateGrid = function (e, selector) {
-            $(options.BlockScreenID).css('display', 'block');
+            oframe.blockUI();
 
             var url = $(e).attr('href');
 
