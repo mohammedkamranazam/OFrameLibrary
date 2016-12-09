@@ -7,7 +7,14 @@ namespace OFrameLibrary.Helpers
     {
         public static HttpCookie GetCookieResp(string key)
         {
-            var cookieInResponse = HttpContext.Current.Response.Cookies[key];
+            var context = HttpContext.Current;
+
+            var cookieInResponse = new HttpCookie(Constants.Keys.CurrentCultureCookieKey, AppConfig.DefaultLocale);
+
+            if (context != null)
+            {
+                cookieInResponse = context.Response.Cookies[key];
+            }
 
             return (cookieInResponse == null || string.IsNullOrWhiteSpace(cookieInResponse.Value)) ? null : cookieInResponse;
         }
@@ -31,7 +38,15 @@ namespace OFrameLibrary.Helpers
 
         public static HttpCookie GetCookieReq(string key)
         {
-            var cookieInRequest = HttpContext.Current.Request.Cookies[key];
+            var context = HttpContext.Current;
+
+            var cookieInRequest = new HttpCookie(Constants.Keys.CurrentCultureCookieKey, AppConfig.DefaultLocale);
+
+            if (context != null)
+            {
+                cookieInRequest = context.Request.Cookies[key];
+            }
+
 
             return (cookieInRequest == null || string.IsNullOrWhiteSpace(cookieInRequest.Value)) ? null : cookieInRequest;
         }

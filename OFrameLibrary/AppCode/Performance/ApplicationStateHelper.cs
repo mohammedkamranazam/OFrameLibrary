@@ -13,6 +13,11 @@ namespace OFrameLibrary.Performance
         /// <param name="key">Name of item</param>
         public static void Add<T>(string key, T o)
         {
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
+
             HttpContext.Current.Application.Add(key, o);
         }
 
@@ -32,6 +37,11 @@ namespace OFrameLibrary.Performance
         /// <returns></returns>
         public static bool Exists(string key)
         {
+            if (HttpContext.Current == null)
+            {
+                return false;
+            }
+
             return HttpContext.Current.Application[key] != null;
         }
 
