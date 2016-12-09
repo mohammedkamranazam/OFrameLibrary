@@ -9,7 +9,7 @@ namespace OFrameLibrary.Helpers
         {
             var context = HttpContext.Current;
 
-            var cookieInResponse = new HttpCookie(Constants.Keys.CurrentCultureCookieKey, AppConfig.DefaultLocale);
+            var cookieInResponse = new HttpCookie(key, string.Empty);
 
             if (context != null)
             {
@@ -40,7 +40,7 @@ namespace OFrameLibrary.Helpers
         {
             var context = HttpContext.Current;
 
-            var cookieInRequest = new HttpCookie(Constants.Keys.CurrentCultureCookieKey, AppConfig.DefaultLocale);
+            var cookieInRequest = new HttpCookie(key, string.Empty);
 
             if (context != null)
             {
