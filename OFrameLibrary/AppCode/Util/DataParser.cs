@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Globalization;
 
 namespace OFrameLibrary.Util
 {
     public static class DataParser
     {
+        public static bool StringToDate(string date, out DateTime dob, string format = "MM/dd/yyyy")
+        {
+            return DateTime.TryParseExact(date, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out dob);
+        }
         public static bool BoolParse(this string text)
         {
             return BoolParse(text, false);
