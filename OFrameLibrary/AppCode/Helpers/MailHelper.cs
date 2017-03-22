@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
+using OFrameLibrary.AppCode.Helpers;
+using OFrameLibrary.AppCode.Models;
 using OFrameLibrary.ILL;
 using OFrameLibrary.SettingsHelpers;
 using OFrameLibrary.Util;
@@ -51,71 +53,23 @@ namespace OFrameLibrary.Helpers
 
             return Task.FromResult(0);
         }
-
-        public static void SendUsingSendGrid(IdentityMessage message)
+        public static SendGridSettings GetSendGridSettings()
         {
-            dynamic sg = new SendGridAPIClient(AppConfig.SendGridAPIKey);
-
-            Email from = new Email(AppConfig.WebsiteMainEmail);
-            string subject = message.Subject;
-            Email to = new Email(message.Destination);
-            Content content = new Content("text/html", message.Body);
-            Mail mail = new Mail(from, subject, to, content);
-
-            dynamic response = sg.client.mail.send.post(requestBody: mail.Get());
-
-            //var myMessage = new SendGridMessage();
-            //myMessage.AddTo(message.Destination);
-            //myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
-            //myMessage.Subject = message.Subject;
-            //myMessage.Text = message.Body;
-            //myMessage.Html = message.Body;
-
-            //var credentials = new NetworkCredential(AppConfig.SendGridUsername, AppConfig.SendGridPassword);
-
-            //// Create a Web transport for sending email.
-            //var transportWeb = new Web(credentials);
-
-            //// Send the email.
-            //if (transportWeb != null)
-            //{
-            //    transportWeb.DeliverAsync(myMessage);
-            //}
+            return new SendGridSettings()
+            {
+                SenderEmail = AppConfig.WebsiteMainEmail,
+                SenderName = AppConfig.SiteName,
+                SendGridApiKey = AppConfig.SendGridAPIKey
+            };
+        }
+        public static bool SendUsingSendGrid(IdentityMessage message)
+        {
+            return SendGridEmailHelper.SendMail(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
         }
 
-        public static Task SendUsingSendGridAsync(IdentityMessage message)
+        public static async Task<bool> SendUsingSendGridAsync(IdentityMessage message)
         {
-            dynamic sg = new SendGridAPIClient(AppConfig.SendGridAPIKey);
-
-            Email from = new Email(AppConfig.WebsiteMainEmail);
-            string subject = message.Subject;
-            Email to = new Email(message.Destination);
-            Content content = new Content("text/html", message.Body);
-            Mail mail = new Mail(from, subject, to, content);
-
-            return sg.client.mail.send.post(requestBody: mail.Get());
-
-            //var myMessage = new SendGridMessage();
-            //myMessage.AddTo(message.Destination);
-            //myMessage.From = new MailAddress(AppConfig.WebsiteMainEmail, AppConfig.MailLabel);
-            //myMessage.Subject = message.Subject;
-            //myMessage.Text = message.Body;
-            //myMessage.Html = message.Body;
-
-            //var credentials = new NetworkCredential(AppConfig.SendGridUsername, AppConfig.SendGridPassword);
-
-            //// Create a Web transport for sending email.
-            //var transportWeb = new Web(credentials);
-
-            //// Send the email.
-            //if (transportWeb != null)
-            //{
-            //    return transportWeb.DeliverAsync(myMessage);
-            //}
-            //else
-            //{
-            //    return Task.FromResult(0);
-            //}
+            return await SendGridEmailHelper.SendMailAsync(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
         }
 
         public static string CleanUpPlaceHolders(string body, int lastCount)

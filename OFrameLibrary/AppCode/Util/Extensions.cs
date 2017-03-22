@@ -16,71 +16,9 @@ namespace OFrameLibrary.Util
 {
     public static class Extensions
     {
-        public static IEnumerable<T> FlattenHierarchy<T>(this T node, Func<T, IEnumerable<T>> getChildEnumerator)
+        public static void AddSelect(this DropDownList dropDownList)
         {
-            yield return node;
-            if (getChildEnumerator(node) != null)
-            {
-                foreach (var child in getChildEnumerator(node))
-                {
-                    foreach (var childOrDescendant
-                              in child.FlattenHierarchy(getChildEnumerator))
-                    {
-                        yield return childOrDescendant;
-                    }
-                }
-            }
-        }
-        public static JsonValidationResult<T> ValidateJsonModel<T>(this string json)
-        {
-            var vr = new JsonValidationResult<T>();
-
-            vr.Model = new List<T>();
-
-            if (!string.IsNullOrWhiteSpace(json))
-            {
-                vr.IsJsonEmpty = false;
-
-                try
-                {
-                    vr.Model = JsonHelper.JsonDeserialize<List<T>>(json);
-
-                    vr.IsJsonDeserialized = true;
-
-                    if (vr.Model.Any())
-                    {
-                        vr.IsModelEmpty = false;
-                        vr.Message = "Model Not Empty And Valid";
-
-                        foreach (var model in vr.Model)
-                        {
-                            if (!ValidateModel(model))
-                            {
-                                vr.IsModelValid = false;
-
-                                vr.Message = "Model Not Empty And Invalid";
-
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        vr.Message = "Model Empty And Valid";
-                    }
-                }
-                catch
-                {
-                    vr.Message = "Json Deserialization Failed";
-                }
-            }
-
-            return vr;
-        }
-
-        public static bool ValidateModel<T>(this T model)
-        {
-            return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, null, null), new List<ValidationResult>());
+            dropDownList.Items.Insert(0, new ListItem("Select", "-1"));
         }
 
         public static void BuildPager(this GridModel gm)
@@ -180,29 +118,37 @@ namespace OFrameLibrary.Util
             }
         }
 
-        public static IQueryable<T> UpdateGridModelList<T>(this IQueryable<T> entitySet, GridModel gm)
+        public static void DeleteFile(this string fileName)
         {
-            gm.Count = entitySet.Count();
+            fileName = fileName.MapPath();
 
-            gm.BuildPager();
-
-            var sortDirection = gm.SortDirection;
-
-            if (gm.SortDirection == "DESC")
+            if (File.Exists(fileName))
             {
-                gm.SortDirection = "ASC";
+                try
+                {
+                    File.Delete(fileName);
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.LogError(ex);
+                }
             }
-            else if (gm.SortDirection == "ASC")
-            {
-                gm.SortDirection = "DESC";
-            }
-
-            return entitySet.OrderBy(gm.SortKey + " " + sortDirection).Skip((gm.Pager.CurrentPage - 1) * gm.Pager.PageSize).Take(gm.Pager.PageSize);
         }
 
-        public static string MapPath(this string path)
+        public static IEnumerable<T> FlattenHierarchy<T>(this T node, Func<T, IEnumerable<T>> getChildEnumerator)
         {
-            return HttpContext.Current.Server.MapPath(path);
+            yield return node;
+            if (getChildEnumerator(node) != null)
+            {
+                foreach (var child in getChildEnumerator(node))
+                {
+                    foreach (var childOrDescendant
+                              in child.FlattenHierarchy(getChildEnumerator))
+                    {
+                        yield return childOrDescendant;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -234,17 +180,6 @@ namespace OFrameLibrary.Util
             return Utilities.GetSelectList(EnumHelper.GetSelectList(type), takeValue, friendlyText, friendlyValue, selectedValue, insertSelect, selected, label, value, isSelectItemDisabled, translate, locale, true);
         }
 
-        public static string Join<T>(this T[] collection, string delimeter = ";")
-        {
-            return string.Join(delimeter, collection) + delimeter;
-        }
-
-        public static string Join<T>(this List<T> collection, string delimeter = ";")
-        {
-            return string.Join(delimeter, collection) + delimeter;
-        }
-
-
         public static List<T> GetIDList<T>(this string ids, string separator = ";")
         {
             if (string.IsNullOrWhiteSpace(ids))
@@ -255,12 +190,72 @@ namespace OFrameLibrary.Util
             return ids.Split(new string[] { separator }, StringSplitOptions.RemoveEmptyEntries).Select(c => (T)Convert.ChangeType(c, typeof(T))).ToList();
         }
 
-        public static IDUpdater<T> UpdatedIDs<T>(this IDUpdater<T> updaterModel)
+        public static string GetProfilePic(this Gender gender)
         {
-            updaterModel.AddIDs = updaterModel.NewIDs.Where(c => !updaterModel.OldIDs.Contains(c)).ToList();
-            updaterModel.RemoveIDs = updaterModel.OldIDs.Where(c => !updaterModel.NewIDs.Contains(c)).ToList();
+            if (gender == Gender.Male)
+            {
+                return AppConfig.MaleAvatar;
+            }
 
-            return updaterModel;
+            if (gender == Gender.Female)
+            {
+                return AppConfig.FemaleAvatar;
+            }
+
+            return AppConfig.UnspecifiedAvatar;
+        }
+
+        public static string Join<T>(this T[] collection, string delimeter = ";")
+        {
+            return string.Join(delimeter, collection) + delimeter;
+        }
+
+        public static string Join<T>(this List<T> collection, string delimeter = ";")
+        {
+            return string.Join(delimeter, collection) + delimeter;
+        }
+
+        public static string MapPath(this string path)
+        {
+            return HttpContext.Current.Server.MapPath(path);
+        }
+
+        public static bool NullableContains(this string text, string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return false;
+            }
+
+            return text.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        //public static bool IsNullSelected(this DropDownListAdv dropDownList)
+        //{
+        //    if (GetNullableSelectedValue(dropDownList) == null)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+        //}
+        public static int NullReverser(this int? value)
+        {
+            if (value == null)
+            {
+                return -1;
+            }
+            else
+            {
+                return (int)value;
+            }
+        }
+
+        public static string ToFriendlyCase(this string EnumString)
+        {
+            return Regex.Replace(EnumString, "(?!^)([A-Z])", " $1");
         }
 
         public static SelectList ToSelectList<TEnum>(this TEnum enumObj)
@@ -271,31 +266,84 @@ namespace OFrameLibrary.Util
             return new SelectList(values, enumObj);
         }
 
-        public static string ToFriendlyCase(this string EnumString)
+        public static IDUpdater<T> UpdatedIDs<T>(this IDUpdater<T> updaterModel)
         {
-            return Regex.Replace(EnumString, "(?!^)([A-Z])", " $1");
+            updaterModel.AddIDs = updaterModel.NewIDs.Where(c => !updaterModel.OldIDs.Contains(c)).ToList();
+            updaterModel.RemoveIDs = updaterModel.OldIDs.Where(c => !updaterModel.NewIDs.Contains(c)).ToList();
+
+            return updaterModel;
         }
 
-        public static void AddSelect(this DropDownList dropDownList)
+        public static IQueryable<T> UpdateGridModelList<T>(this IQueryable<T> entitySet, GridModel gm)
         {
-            dropDownList.Items.Insert(0, new ListItem("Select", "-1"));
-        }
+            gm.Count = entitySet.Count();
 
-        public static void DeleteFile(this string fileName)
-        {
-            fileName = fileName.MapPath();
+            gm.BuildPager();
 
-            if (File.Exists(fileName))
+            var sortDirection = gm.SortDirection;
+
+            if (gm.SortDirection == "DESC")
             {
+                gm.SortDirection = "ASC";
+            }
+            else if (gm.SortDirection == "ASC")
+            {
+                gm.SortDirection = "DESC";
+            }
+
+            return entitySet.OrderBy(gm.SortKey + " " + sortDirection).Skip((gm.Pager.CurrentPage - 1) * gm.Pager.PageSize).Take(gm.Pager.PageSize);
+        }
+
+        public static JsonValidationResult<T> ValidateJsonModel<T>(this string json)
+        {
+            var vr = new JsonValidationResult<T>();
+
+            vr.Model = new List<T>();
+
+            if (!string.IsNullOrWhiteSpace(json))
+            {
+                vr.IsJsonEmpty = false;
+
                 try
                 {
-                    File.Delete(fileName);
+                    vr.Model = JsonHelper.JsonDeserialize<List<T>>(json);
+
+                    vr.IsJsonDeserialized = true;
+
+                    if (vr.Model.Any())
+                    {
+                        vr.IsModelEmpty = false;
+                        vr.Message = "Model Not Empty And Valid";
+
+                        foreach (var model in vr.Model)
+                        {
+                            if (!ValidateModel(model))
+                            {
+                                vr.IsModelValid = false;
+
+                                vr.Message = "Model Not Empty And Invalid";
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        vr.Message = "Model Empty And Valid";
+                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    ErrorLogger.LogError(ex);
+                    vr.Message = "Json Deserialization Failed";
                 }
             }
+
+            return vr;
+        }
+
+        public static bool ValidateModel<T>(this T model)
+        {
+            return System.ComponentModel.DataAnnotations.Validator.TryValidateObject(model, new ValidationContext(model, null, null), new List<ValidationResult>());
         }
 
         //public static Gender GetGender(this DropDownListAdv dropDownList)
@@ -362,61 +410,10 @@ namespace OFrameLibrary.Util
         //        return dropDownList.GetSelectedValue();
         //    }
         //}
-
-        public static string GetProfilePic(this Gender gender)
-        {
-            if (gender == Gender.Male)
-            {
-                return AppConfig.MaleAvatar;
-            }
-
-            if (gender == Gender.Female)
-            {
-                return AppConfig.FemaleAvatar;
-            }
-
-            return AppConfig.UnspecifiedAvatar;
-        }
-
         //public static int GetSelectedValue(this DropDownListAdv dropDownList)
         //{
         //    return DataParser.IntParse(dropDownList.SelectedValue);
         //}
-
-        //public static bool IsNullSelected(this DropDownListAdv dropDownList)
-        //{
-        //    if (GetNullableSelectedValue(dropDownList) == null)
-        //    {
-        //        return false;
-        //    }
-        //    else
-        //    {
-        //        return true;
-        //    }
-        //}
-
-        public static bool NullableContains(this string text, string searchTerm)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                return false;
-            }
-
-            return text.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        public static int NullReverser(this int? value)
-        {
-            if (value == null)
-            {
-                return -1;
-            }
-            else
-            {
-                return (int)value;
-            }
-        }
-
         //public static void SetNullableSelectedValue(this DropDownListAdv dropDownList, int? value)
         //{
         //    if (value == null)
@@ -428,7 +425,5 @@ namespace OFrameLibrary.Util
         //        dropDownList.SelectedValue = value.ToString();
         //    }
         //}
-
-
     }
 }

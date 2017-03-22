@@ -4,27 +4,18 @@ using OFrameLibrary.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Xml;
 using System.Linq;
-
+using System.Xml;
 
 namespace OFrameLibrary.SettingsHelpers
 {
     public static class LanguageHelper
     {
-        const string languagesUniqueKey = "_LanguagesDataSource_";
-        const string messageXPath = "languages/language";
-        const string uniqueKey = "_LanguageHelper_";
+        private const string languagesUniqueKey = "_LanguagesDataSource_";
+        private const string messageXPath = "languages/language";
+        private const string uniqueKey = "_LanguageHelper_";
 
-        readonly static string fileName = AppConfig.LanguagesFile;
-
-        static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        private static readonly string fileName = AppConfig.LanguagesFile;
 
         public static void AddKey(string name, string locale, string value)
         {
@@ -277,6 +268,39 @@ namespace OFrameLibrary.SettingsHelpers
             return directionValue;
         }
 
+        public static string GetLocaleHash(string locale)
+        {
+            return string.Format("{0}#{1};", locale, GetLocaleName(locale));
+        }
+
+        public static string GetLocaleName(string locale)
+        {
+            return LanguageHelper.GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
+        }
+
+        public static string GetLocalesHash(List<Translator> translations)
+        {
+            var locales = translations.Select(c => c.Locale).ToList();
+
+            locales = locales.Select(c => GetLocaleHash(c)).ToList();
+
+            return locales.ToArray<string>().Join("");
+        }
+
+        public static string GetTranslation(List<Translator> translations, string locale)
+        {
+            var transText = translations.FirstOrDefault(d => d.Locale == locale);
+
+            if (transText != null)
+            {
+                return transText.Text;
+            }
+            else
+            {
+                return string.Format("No Translation Found For Language: {0}", LanguageHelper.GetLocaleName(locale));
+            }
+        }
+
         public static bool KeyExists(string name, string locale)
         {
             return KeyExists(name, locale, AppConfig.PerformanceMode);
@@ -403,37 +427,12 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        public static string GetLocaleName(string locale)
+        private static void SaveXml(XmlDocument xmlDoc)
         {
-            return LanguageHelper.GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
-        }
-
-        public static string GetLocaleHash(string locale)
-        {
-            return string.Format("{0}#{1};", locale, GetLocaleName(locale));
-        }
-
-        public static string GetLocalesHash(List<Translator> translations)
-        {
-            var locales = translations.Select(c => c.Locale).ToList();            
-
-            locales = locales.Select(c => GetLocaleHash(c)).ToList();
-
-            return locales.ToArray<string>().Join("");
-        }
-        
-        public static string GetTranslation(List<Translator> translations, string locale)
-        {
-            var transText = translations.FirstOrDefault(d => d.Locale == locale);
-
-            if (transText != null)
-            {
-                return transText.Text;
-            }
-            else
-            {
-                return string.Format("No Translation Found For Language: {0}", LanguageHelper.GetLocaleName(locale));
-            }
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

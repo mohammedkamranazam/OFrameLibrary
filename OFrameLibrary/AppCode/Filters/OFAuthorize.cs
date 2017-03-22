@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace OFrameLibrary.AppCode.Filters
 {
-    public class PSAuthorize : AuthorizeAttribute
+    public class OFAuthorize : AuthorizeAttribute
     {
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {
