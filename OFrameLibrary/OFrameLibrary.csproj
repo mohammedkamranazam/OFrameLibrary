@@ -239,6 +239,7 @@
     <Compile Include="AppCode\Helpers\SendGridEmailHelper.cs" />
     <Compile Include="AppCode\Models\JsonValidationResult.cs" />
     <Compile Include="AppCode\Models\SendGridSettings.cs" />
+    <Compile Include="AppCode\Models\SerializableSession.cs" />
     <Compile Include="AppCode\Models\Translator.cs" />
     <Compile Include="AppCode\Providers\LanguageModelMetadataProvider.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -299,7 +300,6 @@
     <Compile Include="AppCode\Performance\CacheHelper.cs" />
     <Compile Include="AppCode\Performance\MemoryCacheHelper.cs" />
     <Compile Include="AppCode\Performance\RedisCacheHelper.cs" />
-    <Compile Include="AppCode\Performance\SerializableSession.cs" />
     <Compile Include="AppCode\Performance\SessionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service References\ASPSMSX2\Reference.cs" />

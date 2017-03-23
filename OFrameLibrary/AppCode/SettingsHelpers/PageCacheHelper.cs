@@ -8,9 +8,9 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class PageCacheHelper
     {
-        static readonly string fileName = AppConfig.PageCacheFile;
-        const string uniqueKey = "_PageCacheHelper_";
-        const string pageXPath = "pages/page";
+        private const string pageXPath = "pages/page";
+        private const string uniqueKey = "_PageCacheHelper_";
+        private static readonly string fileName = AppConfig.PageCacheFile;
 
         public static void AddCache(PageCache entity)
         {
@@ -61,6 +61,20 @@ namespace OFrameLibrary.SettingsHelpers
             return GetCache(id, AppConfig.PerformanceMode);
         }
 
+        public static PageCache GetCache(string id, PerformanceMode performanceMode)
+        {
+            var keyValue = new PageCache();
+            string performanceKey = uniqueKey + id;
+
+            var fnc = new Func<string, PageCache>(GetCacheFromSettings);
+
+            object[] args = { id };
+
+            Utilities.GetPerformance<PageCache>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+
         public static PageCache GetCacheFromSettings(string id)
         {
             var entity = new PageCache();
@@ -83,20 +97,6 @@ namespace OFrameLibrary.SettingsHelpers
             }
 
             return entity;
-        }
-
-        public static PageCache GetCache(string id, PerformanceMode performanceMode)
-        {
-            var keyValue = new PageCache();
-            string performanceKey = uniqueKey + id;
-
-            var fnc = new Func<string, PageCache>(GetCacheFromSettings);
-
-            object[] args = { id };
-
-            Utilities.GetPerformance<PageCache>(performanceMode, performanceKey, out keyValue, fnc, args);
-
-            return keyValue;
         }
 
         public static bool IsPagePresent(string id)
@@ -146,7 +146,7 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        static void SaveXml(XmlDocument xmlDoc)
+        private static void SaveXml(XmlDocument xmlDoc)
         {
             var xmlTextWriter = new XmlTextWriter(fileName, null);
             xmlTextWriter.Formatting = Formatting.Indented;

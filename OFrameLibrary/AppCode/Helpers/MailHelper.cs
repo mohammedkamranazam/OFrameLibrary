@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNet.Identity;
-using OFrameLibrary.AppCode.Helpers;
-using OFrameLibrary.AppCode.Models;
 using OFrameLibrary.ILL;
+using OFrameLibrary.Models;
 using OFrameLibrary.SettingsHelpers;
 using OFrameLibrary.Util;
-using SendGrid;
-using SendGrid.CSharp.HTTP.Client;
-using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,6 +15,98 @@ namespace OFrameLibrary.Helpers
 {
     public static class MailHelper
     {
+        public static string CleanUpPlaceHolders(string body, int lastCount)
+        {
+            var maxCount = KeywordsHelper.GetKeywordValue("MaxPlaceHoldersCount").IntParse();
+
+            for (var xCount = lastCount + 1; xCount < maxCount; xCount++)
+            {
+                var placeHolder = string.Format("[PLACEHOLDER{0}]", xCount);
+
+                body = body.Replace(placeHolder, string.Empty);
+            }
+
+            return body;
+        }
+
+        public static string GenerateEmailBody(EmailPlaceHolder emailPlaceHolder, string body)
+        {
+            var count = 0;
+
+            Array.ForEach(emailPlaceHolder.GetType().GetProperties(), propertyInfo =>
+            {
+                count++;
+                if (propertyInfo.CanRead)
+                {
+                    var property = propertyInfo.GetValue(emailPlaceHolder, null);
+                    var value = string.Empty;
+                    if (property != null)
+                    {
+                        value = property.ToString();
+                    }
+                    var placeHolder = string.Format("[PLACEHOLDER{0}]", count);
+                    body = body.Replace(placeHolder, value);
+                }
+            });
+
+            return body;
+        }
+
+        public static void GetAttachments(List<System.Net.Mail.Attachment> attachments, MailMessage msg)
+        {
+            attachments.ForEach(msg.Attachments.Add);
+        }
+
+        public static string GetEmailTemplateFromDataBase(string templateName)
+        {
+            var body = string.Empty;
+
+            return body;
+        }
+
+        public static string GetEmailTemplateFromFile(string templatePath)
+        {
+            var body = string.Empty;
+
+            using (var reader = new StreamReader(templatePath))
+            {
+                body = reader.ReadToEnd();
+            }
+
+            return body;
+        }
+
+        public static MailMessage GetMessage(IdentityMessage message)
+        {
+            var msg = new MailMessage();
+
+            msg.From = new MailAddress(AppConfig.WebsiteMainEmail);
+
+            msg.To.Add(message.Destination);
+
+            msg.Subject = message.Subject;
+
+            msg.Body = message.Body;
+
+            msg.IsBodyHtml = true;
+
+            msg.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
+
+            msg.Priority = MailPriority.Normal;
+
+            return msg;
+        }
+
+        public static SendGridSettings GetSendGridSettings()
+        {
+            return new SendGridSettings()
+            {
+                SenderEmail = AppConfig.WebsiteMainEmail,
+                SenderName = AppConfig.SiteName,
+                SendGridApiKey = AppConfig.SendGridAPIKey
+            };
+        }
+
         public static void Send(IdentityMessage message)
         {
             switch (AppConfig.EmailServiceName)
@@ -52,64 +140,6 @@ namespace OFrameLibrary.Helpers
             }
 
             return Task.FromResult(0);
-        }
-        public static SendGridSettings GetSendGridSettings()
-        {
-            return new SendGridSettings()
-            {
-                SenderEmail = AppConfig.WebsiteMainEmail,
-                SenderName = AppConfig.SiteName,
-                SendGridApiKey = AppConfig.SendGridAPIKey
-            };
-        }
-        public static bool SendUsingSendGrid(IdentityMessage message)
-        {
-            return SendGridEmailHelper.SendMail(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
-        }
-
-        public static async Task<bool> SendUsingSendGridAsync(IdentityMessage message)
-        {
-            return await SendGridEmailHelper.SendMailAsync(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
-        }
-
-        public static string CleanUpPlaceHolders(string body, int lastCount)
-        {
-            var maxCount = KeywordsHelper.GetKeywordValue("MaxPlaceHoldersCount").IntParse();
-
-            for (var xCount = lastCount + 1; xCount < maxCount; xCount++)
-            {
-                var placeHolder = string.Format("[PLACEHOLDER{0}]", xCount);
-
-                body = body.Replace(placeHolder, string.Empty);
-            }
-
-            return body;
-        }
-
-        public static void GetAttachments(List<System.Net.Mail.Attachment> attachments, MailMessage msg)
-        {
-            attachments.ForEach(msg.Attachments.Add);
-        }
-
-        public static MailMessage GetMessage(IdentityMessage message)
-        {
-            var msg = new MailMessage();
-
-            msg.From = new MailAddress(AppConfig.WebsiteMainEmail);
-
-            msg.To.Add(message.Destination);
-
-            msg.Subject = message.Subject;
-
-            msg.Body = message.Body;
-
-            msg.IsBodyHtml = true;
-
-            msg.DeliveryNotificationOptions = DeliveryNotificationOptions.OnSuccess;
-
-            msg.Priority = MailPriority.Normal;
-
-            return msg;
         }
 
         public static void SendUsingRelay(IdentityMessage message)
@@ -164,6 +194,16 @@ namespace OFrameLibrary.Helpers
             token = msg;
 
             return Task.Run(() => smtp.SendAsync(msg, token));
+        }
+
+        public static bool SendUsingSendGrid(IdentityMessage message)
+        {
+            return SendGridEmailHelper.SendMail(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
+        }
+
+        public static async Task<bool> SendUsingSendGridAsync(IdentityMessage message)
+        {
+            return await SendGridEmailHelper.SendMailAsync(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
         }
 
         public static void SendUsingSmtp(IdentityMessage message)
@@ -253,48 +293,6 @@ namespace OFrameLibrary.Helpers
             //    StatusMessage.MessageType = StatusMessageType.Error;
             //    StatusMessage.Message = ExceptionHelper.GetExceptionMessage(e.Error);
             //}
-        }
-
-        public static string GenerateEmailBody(EmailPlaceHolder emailPlaceHolder, string body)
-        {
-            var count = 0;
-
-            Array.ForEach(emailPlaceHolder.GetType().GetProperties(), propertyInfo =>
-            {
-                count++;
-                if (propertyInfo.CanRead)
-                {
-                    var property = propertyInfo.GetValue(emailPlaceHolder, null);
-                    var value = string.Empty;
-                    if (property != null)
-                    {
-                        value = property.ToString();
-                    }
-                    var placeHolder = string.Format("[PLACEHOLDER{0}]", count);
-                    body = body.Replace(placeHolder, value);
-                }
-            });
-
-            return body;
-        }
-
-        public static string GetEmailTemplateFromDataBase(string templateName)
-        {
-            var body = string.Empty;
-
-            return body;
-        }
-
-        public static string GetEmailTemplateFromFile(string templatePath)
-        {
-            var body = string.Empty;
-
-            using (var reader = new StreamReader(templatePath))
-            {
-                body = reader.ReadToEnd();
-            }
-
-            return body;
         }
     }
 }

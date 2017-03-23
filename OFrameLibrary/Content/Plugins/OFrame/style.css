@@ -1,5 +1,4 @@
-﻿
-@media (max-width: 600px) {
+﻿@media (max-width: 600px) {
     /* CSS Responsive table */
     table.responsive,
     table.responsive thead,
@@ -65,7 +64,6 @@
         }
 }
 
-
 .loader {
     margin: 0px auto;
     font-size: 10px;
@@ -114,10 +112,7 @@
     }
 }
 
-
-
-
-.portlet {    
+.portlet {
     background: #fff;
     padding: 0px;
 }
@@ -249,7 +244,7 @@
     }
 
     .portlet .portlet-body {
-        background: #fff;        
+        background: #fff;
     }
 
         .portlet .portlet-body .table {

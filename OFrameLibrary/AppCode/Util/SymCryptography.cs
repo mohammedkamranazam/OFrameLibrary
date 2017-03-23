@@ -7,19 +7,10 @@ namespace OFrameLibrary.Util
 {
     public class SymCryptography : IDisposable
     {
-        SymCryptographyServiceProvider mAlgorithm;
-        SymmetricAlgorithm mCryptoService;
-        string mKey = string.Empty;
-        string mSalt = string.Empty;
-
-        public void Dispose()
-        {
-            if (mCryptoService != null)
-            {
-                mCryptoService.Dispose();
-                mCryptoService = null;
-            }
-        }
+        private SymCryptographyServiceProvider mAlgorithm;
+        private SymmetricAlgorithm mCryptoService;
+        private string mKey = string.Empty;
+        private string mSalt = string.Empty;
 
         public SymCryptography()
         {
@@ -97,6 +88,7 @@ namespace OFrameLibrary.Util
             {
                 return mKey;
             }
+
             set
             {
                 mKey = value;
@@ -109,23 +101,10 @@ namespace OFrameLibrary.Util
             {
                 return mSalt;
             }
+
             set
             {
                 mSalt = value;
-            }
-        }
-
-        void SetLegalIV()
-        {
-            switch (mAlgorithm)
-            {
-                case SymCryptographyServiceProvider.Rijndael:
-                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9, 0x5, 0x46, 0x9c, 0xea, 0xa8, 0x4b, 0x73, 0xcc };
-                    break;
-
-                default:
-                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9 };
-                    break;
             }
         }
 
@@ -152,6 +131,15 @@ namespace OFrameLibrary.Util
             catch
             {
                 return null;
+            }
+        }
+
+        public void Dispose()
+        {
+            if (mCryptoService != null)
+            {
+                mCryptoService.Dispose();
+                mCryptoService = null;
             }
         }
 
@@ -206,6 +194,20 @@ namespace OFrameLibrary.Util
             using (PasswordDeriveBytes passwordDeriveBytes = new PasswordDeriveBytes(mKey, ASCIIEncoding.ASCII.GetBytes(mSalt)))
             {
                 return passwordDeriveBytes.GetBytes(mKey.Length);
+            }
+        }
+
+        private void SetLegalIV()
+        {
+            switch (mAlgorithm)
+            {
+                case SymCryptographyServiceProvider.Rijndael:
+                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9, 0x5, 0x46, 0x9c, 0xea, 0xa8, 0x4b, 0x73, 0xcc };
+                    break;
+
+                default:
+                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9 };
+                    break;
             }
         }
     }

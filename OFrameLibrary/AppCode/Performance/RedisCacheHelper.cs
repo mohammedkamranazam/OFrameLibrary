@@ -7,11 +7,11 @@ namespace OFrameLibrary.Performance
 {
     public static class RedisCacheHelper
     {
-        static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
-        {
+        private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+          {
             //return ConnectionMultiplexer.Connect("shopyzone.redis.cache.windows.net,ssl=true,password=MbeBeEQYMvBZNznKGPPy+ZZeHCJEJMQT92LWZ/VGO3Q=");
             return ConnectionMultiplexer.Connect(string.Format("{0},ssl={1},password={2}", AppConfig.RedisHost, AppConfig.RedisIsSsl, AppConfig.RedisPassword));
-        });
+          });
 
         public static ConnectionMultiplexer Connection
         {
@@ -88,22 +88,48 @@ namespace OFrameLibrary.Performance
             return true;
         }
 
-        static T Get<T>(this IDatabase cache, string key)
+        public static T SetOrGet<T>(string key, T value)
+        {
+            if (!Exists(key))
+            {
+                Add(key, value);
+            }
+            else
+            {
+                var cache = Connection.GetDatabase();
+
+                value = (T)cache.Get(key);
+            }
+
+            return value;
+        }
+
+        private static T Deserialize<T>(byte[] stream)
+        {
+            if (stream == null)
+            {
+                return default(T);
+            }
+
+            var binaryFormatter = new BinaryFormatter();
+            using (MemoryStream memoryStream = new MemoryStream(stream))
+            {
+                var result = (T)binaryFormatter.Deserialize(memoryStream);
+                return result;
+            }
+        }
+
+        private static T Get<T>(this IDatabase cache, string key)
         {
             return Deserialize<T>(cache.StringGet(key));
         }
 
-        static object Get(this IDatabase cache, string key)
+        private static object Get(this IDatabase cache, string key)
         {
             return Deserialize<object>(cache.StringGet(key));
         }
 
-        static void Set(this IDatabase cache, string key, object value)
-        {
-            cache.StringSet(key, Serialize(value));
-        }
-
-        static byte[] Serialize(object o)
+        private static byte[] Serialize(object o)
         {
             if (o == null)
             {
@@ -119,19 +145,9 @@ namespace OFrameLibrary.Performance
             }
         }
 
-        static T Deserialize<T>(byte[] stream)
+        private static void Set(this IDatabase cache, string key, object value)
         {
-            if (stream == null)
-            {
-                return default(T);
-            }
-
-            var binaryFormatter = new BinaryFormatter();
-            using (MemoryStream memoryStream = new MemoryStream(stream))
-            {
-                var result = (T)binaryFormatter.Deserialize(memoryStream);
-                return result;
-            }
+            cache.StringSet(key, Serialize(value));
         }
     }
 }

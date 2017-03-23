@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace OFrameLibrary.Models
 {
     public class JsonValidationResult<T>
-    {        
-        public bool IsJsonEmpty { get; set; } = true;
-
+    {
         public bool IsJsonDeserialized { get; set; } = false;
 
-        public bool IsModelValid { get; set; } = true;
+        public bool IsJsonEmpty { get; set; } = true;
 
         public bool IsModelEmpty { get; set; } = true;
 
-        public List<T> Model { get; set; }
+        public bool IsModelValid { get; set; } = true;
 
         public string Message { get; set; } = "Json Empty";
+
+        public List<T> Model { get; set; }
     }
 }

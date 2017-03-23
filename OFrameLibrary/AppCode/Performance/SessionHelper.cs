@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using OFrameLibrary.Models;
+using System.Web;
 
 namespace OFrameLibrary.Performance
 {
@@ -70,6 +71,23 @@ namespace OFrameLibrary.Performance
             }
 
             return true;
+        }
+
+        public static T SetOrGet<T>(string key, T value)
+        {
+            if (!Exists(key))
+            {
+                Add(key, value);
+            }
+            else
+            {
+                var ss = new SerializableSession();
+                ss = (SerializableSession)HttpContext.Current.Session[key];
+
+                value = (T)ss.SessionObject;
+            }
+
+            return value;
         }
     }
 }

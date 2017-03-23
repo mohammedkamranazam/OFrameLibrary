@@ -7,18 +7,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ServerHelper
     {
-         const string expressionXPath = "servers/server";
-         const string uniqueKey = "_ServerHelper_";
+        private const string expressionXPath = "servers/server";
+        private const string uniqueKey = "_ServerHelper_";
 
-         readonly static string fileName = AppConfig.RemoteServersFile;
-
-         static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        private static readonly string fileName = AppConfig.RemoteServersFile;
 
         public static void AddServer(ServerSettings server)
         {
@@ -207,6 +199,14 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        private static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

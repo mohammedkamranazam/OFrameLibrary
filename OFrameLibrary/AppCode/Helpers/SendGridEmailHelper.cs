@@ -1,13 +1,11 @@
-﻿using OFrameLibrary.AppCode.Models;
+﻿using OFrameLibrary.Models;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace OFrameLibrary.AppCode.Helpers
+namespace OFrameLibrary.Helpers
 {
     public class SendGridEmailHelper
     {
@@ -15,7 +13,6 @@ namespace OFrameLibrary.AppCode.Helpers
         {
             try
             {
-
                 SendGridAPIClient sg = new SendGridAPIClient(settings.SendGridApiKey.Replace(" ", ""));
 
                 Email from = new Email(settings.SenderEmail, settings.SenderName);
@@ -76,8 +73,6 @@ namespace OFrameLibrary.AppCode.Helpers
             catch (Exception ex) { throw (ex); }
         }
 
-
-
         public static bool SendMailToMultiple(SendGridSettings settings, List<string> To, string Subject, string Message)
         {
             try
@@ -98,5 +93,4 @@ namespace OFrameLibrary.AppCode.Helpers
             catch (Exception ex) { throw ex; }
         }
     }
-
 }

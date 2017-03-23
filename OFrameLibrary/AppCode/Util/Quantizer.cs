@@ -7,13 +7,54 @@ namespace OFrameLibrary.Util
 {
     internal abstract class Quantizer
     {
-        readonly int _pixelSize;
-        readonly bool _singlePass;
+        private readonly int _pixelSize;
+        private readonly bool _singlePass;
 
         public Quantizer(bool singlePass)
         {
             _singlePass = singlePass;
             _pixelSize = Marshal.SizeOf(typeof(Color32));
+        }
+
+        public Bitmap Quantize(Image source)
+        {
+            var height = source.Height;
+            var width = source.Width;
+
+            var bounds = new Rectangle(0, 0, width, height);
+
+            var copy = new Bitmap(width, height, PixelFormat.Format32bppArgb);
+
+            var output = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
+
+            using (var g = Graphics.FromImage(copy))
+            {
+                g.PageUnit = GraphicsUnit.Pixel;
+
+                g.DrawImage(source, bounds);
+            }
+
+            BitmapData sourceData = null;
+
+            try
+            {
+                sourceData = copy.LockBits(bounds, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+                if (!_singlePass)
+                {
+                    FirstPass(sourceData, width, height);
+                }
+
+                output.Palette = GetPalette(output.Palette);
+
+                SecondPass(sourceData, output, width, height, bounds);
+            }
+            finally
+            {
+                copy.UnlockBits(sourceData);
+            }
+
+            return output;
         }
 
         protected virtual void FirstPass(BitmapData sourceData, int width, int height)
@@ -111,47 +152,6 @@ namespace OFrameLibrary.Util
             }
         }
 
-        public Bitmap Quantize(Image source)
-        {
-            var height = source.Height;
-            var width = source.Width;
-
-            var bounds = new Rectangle(0, 0, width, height);
-
-            var copy = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-
-            var output = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
-
-            using (var g = Graphics.FromImage(copy))
-            {
-                g.PageUnit = GraphicsUnit.Pixel;
-
-                g.DrawImage(source, bounds);
-            }
-
-            BitmapData sourceData = null;
-
-            try
-            {
-                sourceData = copy.LockBits(bounds, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-                if (!_singlePass)
-                {
-                    FirstPass(sourceData, width, height);
-                }
-
-                output.Palette = GetPalette(output.Palette);
-
-                SecondPass(sourceData, output, width, height, bounds);
-            }
-            finally
-            {
-                copy.UnlockBits(sourceData);
-            }
-
-            return output;
-        }
-
         // public structs...
         /// <summary>
         /// Struct that defines a 32 bpp color
@@ -165,19 +165,19 @@ namespace OFrameLibrary.Util
         public struct Color32
         {
             [FieldOffset(0)]
-            byte _Blue;
+            private byte _Blue;
 
             [FieldOffset(1)]
-            byte _Green;
+            private byte _Green;
 
             [FieldOffset(2)]
-            byte _Red;
+            private byte _Red;
 
             [FieldOffset(3)]
-            byte _Alpha;
+            private byte _Alpha;
 
             [FieldOffset(0)]
-            int _ARGB;
+            private int _ARGB;
 
             public Color32(IntPtr pSourcePixel)
             {
@@ -193,6 +193,7 @@ namespace OFrameLibrary.Util
                 {
                     return _Alpha;
                 }
+
                 set
                 {
                     _Alpha = value;
@@ -208,6 +209,7 @@ namespace OFrameLibrary.Util
                 {
                     return _ARGB;
                 }
+
                 set
                 {
                     _ARGB = value;
@@ -223,6 +225,7 @@ namespace OFrameLibrary.Util
                 {
                     return _Blue;
                 }
+
                 set
                 {
                     _Blue = value;
@@ -249,6 +252,7 @@ namespace OFrameLibrary.Util
                 {
                     return _Green;
                 }
+
                 set
                 {
                     _Green = value;
@@ -264,6 +268,7 @@ namespace OFrameLibrary.Util
                 {
                     return _Red;
                 }
+
                 set
                 {
                     _Red = value;

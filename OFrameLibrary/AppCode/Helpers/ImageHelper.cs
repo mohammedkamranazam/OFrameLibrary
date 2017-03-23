@@ -14,70 +14,16 @@ namespace OFrameLibrary.Helpers
 {
     public static class ImageHelper
     {
-        static Size GetAspectRatioSize(int maxWidth, int maxHeight, int actualWidth, int actualHeight)
+        private const string errorMessage = "Could not recognize image format.";
+
+        private static Dictionary<byte[], Func<BinaryReader, Size>> imageFormatDecoders = new Dictionary<byte[], Func<BinaryReader, Size>>
         {
-            var oSize = new Size(maxWidth, maxHeight);
-
-            var iFactorX = (float)maxWidth / (float)actualWidth;
-            var iFactorY = (float)maxHeight / (float)actualHeight;
-
-            if (iFactorX != 1 || iFactorY != 1)
-            {
-                if (iFactorX < iFactorY)
-                {
-                    oSize.Height = (int)Math.Round((float)actualHeight * iFactorX);
-                }
-                else
-                {
-                    if (iFactorX > iFactorY)
-                    {
-                        oSize.Width = (int)Math.Round((float)actualWidth * iFactorY);
-                    }
-                }
-            }
-
-            if (oSize.Height <= 0)
-            {
-                oSize.Height = 1;
-            }
-            if (oSize.Width <= 0)
-            {
-                oSize.Width = 1;
-            }
-            return oSize;
-        }
-
-        static ImageCodecInfo GetEncoderInfo(string mimeType)
-        {
-            var codecs = ImageCodecInfo.GetImageEncoders();
-
-            for (var i = 0; i < codecs.Length; i++)
-            {
-                if (codecs[i].MimeType == mimeType)
-                {
-                    return codecs[i];
-                }
-            }
-
-            return null;
-        }
-
-        static ImageCodecInfo GetJpgCodec()
-        {
-            var aCodecs = ImageCodecInfo.GetImageEncoders();
-            ImageCodecInfo oCodec = null;
-
-            for (var i = 0; i < aCodecs.Length; i++)
-            {
-                if (aCodecs[i].MimeType.Equals("image/jpeg"))
-                {
-                    oCodec = aCodecs[i];
-                    break;
-                }
-            }
-
-            return oCodec;
-        }
+            { new byte[]{ 0x42, 0x4D }, DecodeBitmap},
+            { new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 }, DecodeGif },
+            { new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 }, DecodeGif },
+            { new byte[]{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }, DecodePng },
+            { new byte[]{ 0xff, 0xd8 }, DecodeJfif }
+        };
 
         public static Stream AddText(Stream image, string text, string fontFamily, float size, string color, Point position)
         {
@@ -204,6 +150,74 @@ namespace OFrameLibrary.Helpers
             result.RotateFlip(type);
 
             return result;
+        }
+
+        public static Size GetDimensionFromURL(string imageURL)
+        {
+            Stream str = null;
+            var wReq = (HttpWebRequest)WebRequest.Create(imageURL);
+            var wRes = (HttpWebResponse)(wReq).GetResponse();
+            str = wRes.GetResponseStream();
+
+            var imageOrig = System.Drawing.Image.FromStream(str);
+
+            return new Size(imageOrig.Width, imageOrig.Height);
+        }
+
+        /// <summary>
+        /// Gets the dimensions of an image.
+        /// </summary>
+        /// <param name="path">The path of the image to get the dimensions of.</param>
+        /// <returns>The dimensions of the specified image.</returns>
+        /// <exception cref="ArgumentException">The image was of an unrecognized format.</exception>
+        public static Size GetDimensions(string path)
+        {
+            using (BinaryReader binaryReader = new BinaryReader(File.OpenRead(path)))
+            {
+                try
+                {
+                    return GetDimensions(binaryReader);
+                }
+                catch (ArgumentException e)
+                {
+                    if (e.Message.StartsWith(errorMessage))
+                    {
+                        throw new ArgumentException(errorMessage, "path", e);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the dimensions of an image.
+        /// </summary>
+        /// <param name="path">The path of the image to get the dimensions of.</param>
+        /// <returns>The dimensions of the specified image.</returns>
+        /// <exception cref="ArgumentException">The image was of an unrecognized format.</exception>
+        public static Size GetDimensions(BinaryReader binaryReader)
+        {
+            int maxMagicBytesLength = imageFormatDecoders.Keys.OrderByDescending(x => x.Length).First().Length;
+
+            byte[] magicBytes = new byte[maxMagicBytesLength];
+
+            for (int i = 0; i < maxMagicBytesLength; i += 1)
+            {
+                magicBytes[i] = binaryReader.ReadByte();
+
+                foreach (var kvPair in imageFormatDecoders)
+                {
+                    if (magicBytes.StartsWith(kvPair.Key))
+                    {
+                        return kvPair.Value(binaryReader);
+                    }
+                }
+            }
+
+            throw new ArgumentException(errorMessage, "binaryReader");
         }
 
         public static MemoryStream GetStreamFromFile(string absolutePath)
@@ -510,106 +524,7 @@ namespace OFrameLibrary.Helpers
             }
         }
 
-        const string errorMessage = "Could not recognize image format.";
-
-        static Dictionary<byte[], Func<BinaryReader, Size>> imageFormatDecoders = new Dictionary<byte[], Func<BinaryReader, Size>>
-        {
-            { new byte[]{ 0x42, 0x4D }, DecodeBitmap},
-            { new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x37, 0x61 }, DecodeGif },
-            { new byte[]{ 0x47, 0x49, 0x46, 0x38, 0x39, 0x61 }, DecodeGif },
-            { new byte[]{ 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A }, DecodePng },
-            { new byte[]{ 0xff, 0xd8 }, DecodeJfif }
-        };
-
-        /// <summary>
-        /// Gets the dimensions of an image.
-        /// </summary>
-        /// <param name="path">The path of the image to get the dimensions of.</param>
-        /// <returns>The dimensions of the specified image.</returns>
-        /// <exception cref="ArgumentException">The image was of an unrecognized format.</exception>
-        public static Size GetDimensions(string path)
-        {
-            using (BinaryReader binaryReader = new BinaryReader(File.OpenRead(path)))
-            {
-                try
-                {
-                    return GetDimensions(binaryReader);
-                }
-                catch (ArgumentException e)
-                {
-                    if (e.Message.StartsWith(errorMessage))
-                    {
-                        throw new ArgumentException(errorMessage, "path", e);
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the dimensions of an image.
-        /// </summary>
-        /// <param name="path">The path of the image to get the dimensions of.</param>
-        /// <returns>The dimensions of the specified image.</returns>
-        /// <exception cref="ArgumentException">The image was of an unrecognized format.</exception>
-        public static Size GetDimensions(BinaryReader binaryReader)
-        {
-            int maxMagicBytesLength = imageFormatDecoders.Keys.OrderByDescending(x => x.Length).First().Length;
-
-            byte[] magicBytes = new byte[maxMagicBytesLength];
-
-            for (int i = 0; i < maxMagicBytesLength; i += 1)
-            {
-                magicBytes[i] = binaryReader.ReadByte();
-
-                foreach (var kvPair in imageFormatDecoders)
-                {
-                    if (magicBytes.StartsWith(kvPair.Key))
-                    {
-                        return kvPair.Value(binaryReader);
-                    }
-                }
-            }
-
-            throw new ArgumentException(errorMessage, "binaryReader");
-        }
-
-        static bool StartsWith(this byte[] thisBytes, byte[] thatBytes)
-        {
-            for (int i = 0; i < thatBytes.Length; i += 1)
-            {
-                if (thisBytes[i] != thatBytes[i])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        static short ReadLittleEndianInt16(this BinaryReader binaryReader)
-        {
-            byte[] bytes = new byte[sizeof(short)];
-            for (int i = 0; i < sizeof(short); i += 1)
-            {
-                bytes[sizeof(short) - 1 - i] = binaryReader.ReadByte();
-            }
-            return BitConverter.ToInt16(bytes, 0);
-        }
-
-        static int ReadLittleEndianInt32(this BinaryReader binaryReader)
-        {
-            byte[] bytes = new byte[sizeof(int)];
-            for (int i = 0; i < sizeof(int); i += 1)
-            {
-                bytes[sizeof(int) - 1 - i] = binaryReader.ReadByte();
-            }
-            return BitConverter.ToInt32(bytes, 0);
-        }
-
-        static Size DecodeBitmap(BinaryReader binaryReader)
+        private static Size DecodeBitmap(BinaryReader binaryReader)
         {
             binaryReader.ReadBytes(16);
             var width = binaryReader.ReadInt32();
@@ -617,22 +532,14 @@ namespace OFrameLibrary.Helpers
             return new Size(width, height);
         }
 
-        static Size DecodeGif(BinaryReader binaryReader)
+        private static Size DecodeGif(BinaryReader binaryReader)
         {
             int width = binaryReader.ReadInt16();
             int height = binaryReader.ReadInt16();
             return new Size(width, height);
         }
 
-        static Size DecodePng(BinaryReader binaryReader)
-        {
-            binaryReader.ReadBytes(8);
-            var width = binaryReader.ReadLittleEndianInt32();
-            var height = binaryReader.ReadLittleEndianInt32();
-            return new Size(width, height);
-        }
-
-        static Size DecodeJfif(BinaryReader binaryReader)
+        private static Size DecodeJfif(BinaryReader binaryReader)
         {
             while (binaryReader.ReadByte() == 0xff)
             {
@@ -654,16 +561,109 @@ namespace OFrameLibrary.Helpers
             throw new ArgumentException(errorMessage);
         }
 
-        public static Size GetDimensionFromURL(string imageURL)
+        private static Size DecodePng(BinaryReader binaryReader)
         {
-            Stream str = null;
-            var wReq = (HttpWebRequest)WebRequest.Create(imageURL);
-            var wRes = (HttpWebResponse)(wReq).GetResponse();
-            str = wRes.GetResponseStream();
+            binaryReader.ReadBytes(8);
+            var width = binaryReader.ReadLittleEndianInt32();
+            var height = binaryReader.ReadLittleEndianInt32();
+            return new Size(width, height);
+        }
 
-            var imageOrig = System.Drawing.Image.FromStream(str);
+        private static Size GetAspectRatioSize(int maxWidth, int maxHeight, int actualWidth, int actualHeight)
+        {
+            var oSize = new Size(maxWidth, maxHeight);
 
-            return new Size(imageOrig.Width, imageOrig.Height);
+            var iFactorX = (float)maxWidth / (float)actualWidth;
+            var iFactorY = (float)maxHeight / (float)actualHeight;
+
+            if (iFactorX != 1 || iFactorY != 1)
+            {
+                if (iFactorX < iFactorY)
+                {
+                    oSize.Height = (int)Math.Round((float)actualHeight * iFactorX);
+                }
+                else
+                {
+                    if (iFactorX > iFactorY)
+                    {
+                        oSize.Width = (int)Math.Round((float)actualWidth * iFactorY);
+                    }
+                }
+            }
+
+            if (oSize.Height <= 0)
+            {
+                oSize.Height = 1;
+            }
+            if (oSize.Width <= 0)
+            {
+                oSize.Width = 1;
+            }
+            return oSize;
+        }
+
+        private static ImageCodecInfo GetEncoderInfo(string mimeType)
+        {
+            var codecs = ImageCodecInfo.GetImageEncoders();
+
+            for (var i = 0; i < codecs.Length; i++)
+            {
+                if (codecs[i].MimeType == mimeType)
+                {
+                    return codecs[i];
+                }
+            }
+
+            return null;
+        }
+
+        private static ImageCodecInfo GetJpgCodec()
+        {
+            var aCodecs = ImageCodecInfo.GetImageEncoders();
+            ImageCodecInfo oCodec = null;
+
+            for (var i = 0; i < aCodecs.Length; i++)
+            {
+                if (aCodecs[i].MimeType.Equals("image/jpeg"))
+                {
+                    oCodec = aCodecs[i];
+                    break;
+                }
+            }
+
+            return oCodec;
+        }
+
+        private static short ReadLittleEndianInt16(this BinaryReader binaryReader)
+        {
+            byte[] bytes = new byte[sizeof(short)];
+            for (int i = 0; i < sizeof(short); i += 1)
+            {
+                bytes[sizeof(short) - 1 - i] = binaryReader.ReadByte();
+            }
+            return BitConverter.ToInt16(bytes, 0);
+        }
+
+        private static int ReadLittleEndianInt32(this BinaryReader binaryReader)
+        {
+            byte[] bytes = new byte[sizeof(int)];
+            for (int i = 0; i < sizeof(int); i += 1)
+            {
+                bytes[sizeof(int) - 1 - i] = binaryReader.ReadByte();
+            }
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
+        private static bool StartsWith(this byte[] thisBytes, byte[] thatBytes)
+        {
+            for (int i = 0; i < thatBytes.Length; i += 1)
+            {
+                if (thisBytes[i] != thatBytes[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

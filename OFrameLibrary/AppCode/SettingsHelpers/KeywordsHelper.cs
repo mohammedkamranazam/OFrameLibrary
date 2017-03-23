@@ -6,18 +6,9 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class KeywordsHelper
     {
-        const string uniqueKey = "_KeywordsHelper_";
-        const string keyXPath = "keys/key";
-
-        readonly static string fileName = AppConfig.KeywordsFile;
-
-        static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        private const string keyXPath = "keys/key";
+        private const string uniqueKey = "_KeywordsHelper_";
+        private static readonly string fileName = AppConfig.KeywordsFile;
 
         public static void AddKeyword(string name, string value)
         {
@@ -148,6 +139,14 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        private static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

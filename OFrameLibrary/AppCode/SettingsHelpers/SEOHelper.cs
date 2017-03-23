@@ -7,18 +7,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class SEOHelper
     {
-        const string pageXPath = "pages/page";
-        const string uniqueKey = "_PageSEO_";
+        private const string pageXPath = "pages/page";
+        private const string uniqueKey = "_PageSEO_";
 
-        readonly static string fileName = AppConfig.SEOFile;
-
-        static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        private static readonly string fileName = AppConfig.SEOFile;
 
         public static void AddPage(string id)
         {
@@ -218,6 +210,14 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        private static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

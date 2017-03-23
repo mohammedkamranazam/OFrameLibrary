@@ -68,5 +68,19 @@ namespace OFrameLibrary.Performance
 
             return true;
         }
+
+        public static T SetOrGet<T>(string key, T value)
+        {
+            if (!Exists(key))
+            {
+                Add(key, value);
+            }
+            else
+            {
+                value = (T)HttpContext.Current.Cache[key];
+            }
+
+            return value;
+        }
     }
 }

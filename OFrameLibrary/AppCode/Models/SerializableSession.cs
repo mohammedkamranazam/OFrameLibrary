@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace OFrameLibrary.Performance
+namespace OFrameLibrary.Models
 {
     [Serializable]
     public class SerializableSession

@@ -8,25 +8,6 @@ namespace OFrameLibrary.Util
 {
     public static class StringHelper
     {
-        public static string TruncateFromHere(string content)
-        {
-            var position = content.IndexOf("{TRUNCATE-HERE}", 0);
-
-            if (position > 0)
-            {
-                return content.Remove(position);
-            }
-            else
-            {
-                return content;
-            }
-        }
-
-        public static string RemoveTruncator(string content)
-        {
-            return content.Replace("{TRUNCATE-HERE}", string.Empty);
-        }
-
         public static ListItem GetKey(Match match)
         {
             var key = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
@@ -52,15 +33,6 @@ namespace OFrameLibrary.Util
             {
                 return null;
             }
-        }
-
-        public static string RemoveKeys(string content)
-        {
-            const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
-
-            var r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-            return r.Replace(content, string.Empty);
         }
 
         public static bool HasSpecialChar(string text)
@@ -111,6 +83,15 @@ namespace OFrameLibrary.Util
             }
         }
 
+        public static string RemoveKeys(string content)
+        {
+            const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
+
+            var r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            return r.Replace(content, string.Empty);
+        }
+
         public static string RemoveSpecialChars(string text)
         {
             var chars = new string[] { ",", ".", "/", "!", "@", "#", "$", "%", "^", "&", "*", "'", "\"", ";", "-", "_", "(", ")", ":", "|", "[", "]", " " };
@@ -123,6 +104,65 @@ namespace OFrameLibrary.Util
                 }
             }
             return text;
+        }
+
+        public static string RemoveTruncator(string content)
+        {
+            return content.Replace("{TRUNCATE-HERE}", string.Empty);
+        }
+
+        /// <summary>
+        /// Strips all HTML tags from a string
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string StripHtml(this string html)
+        {
+            if (string.IsNullOrEmpty(html))
+                return html;
+
+            return Regex.Replace(html, @"<(.|\n)*?>", string.Empty);
+        }
+
+        /// <summary>
+        /// Truncates text to a number of characters
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="maxCharacters"></param>
+        /// <param name="trailingText"></param>
+        /// <returns></returns>
+        public static string Truncate(this string text, int maxCharacters)
+        {
+            return text.Truncate(maxCharacters, null);
+        }
+
+        /// <summary>
+        /// Truncates text to a number of characters and adds trailing text, i.e. elipses, to the end
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="maxCharacters"></param>
+        /// <param name="trailingText"></param>
+        /// <returns></returns>
+        public static string Truncate(this string text, int maxCharacters, string trailingText)
+        {
+            if (string.IsNullOrEmpty(text) || maxCharacters <= 0 || text.Length <= maxCharacters)
+                return text;
+            else
+                return text.Substring(0, maxCharacters) + trailingText;
+        }
+
+        public static string TruncateFromHere(string content)
+        {
+            var position = content.IndexOf("{TRUNCATE-HERE}", 0);
+
+            if (position > 0)
+            {
+                return content.Remove(position);
+            }
+            else
+            {
+                return content;
+            }
         }
 
         /// <summary>
@@ -212,46 +252,6 @@ namespace OFrameLibrary.Util
         public static string TruncateHtml(this string html, int maxCharacters)
         {
             return html.TruncateHtml(maxCharacters, null);
-        }
-
-        /// <summary>
-        /// Strips all HTML tags from a string
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string StripHtml(this string html)
-        {
-            if (string.IsNullOrEmpty(html))
-                return html;
-
-            return Regex.Replace(html, @"<(.|\n)*?>", string.Empty);
-        }
-
-        /// <summary>
-        /// Truncates text to a number of characters
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="maxCharacters"></param>
-        /// <param name="trailingText"></param>
-        /// <returns></returns>
-        public static string Truncate(this string text, int maxCharacters)
-        {
-            return text.Truncate(maxCharacters, null);
-        }
-
-        /// <summary>
-        /// Truncates text to a number of characters and adds trailing text, i.e. elipses, to the end
-        /// </summary>
-        /// <param name="text"></param>
-        /// <param name="maxCharacters"></param>
-        /// <param name="trailingText"></param>
-        /// <returns></returns>
-        public static string Truncate(this string text, int maxCharacters, string trailingText)
-        {
-            if (string.IsNullOrEmpty(text) || maxCharacters <= 0 || text.Length <= maxCharacters)
-                return text;
-            else
-                return text.Substring(0, maxCharacters) + trailingText;
         }
 
         /// <summary>

@@ -9,14 +9,6 @@ namespace OFrameLibrary.Helpers
         {
         }
 
-        public string Name
-        {
-            get
-            {
-                return this.FindFirst(ClaimTypes.Name).Value;
-            }
-        }
-
         public string Email
         {
             get
@@ -25,19 +17,27 @@ namespace OFrameLibrary.Helpers
             }
         }
 
-        public string UserType
-        {
-            get
-            {
-                return this.FindFirst(ClaimTypes.UserData).Value;
-            }
-        }
-
         public string ID
         {
             get
             {
                 return this.FindFirst(ClaimTypes.NameIdentifier).Value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.Name).Value;
+            }
+        }
+
+        public string UserType
+        {
+            get
+            {
+                return this.FindFirst(ClaimTypes.UserData).Value;
             }
         }
     }

@@ -35,35 +35,6 @@ namespace OFrameLibrary.Helpers
         #region Public member methods...
 
         /// <summary>
-        /// generic Get method for Entities
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<TEntity> Get()
-        {
-            IQueryable<TEntity> query = DbSet;
-            return query.ToList();
-        }
-
-        /// <summary>
-        /// Generic get method on the basis of id for Entities.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual TEntity GetByID(object id)
-        {
-            return DbSet.Find(id);
-        }
-
-        /// <summary>
-        /// generic Insert method for the entities
-        /// </summary>
-        /// <param name="entity"></param>
-        public virtual void Insert(TEntity entity)
-        {
-            DbSet.Add(entity);
-        }
-
-        /// <summary>
         /// Generic Delete method for the entities
         /// </summary>
         /// <param name="id"></param>
@@ -87,13 +58,74 @@ namespace OFrameLibrary.Helpers
         }
 
         /// <summary>
-        /// Generic update method for the entities
+        /// generic delete method , deletes data for the entities on the basis of condition.
         /// </summary>
-        /// <param name="entityToUpdate"></param>
-        public virtual void Update(TEntity entityToUpdate)
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public void Delete(Func<TEntity, Boolean> where)
         {
-            DbSet.Attach(entityToUpdate);
-            Context.Entry(entityToUpdate).State = EntityState.Modified;
+            var objects = DbSet.Where(where).AsQueryable();
+            foreach (TEntity obj in objects)
+                DbSet.Remove(obj);
+        }
+
+        /// <summary>
+        /// Generic method to check if entity exists
+        /// </summary>
+        /// <param name="primaryKey"></param>
+        /// <returns></returns>
+        public bool Exists(object primaryKey)
+        {
+            return DbSet.Find(primaryKey) != null;
+        }
+
+        /// <summary>
+        /// generic Get method for Entities
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<TEntity> Get()
+        {
+            IQueryable<TEntity> query = DbSet;
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// generic get method , fetches data for the entities on the basis of condition.
+        /// </summary>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public TEntity Get(Func<TEntity, Boolean> where)
+        {
+            return DbSet.FirstOrDefault<TEntity>(where);
+        }
+
+        /// <summary>
+        /// generic method to fetch all the records from db
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<TEntity> GetAll()
+        {
+            return DbSet.ToList();
+        }
+
+        /// <summary>
+        /// Generic get method on the basis of id for Entities.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual TEntity GetByID(object id)
+        {
+            return DbSet.Find(id);
+        }
+
+        /// <summary>
+        /// The first record matching the specified criteria
+        /// </summary>
+        /// <param name="predicate">Criteria to match on</param>
+        /// <returns>A single record containing the first record matching the specified criteria</returns>
+        public TEntity GetFirst(Func<TEntity, bool> predicate)
+        {
+            return DbSet.First<TEntity>(predicate);
         }
 
         /// <summary>
@@ -117,34 +149,13 @@ namespace OFrameLibrary.Helpers
         }
 
         /// <summary>
-        /// generic get method , fetches data for the entities on the basis of condition.
+        /// Gets a single record by the specified criteria (usually the unique identifier)
         /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public TEntity Get(Func<TEntity, Boolean> where)
+        /// <param name="predicate">Criteria to match on</param>
+        /// <returns>A single record that matches the specified criteria</returns>
+        public TEntity GetSingle(Func<TEntity, bool> predicate)
         {
-            return DbSet.FirstOrDefault<TEntity>(where);
-        }
-
-        /// <summary>
-        /// generic delete method , deletes data for the entities on the basis of condition.
-        /// </summary>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public void Delete(Func<TEntity, Boolean> where)
-        {
-            var objects = DbSet.Where(where).AsQueryable();
-            foreach (TEntity obj in objects)
-                DbSet.Remove(obj);
-        }
-
-        /// <summary>
-        /// generic method to fetch all the records from db
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<TEntity> GetAll()
-        {
-            return DbSet.ToList();
+            return DbSet.Single<TEntity>(predicate);
         }
 
         /// <summary>
@@ -163,33 +174,22 @@ namespace OFrameLibrary.Helpers
         }
 
         /// <summary>
-        /// Generic method to check if entity exists
+        /// generic Insert method for the entities
         /// </summary>
-        /// <param name="primaryKey"></param>
-        /// <returns></returns>
-        public bool Exists(object primaryKey)
+        /// <param name="entity"></param>
+        public virtual void Insert(TEntity entity)
         {
-            return DbSet.Find(primaryKey) != null;
+            DbSet.Add(entity);
         }
 
         /// <summary>
-        /// Gets a single record by the specified criteria (usually the unique identifier)
+        /// Generic update method for the entities
         /// </summary>
-        /// <param name="predicate">Criteria to match on</param>
-        /// <returns>A single record that matches the specified criteria</returns>
-        public TEntity GetSingle(Func<TEntity, bool> predicate)
+        /// <param name="entityToUpdate"></param>
+        public virtual void Update(TEntity entityToUpdate)
         {
-            return DbSet.Single<TEntity>(predicate);
-        }
-
-        /// <summary>
-        /// The first record matching the specified criteria
-        /// </summary>
-        /// <param name="predicate">Criteria to match on</param>
-        /// <returns>A single record containing the first record matching the specified criteria</returns>
-        public TEntity GetFirst(Func<TEntity, bool> predicate)
-        {
-            return DbSet.First<TEntity>(predicate);
+            DbSet.Attach(entityToUpdate);
+            Context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
         #endregion Public member methods...

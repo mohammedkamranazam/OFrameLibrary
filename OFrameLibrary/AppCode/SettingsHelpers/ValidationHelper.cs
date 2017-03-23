@@ -8,20 +8,12 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ValidationHelper
     {
-        const string expressionUniqueKey = "_ValidationExpressionHelper_";
-        const string expressionXPath = "validationSetting/validationExpressions/validationExpression";
-        const string messageUniqueKey = "_ValidationMessageHelper_";
-        const string messageXPath = "validationSetting/validationMessages/language";
+        private const string expressionUniqueKey = "_ValidationExpressionHelper_";
+        private const string expressionXPath = "validationSetting/validationExpressions/validationExpression";
+        private const string messageUniqueKey = "_ValidationMessageHelper_";
+        private const string messageXPath = "validationSetting/validationMessages/language";
 
-        readonly static string fileName = AppConfig.ValidationSettingsFile;
-
-        static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        private static readonly string fileName = AppConfig.ValidationSettingsFile;
 
         public static void AddExpression(string name, string value)
         {
@@ -62,7 +54,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void AddMessage(string name, string locale, string value)
         {
-            if (!MessageExists(name, locale) && LanguageExists(locale))
+            if (!MessageExistsFromSettings(name, locale) && LanguageExists(locale))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -115,7 +107,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void DeleteMessage(string name, string locale)
         {
-            if (MessageExists(name, locale))
+            if (MessageExistsFromSettings(name, locale))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -216,19 +208,19 @@ namespace OFrameLibrary.SettingsHelpers
             var defaultLocale = AppConfig.DefaultLocale;
             var currentLocale = CultureInfo.CurrentCulture.Name;
 
-            if (!string.IsNullOrWhiteSpace(userSetLocale) && MessageExists(name, userSetLocale))
+            if (!string.IsNullOrWhiteSpace(userSetLocale) && MessageExistsFromSettings(name, userSetLocale))
             {
                 return GetMessage(name, userSetLocale);
             }
             else
             {
-                if (MessageExists(name, currentLocale))
+                if (MessageExistsFromSettings(name, currentLocale))
                 {
                     return GetMessage(name, currentLocale);
                 }
                 else
                 {
-                    if (MessageExists(name, defaultLocale))
+                    if (MessageExistsFromSettings(name, defaultLocale))
                     {
                         return GetMessage(name, defaultLocale);
                     }
@@ -315,6 +307,25 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static bool MessageExists(string name, string locale)
         {
+            return MessageExists(name, locale, AppConfig.PerformanceMode);
+        }
+
+        public static bool MessageExists(string name, string locale, PerformanceMode performanceMode)
+        {
+            var keyValue = false;
+            var performanceKey = string.Format("{0}{1}_{2}_MessageExistance", messageUniqueKey, name, locale);
+
+            Func<string, string, bool> fnc = MessageExistsFromSettings;
+
+            var args = new object[] { name, locale };
+
+            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+
+        public static bool MessageExistsFromSettings(string name, string locale)
+        {
             var present = false;
 
             var xmlDoc = new XmlDocument();
@@ -371,7 +382,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void SetMessage(string name, string locale, string value)
         {
-            if (MessageExists(name, locale))
+            if (MessageExistsFromSettings(name, locale))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -401,6 +412,14 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        private static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

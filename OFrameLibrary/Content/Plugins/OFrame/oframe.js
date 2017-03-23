@@ -432,10 +432,8 @@ var oframe = {
             });
 
             //if (options.SelectMode === "single") {
-
             //}
             //else if (options.SelectMode === "multiple") {
-
             //}
 
             //$(chkbox).click(function (event) {
@@ -482,7 +480,6 @@ var oframe = {
         var options = $.extend({}, {
             Selector: "",
             Load: function (form) {
-
             },
             Success: function (response, status) {
             },
@@ -528,7 +525,6 @@ var oframe = {
                             return myXhr;
                         },
                         beforeSend: function () {
-
                             var x = object;
                             oframe.blockUI();
                             var vr = oframe.formsValidate(options.Selector);
@@ -676,7 +672,6 @@ var oframe = {
         }
 
         var localeSelected = function (event, selector) {
-
             preAddTab({
                 Selector: selector,
                 LocaleItem: event.currentTarget,
@@ -687,7 +682,6 @@ var oframe = {
         }
 
         var preAddTab = function (args) {
-
             $.magnificPopup.close();
             oframe.blockUI();
 
@@ -716,7 +710,6 @@ var oframe = {
         }
 
         var addTab = function (e, args) {
-
             $(args.Selector).find(".tab-content div").removeClass("active");
             $(args.Selector).find(".nav-tabs li").removeClass("active");
 
@@ -740,7 +733,6 @@ var oframe = {
         }
 
         var tabClosed = function (e, selector) {
-
             var anchor = $(e).parent('a.tabAnchor');
             var tabID = $(anchor).data("tabid");
             var locale = $(anchor).data("locale");
@@ -761,7 +753,6 @@ var oframe = {
         }
 
         var getHashTruncatedLocales = function (e) {
-
             var selLocArr = $(e).val().split(";").clean("");
 
             var locales = "";
@@ -796,7 +787,6 @@ var oframe = {
         }
 
         var initializeTabs = function (selector) {
-
             var localesField = $(selector).find(options.LocalesFieldSelector);
             var locales = getHashTruncatedLocales(localesField).split(";").clean("").clean(options.CurrentLocale);
 
@@ -839,7 +829,6 @@ var oframe = {
         }
 
         var buildTabStructure = function (selector) {
-
             oframe.blockUI();
             var ulTag = '<ul class="nav nav-tabs tab-color-dark background-dark">';
             ulTag += '<li class="active"><a href="#Tab_{0}-{1}" data-toggle="tab">{2}</a></li>';
@@ -888,7 +877,6 @@ var oframe = {
 
     $.fn.LocalizeForm = localizeForm;
 }(jQuery));
-
 
 var dateFormat = function () {
     var token = /d{1,4}|m{1,4}|yy(?:yy)?|([HhMsTt])\1?|[LloSZ]|"[^"]*"|'[^']*'/g,

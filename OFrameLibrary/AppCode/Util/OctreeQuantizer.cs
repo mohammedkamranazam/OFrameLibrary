@@ -7,8 +7,8 @@ namespace OFrameLibrary.Util
 {
     internal class OctreeQuantizer : Quantizer
     {
-        int _maxColors;
-        Octree _octree;
+        private int _maxColors;
+        private Octree _octree;
 
         /// <summary>
         /// Construct the octree quantizer
@@ -64,37 +64,37 @@ namespace OFrameLibrary.Util
         }
 
         // private classes...
-        class Octree
+        private class Octree
         {
+            /// <summary>
+            /// Mask used when getting the appropriate pixels for a given node
+            /// </summary>
+            private static readonly int[] mask = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+
             /// <summary>
             /// Maximum number of significant bits in the image
             /// </summary>
-            int _maxColorBits;
+            private int _maxColorBits;
 
             /// <summary>
             /// Cache the previous color quantized
             /// </summary>
-            int _previousColor;
+            private int _previousColor;
 
             /// <summary>
             /// Store the last node quantized
             /// </summary>
-            OctreeNode _previousNode;
+            private OctreeNode _previousNode;
 
             /// <summary>
             /// Array of reducible nodes
             /// </summary>
-            OctreeNode[] _reducibleNodes;
+            private OctreeNode[] _reducibleNodes;
 
             /// <summary>
             /// The root of the octree
             /// </summary>
-            OctreeNode _root;
-
-            /// <summary>
-            /// Mask used when getting the appropriate pixels for a given node
-            /// </summary>
-            static readonly int[] mask = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+            private OctreeNode _root;
 
             /// <summary>
             /// Construct the octree
@@ -114,23 +114,6 @@ namespace OFrameLibrary.Util
             /// Get/Set the number of leaves in the tree
             /// </summary>
             public int Leaves { get; set; }
-
-            /// <summary>
-            /// Return the array of reducible nodes
-            /// </summary>
-            protected OctreeNode[] ReducibleNodes()
-            {
-                return _reducibleNodes;
-            }
-
-            /// <summary>
-            /// Keep track of the previous node that was quantized
-            /// </summary>
-            /// <param name="node">The node last quantized</param>
-            protected void TrackPrevious(OctreeNode node)
-            {
-                _previousNode = node;
-            }
 
             /// <summary>
             /// Add a given color value to the octree
@@ -205,15 +188,28 @@ namespace OFrameLibrary.Util
             }
 
             /// <summary>
+            /// Return the array of reducible nodes
+            /// </summary>
+            protected OctreeNode[] ReducibleNodes()
+            {
+                return _reducibleNodes;
+            }
+
+            /// <summary>
+            /// Keep track of the previous node that was quantized
+            /// </summary>
+            /// <param name="node">The node last quantized</param>
+            protected void TrackPrevious(OctreeNode node)
+            {
+                _previousNode = node;
+            }
+
+            /// <summary>
             /// Class which encapsulates each node in the tree
             /// </summary>
             protected class OctreeNode
             {
-                /// <summary>
-                /// Blue component
-                /// </summary>
-                int _blue;
-                readonly
+                private readonly
 
                 /// <summary>
                 /// Pointers to any child nodes
@@ -221,34 +217,39 @@ namespace OFrameLibrary.Util
                 OctreeNode[] _children;
 
                 /// <summary>
+                /// Blue component
+                /// </summary>
+                private int _blue;
+
+                /// <summary>
                 /// Green Component
                 /// </summary>
-                int _green;
+                private int _green;
 
                 /// <summary>
                 /// Flag indicating that this is a leaf node
                 /// </summary>
-                bool _leaf;
+                private bool _leaf;
 
                 /// <summary>
                 /// Pointer to next reducible node
                 /// </summary>
-                OctreeNode _nextReducible;
+                private OctreeNode _nextReducible;
 
                 /// <summary>
                 /// The index of this node in the palette
                 /// </summary>
-                int _paletteIndex;
+                private int _paletteIndex;
 
                 /// <summary>
                 /// Number of pixels in this node
                 /// </summary>
-                int _pixelCount;
+                private int _pixelCount;
 
                 /// <summary>
                 /// Red component
                 /// </summary>
-                int _red;
+                private int _red;
 
                 /// <summary>
                 /// Construct the node

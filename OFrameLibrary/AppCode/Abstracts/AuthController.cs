@@ -8,9 +8,10 @@ namespace OFrameLibrary.Abstracts
 {
     public abstract class AuthController : AppController
     {
-        ApplicationSignInManager _signInManager;
-        ApplicationUserManager _userManager;
-        ApplicationRoleManager _roleManager;
+        protected const string XsrfKey = "XsrfId";
+        private ApplicationRoleManager _roleManager;
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
 
         protected AuthController()
         { }
@@ -22,12 +23,26 @@ namespace OFrameLibrary.Abstracts
             RoleManager = roleManager;
         }
 
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+
+            private set
+            {
+                _roleManager = value;
+            }
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
+
             private set
             {
                 _signInManager = value;
@@ -40,21 +55,10 @@ namespace OFrameLibrary.Abstracts
             {
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
+
             private set
             {
                 _userManager = value;
-            }
-        }
-
-        public ApplicationRoleManager RoleManager
-        {
-            get
-            {
-                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
-            }
-            private set
-            {
-                _roleManager = value;
             }
         }
 
@@ -77,8 +81,6 @@ namespace OFrameLibrary.Abstracts
             base.Dispose(disposing);
         }
 
-        protected const string XsrfKey = "XsrfId";
-
         public class ChallengeResult : HttpUnauthorizedResult
         {
             public ChallengeResult(string provider, string redirectUri)
@@ -94,7 +96,9 @@ namespace OFrameLibrary.Abstracts
             }
 
             public string LoginProvider { get; set; }
+
             public string RedirectUri { get; set; }
+
             public string UserId { get; set; }
 
             public override void ExecuteResult(ControllerContext context)

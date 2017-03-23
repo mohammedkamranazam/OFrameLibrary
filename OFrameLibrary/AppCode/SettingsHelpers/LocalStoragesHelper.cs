@@ -7,65 +7,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class LocalStoragesHelper
     {
-        const string localStoragesUniqueKey = "_LocalStoragesHelper_";
-        const string localStoragesXPath = "storages/storage";
+        private const string localStoragesUniqueKey = "_LocalStoragesHelper_";
+        private const string localStoragesXPath = "storages/storage";
 
-        readonly static string fileName = AppConfig.LocalStoragesFile;
-
-        static string CheckPathFormat(this string path)
-        {
-            if (!path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
-            {
-                path += "/";
-            }
-
-            return path;
-        }
-
-        static bool CreateDirectory(this string absPath)
-        {
-            var success = true;
-
-            if (!Directory.Exists(absPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(absPath);
-                }
-                catch (Exception ex)
-                {
-                    success = false;
-                    ErrorLogger.LogError(ex);
-                }
-            }
-
-            return success;
-        }
-
-        static bool DeleteDirectory(this string absPath)
-        {
-            var success = false;
-
-            try
-            {
-                Directory.Delete(absPath);
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.LogError(ex);
-            }
-
-            return success;
-        }
-
-        static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        private static readonly string fileName = AppConfig.LocalStoragesFile;
 
         public static void AddStoragePath(string name, string path)
         {
@@ -197,6 +142,61 @@ namespace OFrameLibrary.SettingsHelpers
             }
 
             return present;
+        }
+
+        private static string CheckPathFormat(this string path)
+        {
+            if (!path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            {
+                path += "/";
+            }
+
+            return path;
+        }
+
+        private static bool CreateDirectory(this string absPath)
+        {
+            var success = true;
+
+            if (!Directory.Exists(absPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(absPath);
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    ErrorLogger.LogError(ex);
+                }
+            }
+
+            return success;
+        }
+
+        private static bool DeleteDirectory(this string absPath)
+        {
+            var success = false;
+
+            try
+            {
+                Directory.Delete(absPath);
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+            }
+
+            return success;
+        }
+
+        private static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null);
+            xmlTextWriter.Formatting = Formatting.Indented;
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

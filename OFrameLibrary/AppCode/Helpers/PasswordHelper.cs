@@ -5,18 +5,18 @@ namespace OFrameLibrary.Helpers
 {
     public static class PasswordHelper
     {
-        // Define default min and max password lengths.
-        static int DEFAULT_MIN_PASSWORD_LENGTH = 8;
+        private static int DEFAULT_MAX_PASSWORD_LENGTH = 10;
 
-        static int DEFAULT_MAX_PASSWORD_LENGTH = 10;
+        // Define default min and max password lengths.
+        private static int DEFAULT_MIN_PASSWORD_LENGTH = 8;
 
         // Define supported password characters divided into groups.
         // You can add (or remove) characters to (from) these groups.
-        static string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
+        private static string PASSWORD_CHARS_LCASE = "abcdefgijkmnopqrstwxyz";
 
-        static string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
-        static string PASSWORD_CHARS_NUMERIC = "23456789";
-        static string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
+        private static string PASSWORD_CHARS_NUMERIC = "23456789";
+        private static string PASSWORD_CHARS_SPECIAL = "*$-+?_&=!%{}/";
+        private static string PASSWORD_CHARS_UCASE = "ABCDEFGHJKLMNPQRSTWXYZ";
 
         /// <summary>
         /// Generates a random password.

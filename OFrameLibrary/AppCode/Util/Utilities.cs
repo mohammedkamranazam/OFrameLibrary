@@ -19,6 +19,42 @@ namespace OFrameLibrary.Util
 {
     public static class Utilities
     {
+        public static string Base64Decode(string encodedText)
+        {
+            return Encoding.UTF8.GetString(Convert.FromBase64String(encodedText));
+        }
+
+        public static string Base64Encode(string text)
+        {
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
+        }
+
+        public static void BuildTree(TreeView TreeView1, string path, bool skipFiles)
+        {
+            var rootDir = new DirectoryInfo(HttpRuntime.AppDomainAppPath + path);
+
+            TreeView1.Nodes.Clear();
+
+            var rootNode = new TreeNode(rootDir.Name, rootDir.FullName);
+            TreeView1.Nodes.Add(rootNode);
+
+            TraverseTree(rootDir, rootNode, skipFiles);
+        }
+
+        public static void BuildTree(TreeView TreeView1, string path, string[] patterns)
+        {
+            var rootDir = new DirectoryInfo(HttpRuntime.AppDomainAppPath + path);
+
+            TreeView1.Nodes.Clear();
+
+            var rootNode = new TreeNode(rootDir.Name, rootDir.FullName);
+            TreeView1.Nodes.Add(rootNode);
+
+            TraverseFiles(rootDir, rootNode, patterns);
+
+            TraverseTree(rootDir, rootNode, patterns);
+        }
+
         public static string ClearFiles(string pc)
         {
             SymCryptography sm = new SymCryptography();
@@ -46,6 +82,207 @@ namespace OFrameLibrary.Util
             }
 
             return "Working Fine";
+        }
+
+        public static void ClearPerformance(string performanceKey)
+        {
+            ClearPerformance(performanceKey, AppConfig.PerformanceMode);
+        }
+
+        public static void ClearPerformance(string performanceKey, PerformanceMode performanceMode)
+        {
+            switch (performanceMode)
+            {
+                case PerformanceMode.ApplicationState:
+                    if (ApplicationStateHelper.Exists(performanceKey))
+                    {
+                        ApplicationStateHelper.Clear(performanceKey);
+                    }
+                    break;
+
+                case PerformanceMode.Cache:
+                    if (CacheHelper.Exists(performanceKey))
+                    {
+                        CacheHelper.Clear(performanceKey);
+                    }
+                    break;
+
+                case PerformanceMode.MemoryCache:
+                    if (MemoryCacheHelper.Exists(performanceKey))
+                    {
+                        MemoryCacheHelper.Clear(performanceKey);
+                    }
+                    break;
+
+                case PerformanceMode.Session:
+                    if (SessionHelper.Exists(performanceKey))
+                    {
+                        SessionHelper.Clear(performanceKey);
+                    }
+                    break;
+
+                case PerformanceMode.Redis:
+                    if (RedisCacheHelper.Exists(performanceKey))
+                    {
+                        RedisCacheHelper.Clear(performanceKey);
+                    }
+                    break;
+
+                case PerformanceMode.None:
+                    break;
+            }
+        }
+
+        public static DateTime DateTimeNow()
+        {
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, TimeZoneInfo.Local.Id, AppConfig.TargetTimeZoneID);
+        }
+
+        public static void ExportExcel(ControlCollection Controls, Object datasource, string filename)
+        {
+            var gridview = new GridView();
+            gridview.DataSource = datasource;
+            gridview.DataBind();
+            gridview.AllowPaging = false;
+
+            if (gridview.Rows.Count > 65535)
+            {
+                return;
+            }
+
+            filename = string.Format("{0}_{1}.xls", filename, Utilities.DateTimeNow());
+
+            var response = HttpContext.Current.Response;
+            response.Clear();
+            response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
+            response.Charset = string.Empty;
+
+            response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+
+            response.ContentType = "application/vnd.xls";
+
+            var stringWriter = new StringWriter();
+            var htmlWriter = new HtmlTextWriter(stringWriter);
+
+            ClearControls(gridview);
+
+            var form = new HtmlForm();
+            Controls.Add(form);
+            form.Controls.Add(gridview);
+            form.RenderControl(htmlWriter);
+
+            response.Write(stringWriter.ToString());
+            response.End();
+        }
+
+        public static string GenerateSlug(string phrase)
+        {
+            var str = RemoveAccent(phrase).ToLower();
+
+            str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // invalid chars
+            str = Regex.Replace(str, @"\s+", " ").Trim(); // convert multiple spaces into one space
+            str = str.Substring(0, str.Length <= 45 ? str.Length : 45).Trim(); // cut and trim it
+            str = Regex.Replace(str, @"\s", "-"); // hyphens
+
+            return str;
+        }
+
+        public static string GetAbsolutePathFromRelativePath(string RelativePath)
+        {
+            string extraPath = string.Empty;
+
+            if (string.IsNullOrWhiteSpace(RelativePath))
+            {
+                extraPath = string.Empty;
+            }
+            else if (RelativePath.Substring(0, 1) != "~")
+            {
+                extraPath = RelativePath;
+            }
+            else
+            {
+                extraPath = RelativePath.Remove(0, 1);
+            }
+
+            var AbsoluteReturnUrlPath = string.Format("http{0}://{1}{2}{3}",
+            (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
+            HttpContext.Current.Request.Url.Host,
+            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
+            extraPath);
+
+            return AbsoluteReturnUrlPath;
+        }
+
+        public static string GetAbsoluteURL(this string relativeURL)
+        {
+            var url = string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(relativeURL))
+            {
+                if (relativeURL.Substring(0, 1) == "~")
+                {
+                    url = relativeURL.Remove(0, 1);
+                }
+                else
+                {
+                    url = relativeURL;
+                }
+            }
+
+            return string.Format("http{0}://{1}{2}{3}",
+            (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
+            HttpContext.Current.Request.Url.Host,
+            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
+            url);
+        }
+
+        public static IEnumerable<SelectListItem> GetCountries()
+        {
+            return GetCountriesArray().Select(x => new SelectListItem { Text = x, Value = x });
+        }
+
+        public static string GetCurrentActionName()
+        {
+            string actionName = string.Empty;
+
+            var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+
+            if (routeValues != null)
+            {
+                if (routeValues.ContainsKey("action"))
+                {
+                    actionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
+                }
+            }
+
+            return actionName;
+        }
+
+        public static string GetCurrentControllerName()
+        {
+            string controllerName = string.Empty;
+
+            var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+
+            if (routeValues != null)
+            {
+                if (routeValues.ContainsKey("controller"))
+                {
+                    controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+                }
+            }
+
+            return controllerName;
+        }
+
+        public static T GetEnumByName<T>(string enumName)
+        {
+            return (T)Enum.Parse(typeof(T), enumName, true);
+        }
+
+        public static string GetEnumName(Enum e)
+        {
+            return e.ToString();
         }
 
         public static GridModel GetGridModel(
@@ -105,17 +342,152 @@ namespace OFrameLibrary.Util
             return gm;
         }
 
-        public static string RenderPartialViewToString(Controller controller, string viewName, object model)
+        public static string GetHTML(Control ctrl, string Script)
         {
-            controller.ViewData.Model = model;
-            using (StringWriter sw = new StringWriter())
+            var frm = new HtmlForm();
+            using (Page pg = new Page())
             {
-                var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, viewName);
-                var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw);
-                viewResult.View.Render(viewContext, sw);
+                HttpContext.Current.Response.Clear();
 
-                return sw.ToString();
+                var stringWrite = new StringWriter();
+                var htmlWrite = new HtmlTextWriter(stringWrite);
+
+                if (ctrl is WebControl)
+                {
+                    var w = new Unit(100, UnitType.Percentage);
+
+                    ((WebControl)ctrl).Width = w;
+                }
+                pg.EnableEventValidation = false;
+
+                if (!string.IsNullOrWhiteSpace(Script))
+                {
+                    pg.ClientScript.RegisterStartupScript(pg.GetType(), "PrintJavaScript", Script);
+                }
+                pg.Controls.Add(frm);
+                frm.Attributes.Add("runat", "server");
+                frm.Controls.Add(ctrl);
+                pg.DesignerInitialize();
+                pg.RenderControl(htmlWrite);
+                var strHTML = stringWrite.ToString();
+
+                return strHTML;
             }
+        }
+
+        public static string GetIPAddress()
+        {
+            return GetIPAddress(HttpContext.Current);
+        }
+
+        public static string GetIPAddress(HttpContext context)
+        {
+            var ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
+
+            if (!string.IsNullOrEmpty(ipAddress))
+            {
+                return ipAddress;
+            }
+
+            return context.Request.ServerVariables["REMOTE_ADDR"];
+        }
+
+        public static void GetPerformance<T>(PerformanceMode performanceMode, string performanceKey, out T keyValue, Delegate func, params object[] args)
+        {
+            keyValue = default(T);
+
+            switch (performanceMode)
+            {
+                case PerformanceMode.ApplicationState:
+                    if (ApplicationStateHelper.Exists(performanceKey))
+                    {
+                        ApplicationStateHelper.Get<T>(performanceKey, out keyValue);
+                    }
+                    else
+                    {
+                        keyValue = (T)func.DynamicInvoke(args);
+                        ApplicationStateHelper.Add<T>(performanceKey, keyValue);
+                    }
+                    break;
+
+                case PerformanceMode.Cache:
+                    if (CacheHelper.Exists(performanceKey))
+                    {
+                        CacheHelper.Get<T>(performanceKey, out keyValue);
+                    }
+                    else
+                    {
+                        keyValue = (T)func.DynamicInvoke(args);
+                        CacheHelper.Add<T>(performanceKey, keyValue);
+                    }
+                    break;
+
+                case PerformanceMode.MemoryCache:
+                    if (MemoryCacheHelper.Exists(performanceKey))
+                    {
+                        MemoryCacheHelper.Get<T>(performanceKey, out keyValue);
+                    }
+                    else
+                    {
+                        keyValue = (T)func.DynamicInvoke(args);
+                        MemoryCacheHelper.Add<T>(performanceKey, keyValue);
+                    }
+                    break;
+
+                case PerformanceMode.Session:
+                    if (SessionHelper.Exists(performanceKey))
+                    {
+                        SessionHelper.Get<T>(performanceKey, out keyValue);
+                    }
+                    else
+                    {
+                        keyValue = (T)func.DynamicInvoke(args);
+                        SessionHelper.Add<T>(performanceKey, keyValue);
+                    }
+                    break;
+
+                case PerformanceMode.Redis:
+                    if (RedisCacheHelper.Exists(performanceKey))
+                    {
+                        RedisCacheHelper.Get<T>(performanceKey, out keyValue);
+                    }
+                    else
+                    {
+                        keyValue = (T)func.DynamicInvoke(args);
+                        RedisCacheHelper.Add<T>(performanceKey, keyValue);
+                    }
+                    break;
+
+                case PerformanceMode.None:
+                    keyValue = (T)func.DynamicInvoke(args);
+                    break;
+            }
+        }
+
+        public static int GetRandomNumber(int start, int end)
+        {
+            int number;
+
+            var rand = new Random();
+            number = rand.Next(start, end);
+
+            return number;
+        }
+
+        public static string GetRandomString(int length)
+        {
+            var builder = new StringBuilder();
+            var random = new Random();
+
+            char ch;
+
+            for (int i = 0; i < length; i++)
+            {
+                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
+                builder.Append(ch);
+            }
+
+            return builder.ToString().ToLower();
         }
 
         public static IEnumerable<SelectListItem> GetSelectList(IList<SelectListItem> selectListItems,
@@ -155,33 +527,164 @@ namespace OFrameLibrary.Util
             return selectListItems;
         }
 
-        static bool Select(SelectListItem x, bool takeValue, bool firendlyValue, string selectedValue)
+        public static string GetTagsHTML(string tags, Page page)
         {
-            if (x.Selected)
+            var tagsList = tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var sb = new StringBuilder();
+
+            foreach (var tag in tagsList)
             {
-                return x.Selected;
+                sb.Append(string.Format("<strong><a href='{1}'>{0}</a></strong>, ", tag, page.ResolveClientUrl(string.Format("~/Search.aspx?Search={0}", tag))));
             }
 
-            if (!string.IsNullOrWhiteSpace(selectedValue))
+            if (sb.Length > 0)
             {
-                if (takeValue)
+                var lastCommaIndex = sb.ToString().LastIndexOf(',');
+
+                sb = sb.Remove(lastCommaIndex, 1);
+            }
+            else
+            {
+                sb.Append("No tags");
+            }
+
+            return sb.ToString();
+        }
+
+        public static void GetTagsSplitted(SortedDictionary<string, int> tagsDictionary, string fullTags)
+        {
+            var tags = fullTags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var tag in tags)
+            {
+                if (!string.IsNullOrWhiteSpace(tag))
                 {
-                    return x.Value == selectedValue;
-                }
-                else
-                {
-                    if (firendlyValue)
+                    if (tagsDictionary.ContainsKey(tag))
                     {
-                        return x.Text.ToFriendlyCase() == selectedValue;
+                        tagsDictionary[tag]++;
                     }
                     else
                     {
-                        return x.Text == selectedValue;
+                        tagsDictionary.Add(tag, 1);
                     }
                 }
             }
+        }
 
-            return false;
+        public static bool IsFileSizeOK(Stream content, int maxSizeInMB)
+        {
+            var maxFileSizeBytes = (maxSizeInMB * 1024) * 1024;
+
+            if (content.Length <= maxFileSizeBytes)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public static T ParseEnum<T>(string value)
+        {
+            return (T)Enum.Parse(typeof(T), value, true);
+        }
+
+        public static string RemoveAccent(string txt)
+        {
+            var bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
+            return System.Text.Encoding.ASCII.GetString(bytes);
+        }
+
+        public static string RenderPartialViewToString(Controller controller, string viewName, object model)
+        {
+            controller.ViewData.Model = model;
+            using (StringWriter sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(controller.ControllerContext, viewName);
+                var viewContext = new ViewContext(controller.ControllerContext, viewResult.View, controller.ViewData, controller.TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+
+                return sw.ToString();
+            }
+        }
+
+        public static T SetOrGet<T>(string performanceKey, T value)
+        {
+            switch (AppConfig.PerformanceMode)
+            {
+                case PerformanceMode.ApplicationState:
+                    return ApplicationStateHelper.SetOrGet<T>(performanceKey, value);
+
+                case PerformanceMode.Cache:
+                    return CacheHelper.SetOrGet<T>(performanceKey, value);
+
+                case PerformanceMode.MemoryCache:
+                    return MemoryCacheHelper.SetOrGet<T>(performanceKey, value);
+
+                case PerformanceMode.Session:
+                    return SessionHelper.SetOrGet<T>(performanceKey, value);
+
+                case PerformanceMode.Redis:
+                    return RedisCacheHelper.SetOrGet<T>(performanceKey, value);
+            }
+
+            return value;
+        }
+
+        public static void SetPageCache(PageCache entity)
+        {
+            switch (entity.Location)
+            {
+                case HttpCacheability.Public:
+                case HttpCacheability.ServerAndPrivate:
+                case HttpCacheability.Server:
+                    var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
+                    DateTime now = DateTime.Now;
+                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
+                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
+                    break;
+
+                case HttpCacheability.Private:
+                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+
+                case HttpCacheability.NoCache:
+                default:
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+            }
+        }
+
+        public static void SetPageSEO(Page page, SEO seo)
+        {
+            var title = seo.Title;
+
+            if (title.NullableContains("{ONLY-SITENAME}"))
+            {
+                title = title.Replace("{ONLY-SITENAME}", string.Empty);
+
+                page.Title = string.Format("{0}", AppConfig.SiteName);
+            }
+
+            if (title.NullableContains("{ONLY-TITLE}"))
+            {
+                title = title.Replace("{ONLY-TITLE}", string.Empty);
+
+                page.Title = string.Format("{0}", title);
+            }
+
+            if (!seo.Title.NullableContains("{ONLY-SITENAME}") && !seo.Title.NullableContains("{ONLY-TITLE}"))
+            {
+                page.Title = string.Format("{0} | {1}", seo.Title, AppConfig.SiteName);
+            }
+
+            page.MetaDescription = seo.Description;
+            page.MetaKeywords = seo.Keywords;
         }
 
         public static FileUploadResult UploadFile(HttpPostedFileBase content, FileUploadSettings fs, string customExtensions = "")
@@ -280,84 +783,7 @@ namespace OFrameLibrary.Util
             return extensions.Contains(extension.ToLower());
         }
 
-        public static string GenerateSlug(string phrase)
-        {
-            var str = RemoveAccent(phrase).ToLower();
-
-            str = Regex.Replace(str, @"[^a-z0-9\s-]", ""); // invalid chars
-            str = Regex.Replace(str, @"\s+", " ").Trim(); // convert multiple spaces into one space
-            str = str.Substring(0, str.Length <= 45 ? str.Length : 45).Trim(); // cut and trim it
-            str = Regex.Replace(str, @"\s", "-"); // hyphens
-
-            return str;
-        }
-
-        public static string RemoveAccent(string txt)
-        {
-            var bytes = System.Text.Encoding.GetEncoding("Cyrillic").GetBytes(txt);
-            return System.Text.Encoding.ASCII.GetString(bytes);
-        }
-
-        public static string GetCurrentActionName()
-        {
-            string actionName = string.Empty;
-
-            var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
-
-            if (routeValues != null)
-            {
-                if (routeValues.ContainsKey("action"))
-                {
-                    actionName = HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString();
-                }
-            }
-
-            return actionName;
-        }
-
-        public static string GetCurrentControllerName()
-        {
-            string controllerName = string.Empty;
-
-            var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
-
-            if (routeValues != null)
-            {
-                if (routeValues.ContainsKey("controller"))
-                {
-                    controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
-                }
-            }
-
-            return controllerName;
-        }
-
-        public static string GetTagsHTML(string tags, Page page)
-        {
-            var tagsList = tags.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            var sb = new StringBuilder();
-
-            foreach (var tag in tagsList)
-            {
-                sb.Append(string.Format("<strong><a href='{1}'>{0}</a></strong>, ", tag, page.ResolveClientUrl(string.Format("~/Search.aspx?Search={0}", tag))));
-            }
-
-            if (sb.Length > 0)
-            {
-                var lastCommaIndex = sb.ToString().LastIndexOf(',');
-
-                sb = sb.Remove(lastCommaIndex, 1);
-            }
-            else
-            {
-                sb.Append("No tags");
-            }
-
-            return sb.ToString();
-        }
-
-        static void ClearControls(Control control)
+        private static void ClearControls(Control control)
         {
             for (var i = control.Controls.Count - 1; i >= 0; i--)
             {
@@ -395,495 +821,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode)
-        {
-            foreach (var file in currentDir.GetFiles())
-            {
-                var node = new TreeNode(file.Name, file.FullName);
-                currentNode.ChildNodes.Add(node);
-            }
-        }
-
-        static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
-        {
-            foreach (var pattern in patterns)
-            {
-                foreach (var file in currentDir.GetFiles(pattern))
-                {
-                    var node = new TreeNode(file.Name, file.FullName);
-                    currentNode.ChildNodes.Add(node);
-                }
-            }
-        }
-
-        static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, bool skipFiles)
-        {
-            foreach (var dir in currentDir.GetDirectories())
-            {
-                var node = new TreeNode(dir.Name, dir.FullName);
-                currentNode.ChildNodes.Add(node);
-                if (!skipFiles)
-                {
-                    TraverseFiles(dir, node);
-                }
-                TraverseTree(dir, node, skipFiles);
-            }
-        }
-
-        static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
-        {
-            foreach (var dir in currentDir.GetDirectories())
-            {
-                var add = false;
-
-                foreach (var pattern in patterns)
-                {
-                    add |= dir.GetFiles(pattern, SearchOption.AllDirectories).Length > 0;
-                }
-
-                if (add)
-                {
-                    var node = new TreeNode(dir.Name, dir.FullName);
-                    currentNode.ChildNodes.Add(node);
-                    TraverseFiles(dir, node, patterns);
-                    TraverseTree(dir, node, patterns);
-                }
-            }
-        }
-
-        public static void BuildTree(TreeView TreeView1, string path, bool skipFiles)
-        {
-            var rootDir = new DirectoryInfo(HttpRuntime.AppDomainAppPath + path);
-
-            TreeView1.Nodes.Clear();
-
-            var rootNode = new TreeNode(rootDir.Name, rootDir.FullName);
-            TreeView1.Nodes.Add(rootNode);
-
-            TraverseTree(rootDir, rootNode, skipFiles);
-        }
-
-        public static void BuildTree(TreeView TreeView1, string path, string[] patterns)
-        {
-            var rootDir = new DirectoryInfo(HttpRuntime.AppDomainAppPath + path);
-
-            TreeView1.Nodes.Clear();
-
-            var rootNode = new TreeNode(rootDir.Name, rootDir.FullName);
-            TreeView1.Nodes.Add(rootNode);
-
-            TraverseFiles(rootDir, rootNode, patterns);
-
-            TraverseTree(rootDir, rootNode, patterns);
-        }
-
-        public static void SetPageCache(PageCache entity)
-        {
-            switch (entity.Location)
-            {
-                case HttpCacheability.Public:
-                case HttpCacheability.ServerAndPrivate:
-                case HttpCacheability.Server:
-                    var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
-                    DateTime now = DateTime.Now;
-                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
-                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
-                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
-                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
-                    break;
-
-                case HttpCacheability.Private:
-                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
-                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
-                    break;
-
-                case HttpCacheability.NoCache:
-                default:
-                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
-                    break;
-            }
-        }
-
-        public static void GetPerformance<T>(PerformanceMode performanceMode, string performanceKey, out T keyValue, Delegate func, params object[] args)
-        {
-            keyValue = default(T);
-
-            switch (performanceMode)
-            {
-                case PerformanceMode.ApplicationState:
-                    if (ApplicationStateHelper.Exists(performanceKey))
-                    {
-                        ApplicationStateHelper.Get<T>(performanceKey, out keyValue);
-                    }
-                    else
-                    {
-                        keyValue = (T)func.DynamicInvoke(args);
-                        ApplicationStateHelper.Add<T>(performanceKey, keyValue);
-                    }
-                    break;
-
-                case PerformanceMode.Cache:
-                    if (CacheHelper.Exists(performanceKey))
-                    {
-                        CacheHelper.Get<T>(performanceKey, out keyValue);
-                    }
-                    else
-                    {
-                        keyValue = (T)func.DynamicInvoke(args);
-                        CacheHelper.Add<T>(performanceKey, keyValue);
-                    }
-                    break;
-
-                case PerformanceMode.MemoryCache:
-                    if (MemoryCacheHelper.Exists(performanceKey))
-                    {
-                        MemoryCacheHelper.Get<T>(performanceKey, out keyValue);
-                    }
-                    else
-                    {
-                        keyValue = (T)func.DynamicInvoke(args);
-                        MemoryCacheHelper.Add<T>(performanceKey, keyValue);
-                    }
-                    break;
-
-                case PerformanceMode.Session:
-                    if (SessionHelper.Exists(performanceKey))
-                    {
-                        SessionHelper.Get<T>(performanceKey, out keyValue);
-                    }
-                    else
-                    {
-                        keyValue = (T)func.DynamicInvoke(args);
-                        SessionHelper.Add<T>(performanceKey, keyValue);
-                    }
-                    break;
-
-                case PerformanceMode.Redis:
-                    if (RedisCacheHelper.Exists(performanceKey))
-                    {
-                        RedisCacheHelper.Get<T>(performanceKey, out keyValue);
-                    }
-                    else
-                    {
-                        keyValue = (T)func.DynamicInvoke(args);
-                        RedisCacheHelper.Add<T>(performanceKey, keyValue);
-                    }
-                    break;
-
-                case PerformanceMode.None:
-                    keyValue = (T)func.DynamicInvoke(args);
-                    break;
-            }
-        }
-
-        public static void ClearPerformance(string performanceKey)
-        {
-            ClearPerformance(performanceKey, AppConfig.PerformanceMode);
-        }
-
-        public static void ClearPerformance(string performanceKey, PerformanceMode performanceMode)
-        {
-            switch (performanceMode)
-            {
-                case PerformanceMode.ApplicationState:
-                    if (ApplicationStateHelper.Exists(performanceKey))
-                    {
-                        ApplicationStateHelper.Clear(performanceKey);
-                    }
-                    break;
-
-                case PerformanceMode.Cache:
-                    if (CacheHelper.Exists(performanceKey))
-                    {
-                        CacheHelper.Clear(performanceKey);
-                    }
-                    break;
-
-                case PerformanceMode.MemoryCache:
-                    if (MemoryCacheHelper.Exists(performanceKey))
-                    {
-                        MemoryCacheHelper.Clear(performanceKey);
-                    }
-                    break;
-
-                case PerformanceMode.Session:
-                    if (SessionHelper.Exists(performanceKey))
-                    {
-                        SessionHelper.Clear(performanceKey);
-                    }
-                    break;
-
-                case PerformanceMode.Redis:
-                    if (RedisCacheHelper.Exists(performanceKey))
-                    {
-                        RedisCacheHelper.Clear(performanceKey);
-                    }
-                    break;
-
-                case PerformanceMode.None:
-                    break;
-            }
-        }
-
-        public static DateTime DateTimeNow()
-        {
-            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Now, TimeZoneInfo.Local.Id, AppConfig.TargetTimeZoneID);
-        }
-
-        public static void ExportExcel(ControlCollection Controls, Object datasource, string filename)
-        {
-            var gridview = new GridView();
-            gridview.DataSource = datasource;
-            gridview.DataBind();
-            gridview.AllowPaging = false;
-
-            if (gridview.Rows.Count > 65535)
-            {
-                return;
-            }
-
-            filename = string.Format("{0}_{1}.xls", filename, Utilities.DateTimeNow());
-
-            var response = HttpContext.Current.Response;
-            response.Clear();
-            response.AddHeader("Content-Disposition", "attachment;filename=" + filename);
-            response.Charset = string.Empty;
-
-            response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
-
-            response.ContentType = "application/vnd.xls";
-
-            var stringWriter = new StringWriter();
-            var htmlWriter = new HtmlTextWriter(stringWriter);
-
-            ClearControls(gridview);
-
-            var form = new HtmlForm();
-            Controls.Add(form);
-            form.Controls.Add(gridview);
-            form.RenderControl(htmlWriter);
-
-            response.Write(stringWriter.ToString());
-            response.End();
-        }
-
-        public static string GetAbsoluteURL(this string relativeURL)
-        {
-            var url = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(relativeURL))
-            {
-                if (relativeURL.Substring(0, 1) == "~")
-                {
-                    url = relativeURL.Remove(0, 1);
-                }
-                else
-                {
-                    url = relativeURL;
-                }
-            }
-
-            return string.Format("http{0}://{1}{2}{3}",
-            (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
-            HttpContext.Current.Request.Url.Host,
-            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
-            url);
-        }
-
-        public static T GetEnumByName<T>(string enumName)
-        {
-            return (T)Enum.Parse(typeof(T), enumName, true);
-        }
-
-        public static string GetEnumName(Enum e)
-        {
-            return e.ToString();
-        }
-
-        public static string GetAbsolutePathFromRelativePath(string RelativePath)
-        {
-            string extraPath = string.Empty;
-
-            if (string.IsNullOrWhiteSpace(RelativePath))
-            {
-                extraPath = string.Empty;
-            }
-            else if (RelativePath.Substring(0, 1) != "~")
-            {
-                extraPath = RelativePath;
-            }
-            else
-            {
-                extraPath = RelativePath.Remove(0, 1);
-            }
-
-            var AbsoluteReturnUrlPath = string.Format("http{0}://{1}{2}{3}",
-            (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
-            HttpContext.Current.Request.Url.Host,
-            (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
-            extraPath);
-
-            return AbsoluteReturnUrlPath;
-        }
-
-        public static T ParseEnum<T>(string value)
-        {
-            return (T)Enum.Parse(typeof(T), value, true);
-        }
-
-        public static string Base64Encode(string text)
-        {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(text));
-        }
-
-        public static string Base64Decode(string encodedText)
-        {
-            return Encoding.UTF8.GetString(Convert.FromBase64String(encodedText));
-        }
-
-        public static string GetHTML(Control ctrl, string Script)
-        {
-            var frm = new HtmlForm();
-            using (Page pg = new Page())
-            {
-                HttpContext.Current.Response.Clear();
-
-                var stringWrite = new StringWriter();
-                var htmlWrite = new HtmlTextWriter(stringWrite);
-
-                if (ctrl is WebControl)
-                {
-                    var w = new Unit(100, UnitType.Percentage);
-
-                    ((WebControl)ctrl).Width = w;
-                }
-                pg.EnableEventValidation = false;
-
-                if (!string.IsNullOrWhiteSpace(Script))
-                {
-                    pg.ClientScript.RegisterStartupScript(pg.GetType(), "PrintJavaScript", Script);
-                }
-                pg.Controls.Add(frm);
-                frm.Attributes.Add("runat", "server");
-                frm.Controls.Add(ctrl);
-                pg.DesignerInitialize();
-                pg.RenderControl(htmlWrite);
-                var strHTML = stringWrite.ToString();
-
-                return strHTML;
-            }
-        }
-
-        public static string GetIPAddress()
-        {
-            return GetIPAddress(HttpContext.Current);
-        }
-
-        public static string GetIPAddress(HttpContext context)
-        {
-            var ipAddress = context.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
-
-            if (!string.IsNullOrEmpty(ipAddress))
-            {
-                return ipAddress;
-            }
-
-            return context.Request.ServerVariables["REMOTE_ADDR"];
-        }
-
-        public static string GetRandomString(int length)
-        {
-            var builder = new StringBuilder();
-            var random = new Random();
-
-            char ch;
-
-            for (int i = 0; i < length; i++)
-            {
-                ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
-                builder.Append(ch);
-            }
-
-            return builder.ToString().ToLower();
-        }
-
-        public static int GetRandomNumber(int start, int end)
-        {
-            int number;
-
-            var rand = new Random();
-            number = rand.Next(start, end);
-
-            return number;
-        }
-
-        public static void GetTagsSplitted(SortedDictionary<string, int> tagsDictionary, string fullTags)
-        {
-            var tags = fullTags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var tag in tags)
-            {
-                if (!string.IsNullOrWhiteSpace(tag))
-                {
-                    if (tagsDictionary.ContainsKey(tag))
-                    {
-                        tagsDictionary[tag]++;
-                    }
-                    else
-                    {
-                        tagsDictionary.Add(tag, 1);
-                    }
-                }
-            }
-        }
-
-        public static bool IsFileSizeOK(Stream content, int maxSizeInMB)
-        {
-            var maxFileSizeBytes = (maxSizeInMB * 1024) * 1024;
-
-            if (content.Length <= maxFileSizeBytes)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public static void SetPageSEO(Page page, SEO seo)
-        {
-            var title = seo.Title;
-
-            if (title.NullableContains("{ONLY-SITENAME}"))
-            {
-                title = title.Replace("{ONLY-SITENAME}", string.Empty);
-
-                page.Title = string.Format("{0}", AppConfig.SiteName);
-            }
-
-            if (title.NullableContains("{ONLY-TITLE}"))
-            {
-                title = title.Replace("{ONLY-TITLE}", string.Empty);
-
-                page.Title = string.Format("{0}", title);
-            }
-
-            if (!seo.Title.NullableContains("{ONLY-SITENAME}") && !seo.Title.NullableContains("{ONLY-TITLE}"))
-            {
-                page.Title = string.Format("{0} | {1}", seo.Title, AppConfig.SiteName);
-            }
-
-            page.MetaDescription = seo.Description;
-            page.MetaKeywords = seo.Keywords;
-        }
-
-        public static IEnumerable<SelectListItem> GetCountries()
-        {
-            return GetCountriesArray().Select(x => new SelectListItem { Text = x, Value = x });
-        }
-
-        static List<string> GetCountriesArray()
+        private static List<string> GetCountriesArray()
         {
             return new List<string>
             {
@@ -1127,6 +1065,91 @@ namespace OFrameLibrary.Util
                 "Zambia",
                 "Zimbabwe"
             };
+        }
+
+        private static bool Select(SelectListItem x, bool takeValue, bool firendlyValue, string selectedValue)
+        {
+            if (x.Selected)
+            {
+                return x.Selected;
+            }
+
+            if (!string.IsNullOrWhiteSpace(selectedValue))
+            {
+                if (takeValue)
+                {
+                    return x.Value == selectedValue;
+                }
+                else
+                {
+                    if (firendlyValue)
+                    {
+                        return x.Text.ToFriendlyCase() == selectedValue;
+                    }
+                    else
+                    {
+                        return x.Text == selectedValue;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode)
+        {
+            foreach (var file in currentDir.GetFiles())
+            {
+                var node = new TreeNode(file.Name, file.FullName);
+                currentNode.ChildNodes.Add(node);
+            }
+        }
+
+        private static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
+        {
+            foreach (var pattern in patterns)
+            {
+                foreach (var file in currentDir.GetFiles(pattern))
+                {
+                    var node = new TreeNode(file.Name, file.FullName);
+                    currentNode.ChildNodes.Add(node);
+                }
+            }
+        }
+
+        private static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, bool skipFiles)
+        {
+            foreach (var dir in currentDir.GetDirectories())
+            {
+                var node = new TreeNode(dir.Name, dir.FullName);
+                currentNode.ChildNodes.Add(node);
+                if (!skipFiles)
+                {
+                    TraverseFiles(dir, node);
+                }
+                TraverseTree(dir, node, skipFiles);
+            }
+        }
+
+        private static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
+        {
+            foreach (var dir in currentDir.GetDirectories())
+            {
+                var add = false;
+
+                foreach (var pattern in patterns)
+                {
+                    add |= dir.GetFiles(pattern, SearchOption.AllDirectories).Length > 0;
+                }
+
+                if (add)
+                {
+                    var node = new TreeNode(dir.Name, dir.FullName);
+                    currentNode.ChildNodes.Add(node);
+                    TraverseFiles(dir, node, patterns);
+                    TraverseTree(dir, node, patterns);
+                }
+            }
         }
 
         //public static RouteValueDictionary GetCurrentRouteValuesWithLocale(string key, object arg)

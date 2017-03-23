@@ -12,7 +12,11 @@ namespace OFrameLibrary.OFrame
     [DefaultProperty("BookmarkText")]
     public class TagCloud : WebControl
     {
-        string[] FontScale = {
+        private const string SPACER_MARKUP = " ";
+
+        private const string TAG_LINK = "<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}";
+
+        private string[] FontScale = {
             "tag-link-1",
             "tag-link-2",
             "tag-link-3",
@@ -22,28 +26,22 @@ namespace OFrameLibrary.OFrame
             "tag-link-7"
         };
 
-        decimal minWeight = new Decimal(-1, -1, -1, false, (byte)0);
-        decimal maxWeight = new Decimal(-1, -1, -1, true, (byte)0);
-        const string SPACER_MARKUP = " ";
-        const string TAG_LINK = "<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}";
-        decimal scaleUnitLength;
+        private decimal maxWeight = new Decimal(-1, -1, -1, true, (byte)0);
+        private decimal minWeight = new Decimal(-1, -1, -1, false, (byte)0);
+        private decimal scaleUnitLength;
 
-        string TagCloudsHtml
+        private string TagCloudsHtml
         {
             get
             {
                 var str = (string)ViewState["TagCloudsHtml"];
                 return str ?? string.Empty;
             }
+
             set
             {
                 ViewState["TagCloudsHtml"] = (object)value;
             }
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
         }
 
         public void GenerateTagCloud(TagCloudItemCollection tags)
@@ -51,18 +49,6 @@ namespace OFrameLibrary.OFrame
             ProcessTagWeights(tags);
             ProcessTagCloud(tags);
             TagCloudsHtml = GetTagCloudHtml(tags);
-        }
-
-        protected void ProcessTagWeights(TagCloudItemCollection tags)
-        {
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
-            {
-                if (tagCloudItem.Count < minWeight)
-                    minWeight = tagCloudItem.Count;
-                if (tagCloudItem.Count > maxWeight)
-                    maxWeight = tagCloudItem.Count;
-            }
-            scaleUnitLength = (Convert.ToDecimal(maxWeight - minWeight) + 1) / Convert.ToDecimal(FontScale.Length);
         }
 
         protected string GetTagCloudHtml(TagCloudItemCollection tags)
@@ -75,6 +61,11 @@ namespace OFrameLibrary.OFrame
             return ((object)stringBuilder).ToString();
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+        }
+
         protected void ProcessTagCloud(TagCloudItemCollection tags)
         {
             foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
@@ -82,6 +73,18 @@ namespace OFrameLibrary.OFrame
                 var scaleValue = (int)Math.Truncate((tagCloudItem.Count - minWeight) / scaleUnitLength);
                 tagCloudItem.SetScaleValue(scaleValue);
             }
+        }
+
+        protected void ProcessTagWeights(TagCloudItemCollection tags)
+        {
+            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
+            {
+                if (tagCloudItem.Count < minWeight)
+                    minWeight = tagCloudItem.Count;
+                if (tagCloudItem.Count > maxWeight)
+                    maxWeight = tagCloudItem.Count;
+            }
+            scaleUnitLength = (Convert.ToDecimal(maxWeight - minWeight) + 1) / Convert.ToDecimal(FontScale.Length);
         }
 
         protected override void RenderContents(HtmlTextWriter output)

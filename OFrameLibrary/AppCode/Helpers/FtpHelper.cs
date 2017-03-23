@@ -8,7 +8,7 @@ namespace OFrameLibrary.Helpers
 {
     public static class FtpHelper
     {
-        const string FTPProtocol = "ftp://";
+        private const string FTPProtocol = "ftp://";
 
         public static void Delete(string filePath, string fileName, string ftpUserId, string ftpPassword, string ftpServerIP)
         {
@@ -334,7 +334,7 @@ namespace OFrameLibrary.Helpers
             return success;
         }
 
-        static string GetPathTillIndex(int tillIndex, string[] directories)
+        private static string GetPathTillIndex(int tillIndex, string[] directories)
         {
             string stringTillIndex = string.Empty;
 

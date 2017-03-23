@@ -9,13 +9,13 @@
             this.URL = url;
         }
 
-        public string Title
+        public string Description
         {
             get;
             set;
         }
 
-        public string Description
+        public string Title
         {
             get;
             set;

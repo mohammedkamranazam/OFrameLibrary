@@ -7,11 +7,6 @@ namespace OFrameLibrary.Helpers
 {
     public static class ThemeHelper
     {
-        public static IEnumerable<string> GetThemeDirectories()
-        {
-            return Directory.EnumerateDirectories("~/Content/Themes/".MapPath(), "*", SearchOption.TopDirectoryOnly).Select(c => new DirectoryInfo(c).Name);
-        }
-
         public static string GetTheme(string theme)
         {
             var layoutPath = "~/Views/Layouts/FallBack.cshtml";
@@ -22,6 +17,11 @@ namespace OFrameLibrary.Helpers
             }
 
             return layoutPath;
+        }
+
+        public static IEnumerable<string> GetThemeDirectories()
+        {
+            return Directory.EnumerateDirectories("~/Content/Themes/".MapPath(), "*", SearchOption.TopDirectoryOnly).Select(c => new DirectoryInfo(c).Name);
         }
     }
 }

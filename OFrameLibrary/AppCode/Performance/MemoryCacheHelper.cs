@@ -5,8 +5,9 @@ namespace OFrameLibrary.Performance
 {
     public static class MemoryCacheHelper
     {
-        static readonly ObjectCache memoryCache = MemoryCache.Default;
-        static CacheItemPolicy policy;
+        private static readonly ObjectCache memoryCache = MemoryCache.Default;
+
+        private static CacheItemPolicy policy;
 
         public static void Add<T>(string key, T o)
         {
@@ -48,6 +49,20 @@ namespace OFrameLibrary.Performance
             }
 
             return true;
+        }
+
+        public static T SetOrGet<T>(string key, T value)
+        {
+            if (!Exists(key))
+            {
+                Add(key, value);
+            }
+            else
+            {
+                value = (T)memoryCache[key];
+            }
+
+            return value;
         }
     }
 }

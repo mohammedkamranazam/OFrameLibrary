@@ -6,7 +6,7 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ThemeStylesheetsHelper
     {
-        const string xPath = "stylesheets/stylesheet";
+        private const string xPath = "stylesheets/stylesheet";
 
         public static string[] GetPathsFromSettings(string themeName)
         {

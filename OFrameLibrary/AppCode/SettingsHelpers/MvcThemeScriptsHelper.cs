@@ -6,7 +6,7 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class MvcThemeScriptsHelper
     {
-        const string scriptXPath = "scripts/script";
+        private const string scriptXPath = "scripts/script";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
