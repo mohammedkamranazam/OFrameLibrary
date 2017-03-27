@@ -4,7 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 
-namespace OFrameLibrary.Util
+namespace OFrameLibrary.Helpers
 {
     public static class StringHelper
     {

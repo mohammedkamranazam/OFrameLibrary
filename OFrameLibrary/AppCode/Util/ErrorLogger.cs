@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
-using OFrameLibrary.Helpers;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using System;
 using System.IO;
 using System.Web;
@@ -31,17 +31,17 @@ namespace OFrameLibrary.Util
 
             try
             {
-                MailHelper.Send(new IdentityMessage
+                MailHelper.Send(new EmailMessage
                 {
                     Body = body,
-                    Destination = to,
+                    To = to,
                     Subject = subject
                 });
             }
             catch (Exception mailException)
             {
-                errorMessage += "--- --- --- --- ---";
-                errorMessage += "<br /><br /> Mail Exception";
+                errorMessage += "--- --- --- --- --- --- --- --- --- --- --- --- --- --- ---";
+                errorMessage += "<br /><br /> <strong>Mail Exception</strong>";
                 errorMessage += "<br /><br /> Inner Exception: " + mailException.InnerException;
                 errorMessage += "<br /><br /> Message: " + mailException.Message;
                 errorMessage += "<br /><br /> Source: " + mailException.Source;

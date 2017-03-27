@@ -236,8 +236,18 @@
     <Compile Include="AppCode\Abstracts\AppViewPage.cs" />
     <Compile Include="AppCode\Abstracts\AuthController.cs" />
     <Compile Include="AppCode\Filters\OFAuthorize.cs" />
+    <Compile Include="AppCode\Helpers\EmailTagsHelper.cs" />
+    <Compile Include="AppCode\Helpers\GridHelper.cs" />
+    <Compile Include="AppCode\Helpers\MvcHelper.cs" />
+    <Compile Include="AppCode\Helpers\PerformanceHelper.cs" />
+    <Compile Include="AppCode\Helpers\RelayEmailHelper.cs" />
     <Compile Include="AppCode\Helpers\SendGridEmailHelper.cs" />
+    <Compile Include="AppCode\Helpers\SmtpEmailHelper.cs" />
+    <Compile Include="AppCode\Helpers\TreeViewHelper.cs" />
+    <Compile Include="AppCode\Helpers\WebControlHelper.cs" />
+    <Compile Include="AppCode\Models\EmailMessage.cs" />
     <Compile Include="AppCode\Models\JsonValidationResult.cs" />
+    <Compile Include="AppCode\Models\OListItem.cs" />
     <Compile Include="AppCode\Models\SendGridSettings.cs" />
     <Compile Include="AppCode\Models\SerializableSession.cs" />
     <Compile Include="AppCode\Models\Translator.cs" />
@@ -324,7 +334,7 @@
     <Compile Include="AppCode\Util\Hash.cs" />
     <Compile Include="AppCode\Util\OctreeQuantizer.cs" />
     <Compile Include="AppCode\Util\Quantizer.cs" />
-    <Compile Include="AppCode\Util\StringHelper.cs" />
+    <Compile Include="AppCode\Helpers\StringHelper.cs" />
     <Compile Include="AppCode\Util\SymCryptography.cs" />
     <Compile Include="AppCode\Util\Utilities.cs" />
   </ItemGroup>

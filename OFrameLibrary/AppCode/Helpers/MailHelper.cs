@@ -1,13 +1,6 @@
-﻿using Microsoft.AspNet.Identity;
-using OFrameLibrary.ILL;
-using OFrameLibrary.Models;
-using OFrameLibrary.SettingsHelpers;
-using OFrameLibrary.Util;
-using System;
+﻿using OFrameLibrary.Models;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
 
@@ -15,74 +8,28 @@ namespace OFrameLibrary.Helpers
 {
     public static class MailHelper
     {
-        public static string CleanUpPlaceHolders(string body, int lastCount)
-        {
-            var maxCount = KeywordsHelper.GetKeywordValue("MaxPlaceHoldersCount").IntParse();
-
-            for (var xCount = lastCount + 1; xCount < maxCount; xCount++)
-            {
-                var placeHolder = string.Format("[PLACEHOLDER{0}]", xCount);
-
-                body = body.Replace(placeHolder, string.Empty);
-            }
-
-            return body;
-        }
-
-        public static string GenerateEmailBody(EmailPlaceHolder emailPlaceHolder, string body)
-        {
-            var count = 0;
-
-            Array.ForEach(emailPlaceHolder.GetType().GetProperties(), propertyInfo =>
-            {
-                count++;
-                if (propertyInfo.CanRead)
-                {
-                    var property = propertyInfo.GetValue(emailPlaceHolder, null);
-                    var value = string.Empty;
-                    if (property != null)
-                    {
-                        value = property.ToString();
-                    }
-                    var placeHolder = string.Format("[PLACEHOLDER{0}]", count);
-                    body = body.Replace(placeHolder, value);
-                }
-            });
-
-            return body;
-        }
-
-        public static void GetAttachments(List<System.Net.Mail.Attachment> attachments, MailMessage msg)
+        public static void GetAttachments(List<Attachment> attachments, MailMessage msg)
         {
             attachments.ForEach(msg.Attachments.Add);
         }
 
-        public static string GetEmailTemplateFromDataBase(string templateName)
-        {
-            var body = string.Empty;
-
-            return body;
-        }
-
-        public static string GetEmailTemplateFromFile(string templatePath)
-        {
-            var body = string.Empty;
-
-            using (var reader = new StreamReader(templatePath))
-            {
-                body = reader.ReadToEnd();
-            }
-
-            return body;
-        }
-
-        public static MailMessage GetMessage(IdentityMessage message)
+        public static MailMessage GetMessage(EmailMessage message)
         {
             var msg = new MailMessage();
 
-            msg.From = new MailAddress(AppConfig.WebsiteMainEmail);
+            msg.From = new MailAddress(message.From);
 
-            msg.To.Add(message.Destination);
+            if (message.Tos.Count > 0)
+            {
+                foreach (var to in message.Tos)
+                {
+                    msg.To.Add(to);
+                }
+            }
+            else
+            {
+                msg.To.Add(message.To);
+            }
 
             msg.Subject = message.Subject;
 
@@ -97,191 +44,54 @@ namespace OFrameLibrary.Helpers
             return msg;
         }
 
-        public static SendGridSettings GetSendGridSettings()
-        {
-            return new SendGridSettings()
-            {
-                SenderEmail = AppConfig.WebsiteMainEmail,
-                SenderName = AppConfig.SiteName,
-                SendGridApiKey = AppConfig.SendGridAPIKey
-            };
-        }
-
-        public static void Send(IdentityMessage message)
+        public static void Send(EmailMessage message)
         {
             switch (AppConfig.EmailServiceName)
             {
                 case "SENDGRID":
-                    SendUsingSendGrid(message);
+                    if (message.Tos.Count > 0)
+                    {
+                        SendGridEmailHelper.SendMailToMultiple(message);
+                    }
+                    else
+                    {
+                        SendGridEmailHelper.SendMail(message);
+                    }
                     break;
 
                 case "SMTP":
-                    SendUsingSmtp(message);
+                    SmtpEmailHelper.SendUsingSmtp(message);
                     break;
 
                 case "RELAY":
-                    SendUsingRelay(message);
+                    RelayEmailHelper.SendUsingRelay(message);
                     break;
             }
         }
 
-        public static Task SendAsync(IdentityMessage message)
+        public static async Task SendAsync(EmailMessage message, object token = null)
         {
             switch (AppConfig.EmailServiceName)
             {
                 case "SENDGRID":
-                    return SendUsingSendGridAsync(message);
+                    if (message.Tos.Count > 0)
+                    {
+                        await SendGridEmailHelper.SendMailToMultipleAsync(message);
+                    }
+                    else
+                    {
+                        await SendGridEmailHelper.SendMailAsync(message);
+                    }
+                    break;
 
                 case "SMTP":
-                    return SendUsingSmtpAsync(message, null);
+                    await SmtpEmailHelper.SendUsingSmtpAsync(message, token);
+                    break;
 
                 case "RELAY":
-                    return SendUsingRelayAsync(message, null);
+                    await RelayEmailHelper.SendUsingRelayAsync(message, token);
+                    break;
             }
-
-            return Task.FromResult(0);
-        }
-
-        public static void SendUsingRelay(IdentityMessage message)
-        {
-            var msg = GetMessage(message);
-
-            using (var smtp = new SmtpClient())
-            {
-                smtp.Send(msg);
-            }
-
-            msg.Dispose();
-        }
-
-        public static Task SendUsingRelayAsync(IdentityMessage message, object token)
-        {
-            var msg = GetMessage(message);
-
-            var smtp = new SmtpClient();
-
-            smtp.SendCompleted += smtp_SendCompleted;
-
-            token = msg;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
-        }
-
-        public static void SendUsingRelayWithAttachments(IdentityMessage message, List<System.Net.Mail.Attachment> attachments)
-        {
-            var msg = GetMessage(message);
-
-            GetAttachments(attachments, msg);
-
-            using (var smtp = new SmtpClient())
-            {
-                smtp.Send(msg);
-            }
-
-            msg.Dispose();
-        }
-
-        public static Task SendUsingRelayWithAttachmentsAsync(IdentityMessage message, List<System.Net.Mail.Attachment> attachments, object token)
-        {
-            var msg = GetMessage(message);
-
-            GetAttachments(attachments, msg);
-
-            var smtp = new SmtpClient();
-
-            smtp.SendCompleted += smtp_SendCompleted;
-
-            token = msg;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
-        }
-
-        public static bool SendUsingSendGrid(IdentityMessage message)
-        {
-            return SendGridEmailHelper.SendMail(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
-        }
-
-        public static async Task<bool> SendUsingSendGridAsync(IdentityMessage message)
-        {
-            return await SendGridEmailHelper.SendMailAsync(GetSendGridSettings(), message.Destination, message.Subject, message.Body);
-        }
-
-        public static void SendUsingSmtp(IdentityMessage message)
-        {
-            var msg = GetMessage(message);
-
-            using (var smtp = new SmtpClient(AppConfig.MailServer))
-            {
-                smtp.EnableSsl = AppConfig.EnableSsl;
-
-                smtp.Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword);
-
-                smtp.Port = AppConfig.MailServerPort;
-
-                smtp.Send(msg);
-            }
-
-            msg.Dispose();
-        }
-
-        public static Task SendUsingSmtpAsync(IdentityMessage message, object token)
-        {
-            var msg = GetMessage(message);
-
-            var smtp = new SmtpClient(AppConfig.MailServer);
-
-            smtp.EnableSsl = AppConfig.EnableSsl;
-
-            smtp.Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword);
-
-            smtp.Port = AppConfig.MailServerPort;
-
-            smtp.SendCompleted += smtp_SendCompleted;
-
-            token = msg;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
-        }
-
-        public static void SendUsingSmtpWithAttachments(IdentityMessage message, List<System.Net.Mail.Attachment> attachments)
-        {
-            var msg = GetMessage(message);
-
-            GetAttachments(attachments, msg);
-
-            using (var smtp = new SmtpClient(AppConfig.MailServer))
-            {
-                smtp.EnableSsl = AppConfig.EnableSsl;
-
-                smtp.Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword);
-
-                smtp.Port = AppConfig.MailServerPort;
-
-                smtp.Send(msg);
-            }
-
-            msg.Dispose();
-        }
-
-        public static Task SendUsingSmtpWithAttachmentsAsync(IdentityMessage message, List<System.Net.Mail.Attachment> attachments, object token)
-        {
-            var msg = GetMessage(message);
-
-            GetAttachments(attachments, msg);
-
-            var smtp = new SmtpClient(AppConfig.MailServer);
-
-            smtp.EnableSsl = AppConfig.EnableSsl;
-
-            smtp.Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword);
-
-            smtp.Port = AppConfig.MailServerPort;
-
-            smtp.SendCompleted += smtp_SendCompleted;
-
-            token = msg;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
         }
 
         public static void smtp_SendCompleted(object sender, AsyncCompletedEventArgs e)

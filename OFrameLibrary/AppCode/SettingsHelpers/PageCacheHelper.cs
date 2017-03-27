@@ -1,4 +1,5 @@
-﻿using OFrameLibrary.Models;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using OFrameLibrary.Util;
 using System;
 using System.Web;
@@ -70,7 +71,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             object[] args = { id };
 
-            Utilities.GetPerformance<PageCache>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<PageCache>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -143,6 +144,33 @@ namespace OFrameLibrary.SettingsHelpers
                         break;
                     }
                 }
+            }
+        }
+
+        public static void SetPageCache(PageCache entity)
+        {
+            switch (entity.Location)
+            {
+                case HttpCacheability.Public:
+                case HttpCacheability.ServerAndPrivate:
+                case HttpCacheability.Server:
+                    var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
+                    DateTime now = DateTime.Now;
+                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
+                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
+                    break;
+
+                case HttpCacheability.Private:
+                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+
+                case HttpCacheability.NoCache:
+                default:
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
             }
         }
 

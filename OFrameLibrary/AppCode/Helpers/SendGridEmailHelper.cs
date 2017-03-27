@@ -2,95 +2,94 @@
 using SendGrid;
 using SendGrid.Helpers.Mail;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace OFrameLibrary.Helpers
 {
-    public class SendGridEmailHelper
+    public static class SendGridEmailHelper
     {
-        public static bool SendMail(SendGridSettings settings, String To, string Subject, string Message, string footerTemplate = "")
+        public static SendGridSettings Settings
+        {
+            get
+            {
+                return new SendGridSettings()
+                {
+                    SenderEmail = AppConfig.WebsiteMainEmail,
+                    SenderName = AppConfig.SiteName,
+                    SendGridApiKey = AppConfig.SendGridAPIKey.Replace(" ", "")
+                };
+            }
+        }
+
+        public static void SendMail(EmailMessage message)
         {
             try
             {
-                SendGridAPIClient sg = new SendGridAPIClient(settings.SendGridApiKey.Replace(" ", ""));
+                var sendGridApiClient = new SendGridAPIClient(Settings.SendGridApiKey);
 
-                Email from = new Email(settings.SenderEmail, settings.SenderName);
-                string subject = Subject;
-                Email to = new Email(To);
-
-                Content content = new Content();
-                content = new Content();
-                content.Type = "text/html";
-                content.Value = Message;
-
-                Mail mail = new Mail(from, subject, to, content);
-
-                MailSettings mailSettings = new MailSettings();
-                if (footerTemplate != "")
-                {
-                    FooterSettings footerSettings = new FooterSettings();
-                    footerSettings.Enable = true;
-                    footerSettings.Html = footerTemplate;
-                    mailSettings.FooterSettings = footerSettings;
-                    mail.MailSettings = mailSettings;
-                }
-                var response = sg.client.mail.send.post(requestBody: mail.Get());
-                return true;
+                sendGridApiClient.client.mail.send.post(requestBody: GetMail(message).Get());
             }
             catch (Exception ex) { throw (ex); }
         }
 
-        public static async Task<bool> SendMailAsync(SendGridSettings settings, String To, string Subject, string Message, string footerTemplate = "")
+        public static async Task SendMailAsync(EmailMessage message)
         {
             try
             {
-                SendGridAPIClient sg = new SendGridAPIClient(settings.SendGridApiKey.Replace(" ", ""));
+                var sendGridApiClient = new SendGridAPIClient(Settings.SendGridApiKey);
 
-                Email from = new Email(settings.SenderEmail, settings.SenderName);
-                string subject = Subject;
-                Email to = new Email(To);
-
-                Content content = new Content();
-                content = new Content();
-                content.Type = "text/html";
-                content.Value = Message;
-
-                Mail mail = new Mail(from, subject, to, content);
-
-                MailSettings mailSettings = new MailSettings();
-                if (footerTemplate != "")
-                {
-                    FooterSettings footerSettings = new FooterSettings();
-                    footerSettings.Enable = true;
-                    footerSettings.Html = footerTemplate;
-                    mailSettings.FooterSettings = footerSettings;
-                    mail.MailSettings = mailSettings;
-                }
-                var response = await sg.client.mail.send.post(requestBody: mail.Get());
-                return true;
+                await sendGridApiClient.client.mail.send.post(requestBody: GetMail(message).Get());
             }
             catch (Exception ex) { throw (ex); }
         }
 
-        public static bool SendMailToMultiple(SendGridSettings settings, List<string> To, string Subject, string Message)
+        public static void SendMailToMultiple(EmailMessage message)
         {
             try
             {
-                foreach (string recipiant in To) SendMail(settings, recipiant, Subject, Message);
-                return true;
+                foreach (string to in message.Tos)
+                {
+                    message.To = to;
+                    SendMail(message);
+                };
             }
             catch (Exception ex) { throw ex; }
         }
 
-        public static async Task<bool> SendMailToMultipleAsync(SendGridSettings settings, List<string> To, string Subject, string Message)
+        public static async Task SendMailToMultipleAsync(EmailMessage message)
         {
             try
             {
-                foreach (string recipiant in To) await SendMailAsync(settings, recipiant, Subject, Message);
-                return true;
+                foreach (string to in message.Tos)
+                {
+                    message.To = to;
+                    await SendMailAsync(message);
+                }
             }
             catch (Exception ex) { throw ex; }
+        }
+
+        private static Mail GetMail(EmailMessage message)
+        {
+            var mail = new Mail(
+                                new Email(Settings.SenderEmail, Settings.SenderName),
+                                message.Subject,
+                                new Email(message.To),
+                                new Content
+                                {
+                                    Type = "text/html",
+                                    Value = message.Body
+                                });
+
+            mail.MailSettings = new MailSettings
+            {
+                FooterSettings = new FooterSettings
+                {
+                    Enable = !(string.IsNullOrWhiteSpace(message.FooterTemplate)),
+                    Html = message.FooterTemplate
+                }
+            };
+            return mail;
         }
     }
 }

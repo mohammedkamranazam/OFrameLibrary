@@ -1,6 +1,8 @@
-﻿using OFrameLibrary.Models;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using OFrameLibrary.Util;
 using System;
+using System.Web.UI;
 using System.Xml;
 
 namespace OFrameLibrary.SettingsHelpers
@@ -101,7 +103,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { id };
 
-            Utilities.GetPerformance<SEO>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<SEO>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -168,6 +170,33 @@ namespace OFrameLibrary.SettingsHelpers
             }
 
             return present;
+        }
+
+        public static void SetPageSEO(Page page, SEO seo)
+        {
+            var title = seo.Title;
+
+            if (title.NullableContains("{ONLY-SITENAME}"))
+            {
+                title = title.Replace("{ONLY-SITENAME}", string.Empty);
+
+                page.Title = string.Format("{0}", AppConfig.SiteName);
+            }
+
+            if (title.NullableContains("{ONLY-TITLE}"))
+            {
+                title = title.Replace("{ONLY-TITLE}", string.Empty);
+
+                page.Title = string.Format("{0}", title);
+            }
+
+            if (!seo.Title.NullableContains("{ONLY-SITENAME}") && !seo.Title.NullableContains("{ONLY-TITLE}"))
+            {
+                page.Title = string.Format("{0} | {1}", seo.Title, AppConfig.SiteName);
+            }
+
+            page.MetaDescription = seo.Description;
+            page.MetaKeywords = seo.Keywords;
         }
 
         public static void SetPageSEO(SEO entity)

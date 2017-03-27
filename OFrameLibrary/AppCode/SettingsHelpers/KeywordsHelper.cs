@@ -1,4 +1,5 @@
-﻿using OFrameLibrary.Util;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Util;
 using System;
 using System.Xml;
 
@@ -68,7 +69,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }

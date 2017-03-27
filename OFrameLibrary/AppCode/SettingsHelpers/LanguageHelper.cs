@@ -145,7 +145,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name, locale };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -195,7 +195,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = (object[])null;
 
-            Utilities.GetPerformance<List<Language>>(performanceMode, languagesUniqueKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<List<Language>>(performanceMode, languagesUniqueKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -240,7 +240,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { locale };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -315,7 +315,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name, locale };
 
-            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -366,7 +366,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { locale };
 
-            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }

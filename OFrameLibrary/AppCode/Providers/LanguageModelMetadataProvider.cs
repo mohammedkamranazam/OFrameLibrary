@@ -1,4 +1,5 @@
-﻿using OFrameLibrary.SettingsHelpers;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.SettingsHelpers;
 using OFrameLibrary.Util;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,7 @@ namespace OFrameLibrary.Providers
 
                 if (!string.IsNullOrWhiteSpace(langKey))
                 {
-                    ((ValidationAttribute)attr).ErrorMessage = LanguageHelper.GetKey(Utilities.SetOrGet(key, langKey));
+                    ((ValidationAttribute)attr).ErrorMessage = LanguageHelper.GetKey(PerformanceHelper.SetOrGet(key, langKey));
                 }
             }
 

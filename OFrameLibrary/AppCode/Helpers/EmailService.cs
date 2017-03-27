@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using OFrameLibrary.Models;
 using System.Threading.Tasks;
 
 namespace OFrameLibrary.Helpers
@@ -7,7 +8,12 @@ namespace OFrameLibrary.Helpers
     {
         public Task SendAsync(IdentityMessage message)
         {
-            return MailHelper.SendAsync(message);
+            return MailHelper.SendAsync(new EmailMessage
+            {
+                Body = message.Body,
+                To = message.Destination,
+                Subject = message.Subject
+            });
         }
     }
 }
