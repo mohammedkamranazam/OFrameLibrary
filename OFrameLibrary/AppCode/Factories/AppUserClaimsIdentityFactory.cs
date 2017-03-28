@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Factories
 {
     public class AppUserClaimsIdentityFactory : ClaimsIdentityFactory<ApplicationUser, string>
     {

@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
+using OFrameLibrary.Helpers;
 using OFrameLibrary.Models;
 using System.Threading.Tasks;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Services
 {
     public class EmailService : IIdentityMessageService
     {

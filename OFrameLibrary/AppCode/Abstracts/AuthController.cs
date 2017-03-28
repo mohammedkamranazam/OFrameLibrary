@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using OFrameLibrary.Factories;
 using OFrameLibrary.Helpers;
 using System.Web;
 using System.Web.Mvc;

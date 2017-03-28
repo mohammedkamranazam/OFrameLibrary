@@ -2,9 +2,11 @@
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using OFrameLibrary.Helpers;
+using OFrameLibrary.Services;
 using System;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Factories
 {
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {

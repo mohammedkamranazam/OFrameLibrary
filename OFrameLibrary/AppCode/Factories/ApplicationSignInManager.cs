@@ -4,7 +4,7 @@ using Microsoft.Owin.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Factories
 {
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {

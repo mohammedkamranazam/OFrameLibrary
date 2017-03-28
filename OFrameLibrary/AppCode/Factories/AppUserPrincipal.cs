@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Factories
 {
     public class AppUserPrincipal : ClaimsPrincipal
     {

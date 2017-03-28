@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Util
 {
     /// <summary>
     /// Generic Repository class for Entity Operations

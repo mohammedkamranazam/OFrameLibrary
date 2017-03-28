@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
+using OFrameLibrary.Factories;
 using OFrameLibrary.Helpers;
 using OFrameLibrary.SettingsHelpers;
 using System.Linq;

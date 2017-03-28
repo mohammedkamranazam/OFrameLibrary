@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Twilio;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Services
 {
     public class SmsService : IIdentityMessageService
     {
