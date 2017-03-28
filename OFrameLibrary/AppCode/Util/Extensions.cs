@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -38,6 +39,24 @@ namespace OFrameLibrary.Util
                     ErrorLogger.LogError(ex);
                 }
             }
+        }
+
+        public static List<OListItem> EnumToList(this Type type)
+        {
+            var list = new List<OListItem>();
+
+            foreach (FieldInfo field in type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField))
+            {
+                object rawConstantValue = field.GetRawConstantValue();
+
+                list.Add(new OListItem()
+                {
+                    Text = GetDisplayName(field),
+                    Value = rawConstantValue.ToString()
+                });
+            }
+
+            return list;
         }
 
         public static IEnumerable<T> FlattenHierarchy<T>(this T node, Func<T, IEnumerable<T>> getChildEnumerator)
@@ -117,6 +136,18 @@ namespace OFrameLibrary.Util
             url);
         }
 
+        public static string GetDisplayName(FieldInfo field)
+        {
+            DisplayAttribute customAttribute = CustomAttributeExtensions.GetCustomAttribute<DisplayAttribute>((MemberInfo)field, false);
+            if (customAttribute != null)
+            {
+                string name = customAttribute.GetName();
+                if (!string.IsNullOrEmpty(name))
+                    return name;
+            }
+            return field.Name;
+        }
+
         /// <summary>
         /// Gets the SelectListItem Collection from the enum.
         /// </summary>
@@ -130,31 +161,33 @@ namespace OFrameLibrary.Util
         /// <param name="selectOptionValue">The value of the Select prompt</param>
         /// <param name="isSelectOptionDisabled">if set to <c>true</c> the Select prompt will be disabled and unelectable.</param>
         /// <returns></returns>
-        public static List<OListItem> GetEnumList<T>(this T e,
-              bool takeValue = false,
-              bool friendlyText = true,
-              bool friendlyValue = false,
-              string selectedValue = null,
-              bool insertSelectOption = false,
-              bool selectOptionSelected = true,
-              string selectOptionLabel = "-- Select --",
-              string selectOptionValue = null,
-              bool isSelectOptionDisabled = true,
-              bool translate = false,
-              string locale = "en-US")
+        public static List<OListItem> GetEnumList(this Type type,
+               bool takeValue = false,
+               bool friendlyText = true,
+               bool friendlyValue = false,
+               string selectedValue = null,
+               bool insertSelectOption = false,
+               bool selectOptionSelected = true,
+               string selectOptionLabel = "-- Select --",
+               string selectOptionValue = null,
+               bool isSelectOptionDisabled = true,
+               bool translate = false,
+               string locale = "en-US",
+               bool isTextTranslatable = true)
         {
-            return Utilities.GetSelectList(e.GetEnumList(), takeValue, friendlyText, friendlyValue, selectedValue, insertSelectOption, selectOptionSelected, selectOptionLabel, selectOptionValue, isSelectOptionDisabled, translate, locale, true);
-        }
-
-        public static List<OListItem> GetEnumList<T>(this T e)
-        {
-            return Enum.GetNames(typeof(T))
-                .Select(c => new OListItem
-                {
-                    Text = c,
-                    Value = Utilities.GetEnumByName<T>(c).ToString()
-                })
-                .ToList();
+            return Utilities.GetSelectList(EnumToList(type),
+                takeValue,
+                friendlyText,
+                friendlyValue,
+                selectedValue,
+                insertSelectOption,
+                selectOptionSelected,
+                selectOptionLabel,
+                selectOptionValue,
+                isSelectOptionDisabled,
+                translate,
+                locale,
+                isTextTranslatable);
         }
 
         public static List<T> GetIDList<T>(this string ids, string separator = ";")
@@ -239,21 +272,6 @@ namespace OFrameLibrary.Util
         public static string ToFriendlyCase(this string EnumString)
         {
             return Regex.Replace(EnumString, "(?!^)([A-Z])", " $1");
-        }
-
-        public static List<OListItem> ToSelectList<TEnum>(this TEnum enumObj)
-              where TEnum : struct, IComparable, IFormattable, IConvertible
-        {
-            var values = from TEnum e in Enum.GetValues(typeof(TEnum))
-                         select new { Id = e, Name = e.ToString() };
-
-            return values.Select(c => new OListItem
-            {
-                Text = c.Name,
-                Value = c.Id.ToString()
-            }).ToList();
-
-            //new SelectList(values, enumObj);
         }
 
         public static IDUpdater<T> UpdatedIDs<T>(this IDUpdater<T> updaterModel)
