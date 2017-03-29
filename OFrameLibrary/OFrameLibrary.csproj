@@ -317,12 +317,6 @@
     <Compile Include="AppCode\Performance\RedisCacheHelper.cs" />
     <Compile Include="AppCode\Performance\SessionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\ASPSMSX2\Reference.cs" />
-    <Compile Include="Service References\ASPSMSX2\Reference1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="AppCode\SettingsHelpers\KeywordsHelper.cs" />
     <Compile Include="AppCode\SettingsHelpers\LanguageHelper.cs" />
     <Compile Include="AppCode\SettingsHelpers\LocalStoragesHelper.cs" />
@@ -347,8 +341,6 @@
     <None Include="App.config" />
     <None Include="App_Data\Settings\Web.config" />
     <None Include="packages.config" />
-    <None Include="Service References\ASPSMSX2\aspsmsx2.wsdl" />
-    <None Include="Service References\ASPSMSX2\OFrameLibrary.ASPSMSX2.vouchers.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Settings\KeyWords.xml" />
@@ -362,12 +354,6 @@
     <Content Include="Content\Plugins\OFrame\style.css" />
     <Content Include="Docs\CustomGrid.txt" />
     <Content Include="Docs\LanguageSelector.txt" />
-    <Content Include="Service References\ASPSMSX2\configuration.svcinfo" />
-    <Content Include="Service References\ASPSMSX2\configuration91.svcinfo" />
-    <Content Include="Service References\ASPSMSX2\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference1.cs</LastGenOutput>
-    </Content>
     <Content Include="Storage\TextFile.txt" />
   </ItemGroup>
   <ItemGroup />
