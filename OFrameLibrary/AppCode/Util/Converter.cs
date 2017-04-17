@@ -91,9 +91,7 @@ namespace OFrameLibrary.Util
 
             var table = new DataTable(entityType.Name);
 
-            var properties = TypeDescriptor.GetProperties(entityType);
-
-            foreach (PropertyDescriptor prop in properties)
+            foreach (PropertyDescriptor prop in TypeDescriptor.GetProperties(entityType))
             {
                 table.Columns.Add(prop.Name, prop.PropertyType);
             }

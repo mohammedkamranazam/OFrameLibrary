@@ -79,7 +79,7 @@ namespace OFrameLibrary.Performance
 
                 value = (T)cache.Get(key);
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;

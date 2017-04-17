@@ -1,4 +1,5 @@
 ﻿using OFrameLibrary.Models;
+using System;
 using System.Web;
 
 namespace OFrameLibrary.Performance
@@ -65,7 +66,7 @@ namespace OFrameLibrary.Performance
 
                 value = (T)ss.SessionObject;
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;

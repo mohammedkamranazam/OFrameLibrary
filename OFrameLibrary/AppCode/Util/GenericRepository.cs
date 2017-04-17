@@ -64,8 +64,7 @@ namespace OFrameLibrary.Util
         /// <returns></returns>
         public void Delete(Func<TEntity, Boolean> where)
         {
-            var objects = DbSet.Where(where).AsQueryable();
-            foreach (TEntity obj in objects)
+            foreach (TEntity obj in DbSet.Where(where).AsQueryable())
             {
                 DbSet.Remove(obj);
             }

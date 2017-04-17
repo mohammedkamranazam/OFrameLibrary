@@ -1,5 +1,6 @@
 ﻿using OFrameLibrary.SettingsHelpers;
 using OFrameLibrary.Util;
+using System;
 using System.Configuration;
 using System.Runtime.Caching;
 using System.Web;
@@ -89,7 +90,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -131,7 +132,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -186,7 +187,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -215,7 +216,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -702,7 +703,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -731,7 +732,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -794,7 +795,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -823,7 +824,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -980,7 +981,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1043,7 +1044,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1131,7 +1132,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1173,7 +1174,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1354,7 +1355,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1469,7 +1470,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1558,7 +1559,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1587,7 +1588,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1655,7 +1656,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }
@@ -1684,7 +1685,7 @@ namespace OFrameLibrary
                     var sm = new SymCryptography();
                     return sm.Decrypt(value);
                 }
-                catch
+                catch (Exception)
                 {
                     return string.Empty;
                 }

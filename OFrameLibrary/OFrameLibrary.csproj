@@ -257,6 +257,7 @@
     <Compile Include="AppCode\Models\SerializableSession.cs" />
     <Compile Include="AppCode\Models\Translator.cs" />
     <Compile Include="AppCode\Providers\LanguageModelMetadataProvider.cs" />
+    <Compile Include="AppCode\Util\UnitOfWork.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="AppCode\Filters\LanguageSelectorFilter.cs" />
     <Compile Include="AppCode\Factories\AppDbContext.cs" />

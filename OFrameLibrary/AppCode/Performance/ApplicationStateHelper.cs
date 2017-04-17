@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 
 namespace OFrameLibrary.Performance
 {
@@ -64,7 +65,7 @@ namespace OFrameLibrary.Performance
 
                 value = (T)HttpContext.Current.Application[key];
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;

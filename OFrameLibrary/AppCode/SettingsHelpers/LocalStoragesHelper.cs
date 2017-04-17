@@ -8,10 +8,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class LocalStoragesHelper
     {
-        private const string localStoragesUniqueKey = "_LocalStoragesHelper_";
-        private const string localStoragesXPath = "storages/storage";
+        const string localStoragesUniqueKey = "_LocalStoragesHelper_";
+        const string localStoragesXPath = "storages/storage";
 
-        private static readonly string fileName = AppConfig.LocalStoragesFile;
+        static readonly string fileName = AppConfig.LocalStoragesFile;
 
         public static void AddStoragePath(string name, string path)
         {
@@ -40,9 +40,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-                foreach (XmlNode storage in storages)
+                foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
                 {
                     if (name == storage.Attributes["name"].Value && storage.Attributes["path"].Value.CheckPathFormat().MapPath().DeleteDirectory())
                     {
@@ -83,9 +81,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-            foreach (XmlNode storage in storages)
+            foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
             {
                 if (name == storage.Attributes["name"].Value)
                 {
@@ -107,9 +103,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-                foreach (XmlNode storage in storages)
+                foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
                 {
                     if (name == storage.Attributes["name"].Value)
                     {
@@ -131,9 +125,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-            foreach (XmlNode storage in storages)
+            foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
             {
                 if (name == storage.Attributes["name"].Value)
                 {
@@ -145,7 +137,7 @@ namespace OFrameLibrary.SettingsHelpers
             return present;
         }
 
-        private static string CheckPathFormat(this string path)
+        static string CheckPathFormat(this string path)
         {
             if (!path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
             {
@@ -155,7 +147,7 @@ namespace OFrameLibrary.SettingsHelpers
             return path;
         }
 
-        private static bool CreateDirectory(this string absPath)
+        static bool CreateDirectory(this string absPath)
         {
             var success = true;
 
@@ -175,7 +167,7 @@ namespace OFrameLibrary.SettingsHelpers
             return success;
         }
 
-        private static bool DeleteDirectory(this string absPath)
+        static bool DeleteDirectory(this string absPath)
         {
             var success = false;
 
@@ -192,10 +184,12 @@ namespace OFrameLibrary.SettingsHelpers
             return success;
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();
         }

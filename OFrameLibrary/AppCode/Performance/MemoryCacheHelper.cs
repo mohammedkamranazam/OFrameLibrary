@@ -42,7 +42,7 @@ namespace OFrameLibrary.Performance
 
                 value = (T)memoryCache[key];
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;

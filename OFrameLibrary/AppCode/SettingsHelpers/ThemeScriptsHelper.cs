@@ -6,11 +6,11 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ThemeScriptsHelper
     {
-        private const string xPath = "scripts/script";
+        const string xPath = "scripts/script";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
-            var fileName = string.Format("~/Themes/{0}/Scripts.xml", themeName).MapPath();
+            var fileName = $"~/Themes/{themeName}/Scripts.xml".MapPath();
 
             var paths = new List<string>();
 
@@ -18,9 +18,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pathNodes = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode pathNode in pathNodes)
+            foreach (XmlNode pathNode in xmlDoc.SelectNodes(xPath))
             {
                 paths.Add(pathNode.Attributes["path"].Value);
             }

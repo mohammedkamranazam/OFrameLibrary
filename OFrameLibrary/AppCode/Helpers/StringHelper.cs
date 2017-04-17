@@ -215,11 +215,9 @@ namespace OFrameLibrary.Helpers
 
             // keep track of open tags and close any tags left open
             var tags = new Stack<string>();
-            var matches = Regex.Matches(trunc.ToString(),
+            foreach (Match match in Regex.Matches(trunc.ToString(),
                 @"<((?<tag>[^\s/>]+)|/(?<closeTag>[^\s>]+)).*?(?<selfClose>/)?\s*>",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
-
-            foreach (Match match in matches)
+                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline))
             {
                 if (match.Success)
                 {

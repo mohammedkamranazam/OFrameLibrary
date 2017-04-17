@@ -9,10 +9,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class SEOHelper
     {
-        private const string pageXPath = "pages/page";
-        private const string uniqueKey = "_PageSEO_";
+        const string pageXPath = "pages/page";
+        const string uniqueKey = "_PageSEO_";
 
-        private static readonly string fileName = AppConfig.SEOFile;
+        static readonly string fileName = AppConfig.SEOFile;
 
         public static void AddPage(string id)
         {
@@ -48,9 +48,7 @@ namespace OFrameLibrary.SettingsHelpers
             newKeywordMeta.SetAttribute("name", "keywords");
             newKeywordMeta.SetAttribute("content", entity.Keywords);
 
-            var pages = xmlDoc.SelectNodes(pageXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (page.Attributes["id"].Value == entity.ID)
                 {
@@ -73,9 +71,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pageXPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (page.Attributes["id"].Value == id)
                     {
@@ -97,7 +93,7 @@ namespace OFrameLibrary.SettingsHelpers
         public static SEO GetPageSEO(string id, PerformanceMode performanceMode)
         {
             var keyValue = new SEO();
-            var performanceKey = string.Format("{0}_{1}", uniqueKey, id);
+            var performanceKey = $"{uniqueKey}_{id}";
 
             Func<string, SEO> fnc = GetPageSEOFromSettings;
 
@@ -110,22 +106,19 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static SEO GetPageSEOFromSettings(string id)
         {
-            var entity = new SEO();
-            entity.ID = id;
-
+            var entity = new SEO()
+            {
+                ID = id
+            };
             var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pageXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (page.Attributes["id"].Value == id)
                 {
-                    var metas = page.ChildNodes;
-
-                    foreach (XmlNode meta in metas)
+                    foreach (XmlNode meta in page.ChildNodes)
                     {
                         if ("keywords" == meta.Attributes["name"].Value)
                         {
@@ -158,9 +151,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pageXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (id == page.Attributes["id"].Value)
                 {
@@ -180,19 +171,19 @@ namespace OFrameLibrary.SettingsHelpers
             {
                 title = title.Replace("{ONLY-SITENAME}", string.Empty);
 
-                page.Title = string.Format("{0}", AppConfig.SiteName);
+                page.Title = $"{AppConfig.SiteName}";
             }
 
             if (title.NullableContains("{ONLY-TITLE}"))
             {
                 title = title.Replace("{ONLY-TITLE}", string.Empty);
 
-                page.Title = string.Format("{0}", title);
+                page.Title = $"{title}";
             }
 
             if (!seo.Title.NullableContains("{ONLY-SITENAME}") && !seo.Title.NullableContains("{ONLY-TITLE}"))
             {
-                page.Title = string.Format("{0} | {1}", seo.Title, AppConfig.SiteName);
+                page.Title = $"{seo.Title} | {AppConfig.SiteName}";
             }
 
             page.MetaDescription = seo.Description;
@@ -207,15 +198,11 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pageXPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (page.Attributes["id"].Value == entity.ID)
                     {
-                        var metas = page.ChildNodes;
-
-                        foreach (XmlNode meta in metas)
+                        foreach (XmlNode meta in page.ChildNodes)
                         {
                             if ("keywords" == meta.Attributes["name"].Value)
                             {
@@ -241,10 +228,12 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();
         }

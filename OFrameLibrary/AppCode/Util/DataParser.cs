@@ -12,7 +12,6 @@ namespace OFrameLibrary.Util
 
         public static bool BoolParse(this string text, bool returnTrue)
         {
-            bool value;
 
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -28,11 +27,11 @@ namespace OFrameLibrary.Util
                     return true;
             }
 
-            if (!bool.TryParse(text, out value))
+            if (!bool.TryParse(text, out var value))
             {
                 value = returnTrue;
 
-                ErrorLogger.LogError(string.Format("BoolParse: string [{0}] not in proper format", text));
+                ErrorLogger.LogError($"BoolParse: string [{text}] not in proper format");
             }
 
             return value;
@@ -40,11 +39,10 @@ namespace OFrameLibrary.Util
 
         public static DateTime DateTimeParse(this string text)
         {
-            DateTime value;
 
-            if (!DateTime.TryParse(text, out value))
+            if (!DateTime.TryParse(text, out var value))
             {
-                ErrorLogger.LogError(string.Format("DateTimeParse: string [{0}] not in proper format", text));
+                ErrorLogger.LogError($"DateTimeParse: string [{text}] not in proper format");
             }
 
             return value;
@@ -57,13 +55,12 @@ namespace OFrameLibrary.Util
 
         public static double DoubleParse(this string number, double nullReturn)
         {
-            double value;
 
-            if (!double.TryParse(number, out value))
+            if (!double.TryParse(number, out var value))
             {
                 value = nullReturn;
 
-                ErrorLogger.LogError(string.Format("DoubleParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError($"DoubleParse: string [{number}] not in proper format");
             }
 
             return value;
@@ -76,13 +73,12 @@ namespace OFrameLibrary.Util
 
         public static float FloatParse(this string number, float nullReturn)
         {
-            float value;
 
-            if (!float.TryParse(number, out value))
+            if (!float.TryParse(number, out var value))
             {
                 value = nullReturn;
 
-                ErrorLogger.LogError(string.Format("FloatParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError($"FloatParse: string [{number}] not in proper format");
             }
 
             return value;
@@ -152,7 +148,6 @@ namespace OFrameLibrary.Util
 
         public static int IntParse(this string number, int nullReturn)
         {
-            int value;
 
             var dotPos = number.IndexOf('.');
 
@@ -161,11 +156,11 @@ namespace OFrameLibrary.Util
                 number = number.Remove(dotPos);
             }
 
-            if (!int.TryParse(number, out value))
+            if (!int.TryParse(number, out var value))
             {
                 value = nullReturn;
 
-                ErrorLogger.LogError(string.Format("IntParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError($"IntParse: string [{number}] not in proper format");
             }
 
             return value;
@@ -178,13 +173,12 @@ namespace OFrameLibrary.Util
 
         public static long LongParse(this string number, long nullReturn)
         {
-            long value;
 
-            if (!long.TryParse(number, out value))
+            if (!long.TryParse(number, out var value))
             {
                 value = nullReturn;
 
-                ErrorLogger.LogError(string.Format("LongParse: string [{0}] not in proper format", number));
+                ErrorLogger.LogError($"LongParse: string [{number}] not in proper format");
             }
 
             return value;
@@ -197,11 +191,10 @@ namespace OFrameLibrary.Util
                 return null;
             }
 
-            DateTime value;
 
-            if (!DateTime.TryParse(text, out value))
+            if (!DateTime.TryParse(text, out var value))
             {
-                ErrorLogger.LogError(string.Format("NullableDateTimeParse: string [{0}] not in proper format", text));
+                ErrorLogger.LogError($"NullableDateTimeParse: string [{text}] not in proper format");
                 return null;
             }
 

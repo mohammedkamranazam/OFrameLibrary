@@ -26,8 +26,8 @@ namespace OFrameLibrary.OFrame
             "tag-link-7"
         };
 
-        decimal maxWeight = new Decimal(-1, -1, -1, true, (byte)0);
-        decimal minWeight = new Decimal(-1, -1, -1, false, (byte)0);
+        decimal maxWeight = new Decimal(-1, -1, -1, true, 0);
+        decimal minWeight = new Decimal(-1, -1, -1, false, 0);
         decimal scaleUnitLength;
 
         string TagCloudsHtml
@@ -40,7 +40,7 @@ namespace OFrameLibrary.OFrame
 
             set
             {
-                ViewState["TagCloudsHtml"] = (object)value;
+                ViewState["TagCloudsHtml"] = value;
             }
         }
 
@@ -55,23 +55,18 @@ namespace OFrameLibrary.OFrame
         {
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("<div id=\"tag-cloud-div\">");
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
+            foreach (TagCloudItem tagCloudItem in tags)
             {
-                stringBuilder.Append(string.Format("<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}", (object)FontScale[tagCloudItem.ScaleValue], (object)tagCloudItem.HoverTitle, (object)tagCloudItem.Url, (object)tagCloudItem.Text, (object)" "));
+                stringBuilder.Append($"<a class=\"{FontScale[tagCloudItem.ScaleValue]}\" title=\"{tagCloudItem.HoverTitle}\" href=\"{tagCloudItem.Url}\">{tagCloudItem.Text}</a>{" "}");
             }
 
             stringBuilder.Append("</div>");
-            return ((object)stringBuilder).ToString();
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
+            return stringBuilder.ToString();
         }
 
         protected void ProcessTagCloud(TagCloudItemCollection tags)
         {
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
+            foreach (TagCloudItem tagCloudItem in tags)
             {
                 var scaleValue = (int)Math.Truncate((tagCloudItem.Count - minWeight) / scaleUnitLength);
                 tagCloudItem.SetScaleValue(scaleValue);
@@ -80,7 +75,7 @@ namespace OFrameLibrary.OFrame
 
         protected void ProcessTagWeights(TagCloudItemCollection tags)
         {
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
+            foreach (TagCloudItem tagCloudItem in tags)
             {
                 if (tagCloudItem.Count < minWeight)
                 {

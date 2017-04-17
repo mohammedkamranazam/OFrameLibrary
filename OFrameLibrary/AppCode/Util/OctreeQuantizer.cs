@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace OFrameLibrary.Util
 {
-    internal class OctreeQuantizer : Quantizer
+    class OctreeQuantizer : Quantizer
     {
         int _maxColors;
         Octree _octree;
@@ -355,6 +355,8 @@ namespace OFrameLibrary.Util
                 /// <summary>
                 /// Return the palette index for the passed color
                 /// </summary>
+                /// <param name="pixel">todo: describe pixel parameter on GetPaletteIndex</param>
+                /// <param name="level">todo: describe level parameter on GetPaletteIndex</param>
                 public int GetPaletteIndex(Color32 pixel, int level)
                 {
                     var paletteIndex = _paletteIndex;
@@ -385,6 +387,7 @@ namespace OFrameLibrary.Util
                 /// <summary>
                 /// Increment the pixel count and add to the color information
                 /// </summary>
+                /// <param name="pixel">todo: describe pixel parameter on Increment</param>
                 public void Increment(Color32 pixel)
                 {
                     _pixelCount++;

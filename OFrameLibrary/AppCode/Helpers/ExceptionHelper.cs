@@ -20,6 +20,11 @@ namespace OFrameLibrary.Helpers
 
         public static string GetEntityExceptionMessage(DbEntityValidationException e)
         {
+            if (e == null)
+            {
+                return string.Empty;
+            }
+
             var message = new List<string>();
             foreach (var eve in e.EntityValidationErrors)
             {

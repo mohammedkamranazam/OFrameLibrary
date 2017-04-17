@@ -113,9 +113,7 @@ namespace OFrameLibrary.Util
         public virtual string Decrypt(string cryptoText)
         {
             var cryptoByte = Convert.FromBase64String(cryptoText);
-            var keyByte = GetLegalKey();
-
-            mCryptoService.Key = keyByte;
+            mCryptoService.Key = GetLegalKey();
             SetLegalIV();
 
             var cryptoTransform = mCryptoService.CreateDecryptor();
@@ -126,11 +124,12 @@ namespace OFrameLibrary.Util
 
                 var cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Read);
 
-                var sr = new StreamReader(cs);
-
-                return sr.ReadToEnd();
+                using (var sr = new StreamReader(cs))
+                {
+                    return sr.ReadToEnd();
+                }
             }
-            catch
+            catch (Exception)
             {
                 return null;
             }
@@ -143,28 +142,29 @@ namespace OFrameLibrary.Util
                 mCryptoService.Dispose();
                 mCryptoService = null;
             }
+
+            GC.SuppressFinalize(this);
         }
 
         public virtual string Encrypt(string plainText)
         {
-            var plainByte = ASCIIEncoding.ASCII.GetBytes(plainText);
-            var keyByte = GetLegalKey();
-
-            mCryptoService.Key = keyByte;
+            var plainByte = Encoding.ASCII.GetBytes(plainText);
+            mCryptoService.Key = GetLegalKey();
             SetLegalIV();
 
             var cryptoTransform = mCryptoService.CreateEncryptor();
 
             var ms = new MemoryStream();
 
-            var cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
+            using (var cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write))
+            {
+                cs.Write(plainByte, 0, plainByte.Length);
+                cs.FlushFinalBlock();
 
-            cs.Write(plainByte, 0, plainByte.Length);
-            cs.FlushFinalBlock();
+                var cryptoByte = ms.ToArray();
 
-            var cryptoByte = ms.ToArray();
-
-            return Convert.ToBase64String(cryptoByte, 0, cryptoByte.GetLength(0));
+                return Convert.ToBase64String(cryptoByte, 0, cryptoByte.GetLength(0));
+            }
         }
 
         public virtual byte[] GetLegalKey()
@@ -193,7 +193,7 @@ namespace OFrameLibrary.Util
                 }
             }
 
-            using (var passwordDeriveBytes = new PasswordDeriveBytes(mKey, ASCIIEncoding.ASCII.GetBytes(mSalt)))
+            using (var passwordDeriveBytes = new PasswordDeriveBytes(mKey, Encoding.ASCII.GetBytes(mSalt)))
             {
                 return passwordDeriveBytes.GetBytes(mKey.Length);
             }

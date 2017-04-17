@@ -24,7 +24,7 @@ namespace OFrameLibrary.Util
 
         public static string GetCurrentActionName()
         {
-            string actionName = string.Empty;
+            var actionName = string.Empty;
 
             var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
 
@@ -41,7 +41,7 @@ namespace OFrameLibrary.Util
 
         public static string GetCurrentControllerName()
         {
-            string controllerName = string.Empty;
+            var controllerName = string.Empty;
 
             var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
 
@@ -159,7 +159,7 @@ namespace OFrameLibrary.Util
 
             char ch;
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 ch = Convert.ToChar(Convert.ToInt32(Math.Floor(26 * random.NextDouble() + 65)));
                 builder.Append(ch);
@@ -206,9 +206,7 @@ namespace OFrameLibrary.Util
 
         public static void GetTagsSplitted(SortedDictionary<string, int> tagsDictionary, string fullTags)
         {
-            var tags = fullTags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (var tag in tags)
+            foreach (var tag in fullTags.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (!string.IsNullOrWhiteSpace(tag))
                 {
@@ -228,14 +226,7 @@ namespace OFrameLibrary.Util
         {
             var maxFileSizeBytes = (maxSizeInMB * 1024) * 1024;
 
-            if (content.Length <= maxFileSizeBytes)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return content.Length <= maxFileSizeBytes;
         }
 
         public static T ParseEnum<T>(string value)
@@ -590,31 +581,17 @@ namespace OFrameLibrary.Util
         {
             if (isTextTranslatable)
             {
-                if (translate)
-                {
-                    return LanguageHelper.GetKey(x.Text, locale);
-                }
-                else
-                {
-                    return ((friendlyText) ? x.Text.ToFriendlyCase() : x.Text);
-                }
+                return translate ? LanguageHelper.GetKey(x.Text, locale) : ((friendlyText) ? x.Text.ToFriendlyCase() : x.Text);
             }
             else
             {
-                return ((friendlyText) ? x.Text.ToFriendlyCase() : x.Text);
+                return (friendlyText) ? x.Text.ToFriendlyCase() : x.Text;
             }
         }
 
         static string GetListItemValue(OListItem x, bool takeValue, bool friendlyValue)
         {
-            if (takeValue)
-            {
-                return x.Value;
-            }
-            else
-            {
-                return (friendlyValue) ? x.Text.ToFriendlyCase() : x.Text;
-            }
+            return takeValue ? x.Value : (friendlyValue) ? x.Text.ToFriendlyCase() : x.Text;
         }
 
         static bool IsListItemSelected(OListItem x, bool takeValue, bool firendlyValue, string selectedValue)
@@ -632,14 +609,7 @@ namespace OFrameLibrary.Util
                 }
                 else
                 {
-                    if (firendlyValue)
-                    {
-                        return x.Text.ToFriendlyCase() == selectedValue;
-                    }
-                    else
-                    {
-                        return x.Text == selectedValue;
-                    }
+                    return firendlyValue ? x.Text.ToFriendlyCase() == selectedValue : x.Text == selectedValue;
                 }
             }
 

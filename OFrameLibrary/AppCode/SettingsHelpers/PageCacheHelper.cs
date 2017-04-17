@@ -9,9 +9,9 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class PageCacheHelper
     {
-        private const string pageXPath = "pages/page";
-        private const string uniqueKey = "_PageCacheHelper_";
-        private static readonly string fileName = AppConfig.PageCacheFile;
+        const string pageXPath = "pages/page";
+        const string uniqueKey = "_PageCacheHelper_";
+        static readonly string fileName = AppConfig.PageCacheFile;
 
         public static void AddCache(PageCache entity)
         {
@@ -41,9 +41,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pageXPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (id == page.Attributes["id"].Value)
                     {
@@ -65,7 +63,7 @@ namespace OFrameLibrary.SettingsHelpers
         public static PageCache GetCache(string id, PerformanceMode performanceMode)
         {
             var keyValue = new PageCache();
-            string performanceKey = uniqueKey + id;
+            var performanceKey = uniqueKey + id;
 
             var fnc = new Func<string, PageCache>(GetCacheFromSettings);
 
@@ -84,9 +82,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pageXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (id == page.Attributes["id"].Value)
                 {
@@ -102,15 +98,13 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static bool IsPagePresent(string id)
         {
-            bool present = false;
+            var present = false;
 
             var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pageXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (id == page.Attributes["id"].Value)
                 {
@@ -130,9 +124,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pageXPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (entity.ID == page.Attributes["id"].Value)
                     {
@@ -155,7 +147,7 @@ namespace OFrameLibrary.SettingsHelpers
                 case HttpCacheability.ServerAndPrivate:
                 case HttpCacheability.Server:
                     var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
-                    DateTime now = DateTime.Now;
+                    var now = DateTime.Now;
                     HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
                     HttpContext.Current.Response.Cache.SetMaxAge(freshness);
                     HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
@@ -174,10 +166,12 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();
         }

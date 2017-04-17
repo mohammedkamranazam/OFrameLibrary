@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 
 namespace OFrameLibrary.Util
 {
-    internal abstract class Quantizer
+    abstract class Quantizer
     {
         readonly int _pixelSize;
         readonly bool _singlePass;
 
-        public Quantizer(bool singlePass)
+        protected Quantizer(bool singlePass)
         {
             _singlePass = singlePass;
             _pixelSize = Marshal.SizeOf(typeof(Color32));

@@ -7,9 +7,9 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class KeywordsHelper
     {
-        private const string keyXPath = "keys/key";
-        private const string uniqueKey = "_KeywordsHelper_";
-        private static readonly string fileName = AppConfig.KeywordsFile;
+        const string keyXPath = "keys/key";
+        const string uniqueKey = "_KeywordsHelper_";
+        static readonly string fileName = AppConfig.KeywordsFile;
 
         public static void AddKeyword(string name, string value)
         {
@@ -38,9 +38,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var keys = xmlDoc.SelectNodes(keyXPath);
-
-                foreach (XmlNode key in keys)
+                foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
                 {
                     if (name == key.Attributes["name"].Value)
                     {
@@ -82,9 +80,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var keys = xmlDoc.SelectNodes(keyXPath);
-
-            foreach (XmlNode key in keys)
+            foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
             {
                 if (name == key.Attributes["name"].Value)
                 {
@@ -104,9 +100,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var keys = xmlDoc.SelectNodes(keyXPath);
-
-            foreach (XmlNode key in keys)
+            foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
             {
                 if (name == key.Attributes["name"].Value)
                 {
@@ -126,9 +120,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var keys = xmlDoc.SelectNodes(keyXPath);
-
-                foreach (XmlNode key in keys)
+                foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
                 {
                     if (name == key.Attributes["name"].Value)
                     {
@@ -142,10 +134,12 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();
         }

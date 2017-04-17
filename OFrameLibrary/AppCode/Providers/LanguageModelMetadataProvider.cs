@@ -16,7 +16,7 @@ namespace OFrameLibrary.Providers
             foreach (var attr in attributes.Where(c => c is ValidationAttribute && c != null).ToList())
             {
                 var langKey = ((ValidationAttribute)attr).ErrorMessage;
-                var key = string.Format("{0}_{1}_{2}", containerType.FullName, propertyName, attr.GetType().Name);
+                var key = $"{containerType.FullName}_{propertyName}_{attr.GetType().Name}";
 
                 if (!string.IsNullOrWhiteSpace(langKey))
                 {

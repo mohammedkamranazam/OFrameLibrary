@@ -28,9 +28,7 @@ namespace OFrameLibrary.Helpers
 
                 if (ctrl is WebControl)
                 {
-                    var w = new Unit(100, UnitType.Percentage);
-
-                    ((WebControl)ctrl).Width = w;
+                    ((WebControl)ctrl).Width = new Unit(100, UnitType.Percentage);
                 }
 
                 using (

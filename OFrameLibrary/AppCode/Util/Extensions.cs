@@ -47,7 +47,7 @@ namespace OFrameLibrary.Util
 
             foreach (FieldInfo field in type.GetFields(BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.Public | BindingFlags.GetField))
             {
-                object rawConstantValue = field.GetRawConstantValue();
+                var rawConstantValue = field.GetRawConstantValue();
 
                 list.Add(new OListItem
                 {
@@ -62,9 +62,9 @@ namespace OFrameLibrary.Util
         public static IEnumerable<T> FlattenHierarchy<T>(this T node, Func<T, IEnumerable<T>> getChildEnumerator)
         {
             yield return node;
-            if (getChildEnumerator(node) != null)
+            if (getChildEnumerator?.Invoke(node) != null)
             {
-                foreach (var child in getChildEnumerator(node))
+                foreach (var child in getChildEnumerator?.Invoke(node))
                 {
                     foreach (var childOrDescendant
                               in child.FlattenHierarchy(getChildEnumerator))
@@ -89,7 +89,7 @@ namespace OFrameLibrary.Util
 
         public static string GetAbsolutePathFromRelativePath(this string RelativePath)
         {
-            string extraPath = string.Empty;
+            var extraPath = string.Empty;
 
             if (string.IsNullOrWhiteSpace(RelativePath))
             {
@@ -136,10 +136,10 @@ namespace OFrameLibrary.Util
 
         public static string GetDisplayName(FieldInfo field)
         {
-            DisplayAttribute customAttribute = CustomAttributeExtensions.GetCustomAttribute<DisplayAttribute>((MemberInfo)field, false);
+            var customAttribute = CustomAttributeExtensions.GetCustomAttribute<DisplayAttribute>((MemberInfo)field, false);
             if (customAttribute != null)
             {
-                string name = customAttribute.GetName();
+                var name = customAttribute.GetName();
                 if (!string.IsNullOrEmpty(name))
                 {
                     return name;
@@ -160,6 +160,10 @@ namespace OFrameLibrary.Util
         /// <param name="selectOptionLabel">The label of the Select prompt</param>
         /// <param name="selectOptionValue">The value of the Select prompt</param>
         /// <param name="isSelectOptionDisabled">if set to <c>true</c> the Select prompt will be disabled and unelectable.</param>
+        /// <param name="friendlyText">todo: describe friendlyText parameter on GetEnumList</param>
+        /// <param name="translate">todo: describe translate parameter on GetEnumList</param>
+        /// <param name="locale">todo: describe locale parameter on GetEnumList</param>
+        /// <param name="isTextTranslatable">todo: describe isTextTranslatable parameter on GetEnumList</param>
         /// <returns></returns>
         public static List<OListItem> GetEnumList(this Type type,
                bool takeValue = false,
@@ -320,7 +324,7 @@ namespace OFrameLibrary.Util
                         vr.Message = "Model Empty And Valid";
                     }
                 }
-                catch
+                catch (Exception)
                 {
                     vr.Message = "Json Deserialization Failed";
                 }

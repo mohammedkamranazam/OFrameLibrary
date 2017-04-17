@@ -57,11 +57,13 @@ namespace OFrameLibrary.Util
                 mCryptoService.Dispose();
                 mCryptoService = null;
             }
+
+            GC.SuppressFinalize(this);
         }
 
         public virtual string Encrypt(string plainText)
         {
-            var cryptoByte = mCryptoService.ComputeHash(ASCIIEncoding.ASCII.GetBytes(plainText + Salt));
+            var cryptoByte = mCryptoService.ComputeHash(Encoding.ASCII.GetBytes(plainText + Salt));
 
             return Convert.ToBase64String(cryptoByte, 0, cryptoByte.Length);
         }

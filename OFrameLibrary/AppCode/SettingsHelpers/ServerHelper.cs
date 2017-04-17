@@ -8,10 +8,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ServerHelper
     {
-        private const string expressionXPath = "servers/server";
-        private const string uniqueKey = "_ServerHelper_";
+        const string expressionXPath = "servers/server";
+        const string uniqueKey = "_ServerHelper_";
 
-        private static readonly string fileName = AppConfig.RemoteServersFile;
+        static readonly string fileName = AppConfig.RemoteServersFile;
 
         public static void AddServer(ServerSettings server)
         {
@@ -23,20 +23,21 @@ namespace OFrameLibrary.SettingsHelpers
 
                 var newExpression = xmlDoc.CreateElement("server");
 
-                var smc = new SymCryptography();
+                using (var smc = new SymCryptography())
+                {
+                    newExpression.SetAttribute("domain", server.Domain);
+                    newExpression.SetAttribute("ip", server.IP);
+                    newExpression.SetAttribute("isHttp", server.IsHttp.ToString());
+                    newExpression.SetAttribute("name", server.Name);
+                    newExpression.SetAttribute("password", smc.Encrypt(server.Password));
+                    newExpression.SetAttribute("path", server.Path);
+                    newExpression.SetAttribute("rootDirectory", server.RootDirectory);
+                    newExpression.SetAttribute("username", server.Username);
 
-                newExpression.SetAttribute("domain", server.Domain);
-                newExpression.SetAttribute("ip", server.IP);
-                newExpression.SetAttribute("isHttp", server.IsHttp.ToString());
-                newExpression.SetAttribute("name", server.Name);
-                newExpression.SetAttribute("password", smc.Encrypt(server.Password));
-                newExpression.SetAttribute("path", server.Path);
-                newExpression.SetAttribute("rootDirectory", server.RootDirectory);
-                newExpression.SetAttribute("username", server.Username);
+                    xmlDoc.SelectSingleNode(expressionXPath).ParentNode.AppendChild(newExpression);
 
-                xmlDoc.SelectSingleNode(expressionXPath).ParentNode.AppendChild(newExpression);
-
-                SaveXml(xmlDoc);
+                    SaveXml(xmlDoc);
+                }
             }
         }
 
@@ -48,9 +49,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-                foreach (XmlNode expression in expressions)
+                foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
                 {
                     if (name == expression.Attributes["name"].Value)
                     {
@@ -72,9 +71,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-            foreach (XmlNode expression in expressions)
+            foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
             {
                 if (name == expression.Attributes["name"].Value)
                 {
@@ -117,7 +114,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name };
 
-            PerformanceHelper.GetPerformance<ServerSettings>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -130,23 +127,22 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-            foreach (XmlNode expression in expressions)
+            foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
             {
                 if (name == expression.Attributes["name"].Value)
                 {
-                    var smc = new SymCryptography();
-
-                    server.Domain = expression.Attributes["domain"].Value;
-                    server.IP = expression.Attributes["ip"].Value;
-                    server.IsHttp = expression.Attributes["isHttp"].Value.BoolParse();
-                    server.Name = expression.Attributes["name"].Value;
-                    server.Password = smc.Decrypt(expression.Attributes["password"].Value);
-                    server.Path = expression.Attributes["path"].Value;
-                    server.RootDirectory = expression.Attributes["rootDirectory"].Value;
-                    server.Username = expression.Attributes["username"].Value;
-                    break;
+                    using (var smc = new SymCryptography())
+                    {
+                        server.Domain = expression.Attributes["domain"].Value;
+                        server.IP = expression.Attributes["ip"].Value;
+                        server.IsHttp = expression.Attributes["isHttp"].Value.BoolParse();
+                        server.Name = expression.Attributes["name"].Value;
+                        server.Password = smc.Decrypt(expression.Attributes["password"].Value);
+                        server.Path = expression.Attributes["path"].Value;
+                        server.RootDirectory = expression.Attributes["rootDirectory"].Value;
+                        server.Username = expression.Attributes["username"].Value;
+                        break;
+                    }
                 }
             }
 
@@ -177,35 +173,36 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-                foreach (XmlNode expression in expressions)
+                foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
                 {
                     if (server.Name == expression.Attributes["name"].Value)
                     {
-                        var smc = new SymCryptography();
+                        using (var smc = new SymCryptography())
+                        {
+                            expression.Attributes["domain"].Value = server.Domain;
+                            expression.Attributes["ip"].Value = server.IP;
+                            expression.Attributes["isHttp"].Value = server.IsHttp.ToString();
+                            expression.Attributes["name"].Value = server.Name;
+                            expression.Attributes["password"].Value = smc.Encrypt(server.Password);
+                            expression.Attributes["path"].Value = server.Path;
+                            expression.Attributes["rootDirectory"].Value = server.RootDirectory;
+                            expression.Attributes["username"].Value = server.Username;
 
-                        expression.Attributes["domain"].Value = server.Domain;
-                        expression.Attributes["ip"].Value = server.IP;
-                        expression.Attributes["isHttp"].Value = server.IsHttp.ToString();
-                        expression.Attributes["name"].Value = server.Name;
-                        expression.Attributes["password"].Value = smc.Encrypt(server.Password);
-                        expression.Attributes["path"].Value = server.Path;
-                        expression.Attributes["rootDirectory"].Value = server.RootDirectory;
-                        expression.Attributes["username"].Value = server.Username;
+                            SaveXml(xmlDoc);
 
-                        SaveXml(xmlDoc);
-
-                        break;
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();
         }

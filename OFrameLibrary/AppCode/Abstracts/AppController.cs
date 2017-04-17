@@ -54,11 +54,6 @@ namespace OFrameLibrary.Abstracts
             }
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-        }
-
         protected static string Language(string key)
         {
             return LanguageHelper.GetKey(key);
