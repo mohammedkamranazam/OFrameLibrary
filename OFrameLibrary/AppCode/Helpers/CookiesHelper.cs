@@ -52,10 +52,11 @@ namespace OFrameLibrary.Helpers
 
         public static void SetCookie(string key, string value, DateTime expires)
         {
-            var cookie = new HttpCookie(key, value);
-            cookie.Expires = expires;
-            cookie.HttpOnly = true;
-
+            var cookie = new HttpCookie(key, value)
+            {
+                Expires = expires,
+                HttpOnly = true
+            };
             if (HttpContext.Current.Response.Cookies[key] != null)
             {
                 HttpContext.Current.Response.Cookies.Set(cookie);

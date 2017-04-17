@@ -30,19 +30,21 @@ namespace OFrameLibrary.Helpers
         {
             var msg = MailHelper.GetMessage(message);
 
-            var smtp = new SmtpClient(AppConfig.MailServer);
+            using (var smtp = new SmtpClient(AppConfig.MailServer)
+            {
+                EnableSsl = AppConfig.EnableSsl,
 
-            smtp.EnableSsl = AppConfig.EnableSsl;
+                Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword),
 
-            smtp.Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword);
+                Port = AppConfig.MailServerPort
+            })
+            {
+                smtp.SendCompleted += MailHelper.smtp_SendCompleted;
 
-            smtp.Port = AppConfig.MailServerPort;
+                token = msg;
 
-            smtp.SendCompleted += MailHelper.smtp_SendCompleted;
-
-            token = msg;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
+                return Task.Run(() => smtp.SendAsync(msg, token));
+            }
         }
 
         public static void SendUsingSmtpWithAttachments(EmailMessage message, List<Attachment> attachments)
@@ -71,19 +73,21 @@ namespace OFrameLibrary.Helpers
 
             MailHelper.GetAttachments(attachments, msg);
 
-            var smtp = new SmtpClient(AppConfig.MailServer);
+            using (var smtp = new SmtpClient(AppConfig.MailServer)
+            {
+                EnableSsl = AppConfig.EnableSsl,
 
-            smtp.EnableSsl = AppConfig.EnableSsl;
+                Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword),
 
-            smtp.Credentials = new NetworkCredential(AppConfig.MailLogOnId, AppConfig.MailLogOnPassword);
+                Port = AppConfig.MailServerPort
+            })
+            {
+                smtp.SendCompleted += MailHelper.smtp_SendCompleted;
 
-            smtp.Port = AppConfig.MailServerPort;
+                token = msg;
 
-            smtp.SendCompleted += MailHelper.smtp_SendCompleted;
-
-            token = msg;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
+                return Task.Run(() => smtp.SendAsync(msg, token));
+            }
         }
     }
 }

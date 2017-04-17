@@ -1,4 +1,7 @@
-﻿using System;
+﻿using OFrameLibrary.Util;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity.Validation;
 
 namespace OFrameLibrary.Helpers
 {
@@ -7,12 +10,26 @@ namespace OFrameLibrary.Helpers
         public static string GetExceptionMessage(Exception ex)
         {
             var message = "<br /><strong>Error occurred while performing this operation</strong><br /><br />";
-            message += string.Format("<strong>Error Message:</strong> {0}<br /><br />", ex.Message);
-            message += string.Format("<strong>Error Details:</strong> {0}<br /><br />", ((ex.InnerException == null) ? string.Empty : ((ex.InnerException.InnerException == null) ? ex.InnerException.ToString() : ex.InnerException.InnerException.ToString())));
-            message += string.Format("<strong>Stack Trace:</strong> {0}<br /><br />", ex.StackTrace);
-            message += string.Format("<strong>Method Name:</strong> {0}<br /><br />", (ex.TargetSite != null ? ex.TargetSite.Name : string.Empty));
-            message += string.Format("<strong>Source:</strong> {0}<br /><br />", ex.Source);
+            message += $"<strong>Error Message:</strong> {ex.Message}<br /><br />";
+            message += $"<strong>Error Details:</strong> {((ex.InnerException == null) ? string.Empty : ((ex.InnerException.InnerException == null) ? ex.InnerException.ToString() : ex.InnerException.InnerException.ToString()))}<br /><br />";
+            message += $"<strong>Stack Trace:</strong> {ex.StackTrace}<br /><br />";
+            message += $"<strong>Method Name:</strong> {(ex.TargetSite != null ? ex.TargetSite.Name : string.Empty)}<br /><br />";
+            message += $"<strong>Source:</strong> {ex.Source}<br /><br />";
             return message;
+        }
+
+        public static string GetEntityExceptionMessage(DbEntityValidationException e)
+        {
+            var message = new List<string>();
+            foreach (var eve in e.EntityValidationErrors)
+            {
+                message.Add($"Entity of type \"{eve.Entry.Entity.GetType().Name}\" in state \"{eve.Entry.State}\" has the following validation errors:");
+                foreach (var ve in eve.ValidationErrors)
+                {
+                    message.Add($"- Property: \"{ve.PropertyName}\", Error: \"{ve.ErrorMessage}\"");
+                }
+            }
+            return string.Join("<br /><br />", message.ToArray());
         }
     }
 }

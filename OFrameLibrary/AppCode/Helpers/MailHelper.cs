@@ -15,10 +15,10 @@ namespace OFrameLibrary.Helpers
 
         public static MailMessage GetMessage(EmailMessage message)
         {
-            var msg = new MailMessage();
-
-            msg.From = new MailAddress(message.From);
-
+            var msg = new MailMessage
+            {
+                From = new MailAddress(message.From)
+            };
             if (message.Tos.Count > 0)
             {
                 foreach (var to in message.Tos)

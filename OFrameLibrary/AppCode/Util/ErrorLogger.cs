@@ -57,7 +57,7 @@ namespace OFrameLibrary.Util
                 var fileName = string.Format("{0}.txt", Utilities.DateTimeNow().ToString("dd-MM-yyyy"));
 
                 // Write the text asynchronously to a new file named "WriteTextAsync.txt".
-                using (StreamWriter outputFile = new StreamWriter(mydocpath + fileName, true))
+                using (var outputFile = new StreamWriter(mydocpath + fileName, true))
                 {
                     outputFile.WriteLine(errorMessage);
                 }

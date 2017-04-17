@@ -32,7 +32,7 @@ namespace OFrameLibrary.Helpers
             TraverseTree(rootDir, rootNode, patterns);
         }
 
-        private static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode)
+        static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode)
         {
             foreach (var file in currentDir.GetFiles())
             {
@@ -41,7 +41,7 @@ namespace OFrameLibrary.Helpers
             }
         }
 
-        private static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
+        static void TraverseFiles(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
         {
             foreach (var pattern in patterns)
             {
@@ -53,7 +53,7 @@ namespace OFrameLibrary.Helpers
             }
         }
 
-        private static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, bool skipFiles)
+        static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, bool skipFiles)
         {
             foreach (var dir in currentDir.GetDirectories())
             {
@@ -67,7 +67,7 @@ namespace OFrameLibrary.Helpers
             }
         }
 
-        private static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
+        static void TraverseTree(DirectoryInfo currentDir, TreeNode currentNode, string[] patterns)
         {
             foreach (var dir in currentDir.GetDirectories())
             {

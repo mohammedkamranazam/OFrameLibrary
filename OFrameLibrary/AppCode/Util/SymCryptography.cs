@@ -7,15 +7,17 @@ namespace OFrameLibrary.Util
 {
     public class SymCryptography : IDisposable
     {
-        private SymCryptographyServiceProvider mAlgorithm;
-        private SymmetricAlgorithm mCryptoService;
-        private string mKey = string.Empty;
-        private string mSalt = string.Empty;
+        SymCryptographyServiceProvider mAlgorithm;
+        SymmetricAlgorithm mCryptoService;
+        string mKey = string.Empty;
+        string mSalt = string.Empty;
 
         public SymCryptography()
         {
-            mCryptoService = new RijndaelManaged();
-            mCryptoService.Mode = CipherMode.CBC;
+            mCryptoService = new RijndaelManaged
+            {
+                Mode = CipherMode.CBC
+            };
             mAlgorithm = SymCryptographyServiceProvider.Rijndael;
         }
 
@@ -191,13 +193,13 @@ namespace OFrameLibrary.Util
                 }
             }
 
-            using (PasswordDeriveBytes passwordDeriveBytes = new PasswordDeriveBytes(mKey, ASCIIEncoding.ASCII.GetBytes(mSalt)))
+            using (var passwordDeriveBytes = new PasswordDeriveBytes(mKey, ASCIIEncoding.ASCII.GetBytes(mSalt)))
             {
                 return passwordDeriveBytes.GetBytes(mKey.Length);
             }
         }
 
-        private void SetLegalIV()
+        void SetLegalIV()
         {
             switch (mAlgorithm)
             {

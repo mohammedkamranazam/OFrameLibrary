@@ -47,9 +47,7 @@ namespace OFrameLibrary.Helpers
 
         public static string GetEmailTemplateFromDataBase(string templateName)
         {
-            var body = string.Empty;
-
-            return body;
+            return string.Empty;
         }
 
         public static string GetEmailTemplateFromFile(string templatePath)

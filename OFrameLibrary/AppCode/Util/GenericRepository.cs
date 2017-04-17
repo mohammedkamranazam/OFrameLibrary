@@ -66,7 +66,9 @@ namespace OFrameLibrary.Util
         {
             var objects = DbSet.Where(where).AsQueryable();
             foreach (TEntity obj in objects)
+            {
                 DbSet.Remove(obj);
+            }
         }
 
         /// <summary>

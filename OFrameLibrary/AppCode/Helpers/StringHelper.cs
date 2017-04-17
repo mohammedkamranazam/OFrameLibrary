@@ -53,13 +53,11 @@ namespace OFrameLibrary.Helpers
         {
             if (!string.IsNullOrWhiteSpace(email))
             {
-                var emailRegX = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                const string emailRegX = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                               @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
 
-                var re = new Regex(emailRegX);
-
-                return re.IsMatch(email);
+                return Regex.IsMatch(email, emailRegX, RegexOptions.Compiled);
             }
             else
             {
@@ -71,11 +69,9 @@ namespace OFrameLibrary.Helpers
         {
             if (!string.IsNullOrWhiteSpace(url))
             {
-                var urlRegEx = @"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
+                const string urlRegEx = @"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
 
-                var re = new Regex(urlRegEx);
-
-                return re.IsMatch(url);
+                return Regex.IsMatch(url, urlRegEx, RegexOptions.Compiled);
             }
             else
             {
@@ -115,11 +111,14 @@ namespace OFrameLibrary.Helpers
         /// Strips all HTML tags from a string
         /// </summary>
         /// <param name="s"></param>
+        /// <param name="html">todo: describe html parameter on StripHtml</param>
         /// <returns></returns>
         public static string StripHtml(this string html)
         {
             if (string.IsNullOrEmpty(html))
+            {
                 return html;
+            }
 
             return Regex.Replace(html, @"<(.|\n)*?>", string.Empty);
         }
@@ -146,9 +145,13 @@ namespace OFrameLibrary.Helpers
         public static string Truncate(this string text, int maxCharacters, string trailingText)
         {
             if (string.IsNullOrEmpty(text) || maxCharacters <= 0 || text.Length <= maxCharacters)
+            {
                 return text;
+            }
             else
+            {
                 return text.Substring(0, maxCharacters) + trailingText;
+            }
         }
 
         public static string TruncateFromHere(string content)
@@ -170,11 +173,16 @@ namespace OFrameLibrary.Helpers
         /// The result contains HTML and any tags left open are closed.
         /// </summary>
         /// <param name="s"></param>
+        /// <param name="html">todo: describe html parameter on TruncateHtml</param>
+        /// <param name="maxCharacters">todo: describe maxCharacters parameter on TruncateHtml</param>
+        /// <param name="trailingText">todo: describe trailingText parameter on TruncateHtml</param>
         /// <returns></returns>
         public static string TruncateHtml(this string html, int maxCharacters, string trailingText)
         {
             if (string.IsNullOrEmpty(html))
+            {
                 return html;
+            }
 
             // find the spot to truncate
             // count the text characters and ignore tags
@@ -185,15 +193,21 @@ namespace OFrameLibrary.Helpers
             {
                 charCount++;
                 if (c == '<')
+                {
                     ignore = true;
+                }
                 else if (!ignore)
+                {
                     textCount++;
+                }
 
                 ignore &= c != '>';
 
                 // stop once we hit the limit
                 if (textCount >= maxCharacters)
+                {
                     break;
+                }
             }
 
             // Truncate the html and keep whole words only
@@ -214,7 +228,9 @@ namespace OFrameLibrary.Helpers
 
                     // push to stack if open tag and ignore it if it is self-closing, i.e. <br />
                     if (!string.IsNullOrEmpty(tag) && string.IsNullOrEmpty(match.Groups["selfClose"].Value))
+                    {
                         tags.Push(tag);
+                    }
 
                     // pop from stack if close tag
                     else if (!string.IsNullOrEmpty(closeTag))
@@ -229,8 +245,10 @@ namespace OFrameLibrary.Helpers
             }
 
             if (html.Length > charCount)
+            {
                 // add the trailing text
                 trunc.Append(trailingText);
+            }
 
             // pop the rest off the stack to close remainder of tags
             while (tags.Count > 0)
@@ -248,6 +266,8 @@ namespace OFrameLibrary.Helpers
         /// The result contains HTML and any tags left open are closed.
         /// </summary>
         /// <param name="s"></param>
+        /// <param name="html">todo: describe html parameter on TruncateHtml</param>
+        /// <param name="maxCharacters">todo: describe maxCharacters parameter on TruncateHtml</param>
         /// <returns></returns>
         public static string TruncateHtml(this string html, int maxCharacters)
         {
@@ -276,7 +296,9 @@ namespace OFrameLibrary.Helpers
         public static string TruncateWords(this string text, int maxCharacters, string trailingText)
         {
             if (string.IsNullOrEmpty(text) || maxCharacters <= 0 || text.Length <= maxCharacters)
+            {
                 return text;
+            }
 
             // trunctate the text, then remove the partial word at the end
             return Regex.Replace(text.Truncate(maxCharacters),

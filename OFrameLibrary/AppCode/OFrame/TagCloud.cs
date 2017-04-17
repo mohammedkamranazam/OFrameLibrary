@@ -12,11 +12,11 @@ namespace OFrameLibrary.OFrame
     [DefaultProperty("BookmarkText")]
     public class TagCloud : WebControl
     {
-        private const string SPACER_MARKUP = " ";
+        const string SPACER_MARKUP = " ";
 
-        private const string TAG_LINK = "<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}";
+        const string TAG_LINK = "<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}";
 
-        private string[] FontScale = {
+        string[] FontScale = {
             "tag-link-1",
             "tag-link-2",
             "tag-link-3",
@@ -26,11 +26,11 @@ namespace OFrameLibrary.OFrame
             "tag-link-7"
         };
 
-        private decimal maxWeight = new Decimal(-1, -1, -1, true, (byte)0);
-        private decimal minWeight = new Decimal(-1, -1, -1, false, (byte)0);
-        private decimal scaleUnitLength;
+        decimal maxWeight = new Decimal(-1, -1, -1, true, (byte)0);
+        decimal minWeight = new Decimal(-1, -1, -1, false, (byte)0);
+        decimal scaleUnitLength;
 
-        private string TagCloudsHtml
+        string TagCloudsHtml
         {
             get
             {
@@ -56,7 +56,10 @@ namespace OFrameLibrary.OFrame
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("<div id=\"tag-cloud-div\">");
             foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
+            {
                 stringBuilder.Append(string.Format("<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}", (object)FontScale[tagCloudItem.ScaleValue], (object)tagCloudItem.HoverTitle, (object)tagCloudItem.Url, (object)tagCloudItem.Text, (object)" "));
+            }
+
             stringBuilder.Append("</div>");
             return ((object)stringBuilder).ToString();
         }
@@ -80,9 +83,14 @@ namespace OFrameLibrary.OFrame
             foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
             {
                 if (tagCloudItem.Count < minWeight)
+                {
                     minWeight = tagCloudItem.Count;
+                }
+
                 if (tagCloudItem.Count > maxWeight)
+                {
                     maxWeight = tagCloudItem.Count;
+                }
             }
             scaleUnitLength = (Convert.ToDecimal(maxWeight - minWeight) + 1) / Convert.ToDecimal(FontScale.Length);
         }

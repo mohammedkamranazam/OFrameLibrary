@@ -21,16 +21,16 @@ namespace OFrameLibrary.Helpers
         public static byte[] ExportExcel(DataTable dataTable, string heading = "", bool showSrNo = false, params string[] columnsToTake)
         {
             byte[] result = null;
-            using (ExcelPackage package = new ExcelPackage())
+            using (var package = new ExcelPackage())
             {
-                ExcelWorksheet workSheet = package.Workbook.Worksheets.Add(String.Format("{0} Data", heading));
-                int startRowFrom = String.IsNullOrEmpty(heading) ? 1 : 3;
+                var workSheet = package.Workbook.Worksheets.Add(String.Format("{0} Data", heading));
+                var startRowFrom = String.IsNullOrEmpty(heading) ? 1 : 3;
 
                 if (showSrNo)
                 {
-                    DataColumn dataColumn = dataTable.Columns.Add("#", typeof(int));
+                    var dataColumn = dataTable.Columns.Add("#", typeof(int));
                     dataColumn.SetOrdinal(0);
-                    int index = 1;
+                    var index = 1;
                     foreach (DataRow item in dataTable.Rows)
                     {
                         item[0] = index;
@@ -42,11 +42,11 @@ namespace OFrameLibrary.Helpers
                 workSheet.Cells["A" + startRowFrom].LoadFromDataTable(dataTable, true);
 
                 // autofit width of cells with small content
-                int columnIndex = 1;
-                foreach (DataColumn column in dataTable.Columns)
+                var columnIndex = 1;
+                foreach (var column in dataTable.Columns)
                 {
-                    ExcelRange columnCells = workSheet.Cells[workSheet.Dimension.Start.Row, columnIndex, workSheet.Dimension.End.Row, columnIndex];
-                    int maxLength = columnCells.Max(cell => cell.Value.ToString().Count());
+                    var columnCells = workSheet.Cells[workSheet.Dimension.Start.Row, columnIndex, workSheet.Dimension.End.Row, columnIndex];
+                    var maxLength = columnCells.Max(cell => cell.Value.ToString().Count());
                     if (maxLength < 150)
                     {
                         workSheet.Column(columnIndex).AutoFit();
@@ -56,7 +56,7 @@ namespace OFrameLibrary.Helpers
                 }
 
                 // format header - bold, yellow on black
-                using (ExcelRange r = workSheet.Cells[startRowFrom, 1, startRowFrom, dataTable.Columns.Count])
+                using (var r = workSheet.Cells[startRowFrom, 1, startRowFrom, dataTable.Columns.Count])
                 {
                     r.Style.Font.Color.SetColor(System.Drawing.Color.White);
                     r.Style.Font.Bold = true;
@@ -65,7 +65,7 @@ namespace OFrameLibrary.Helpers
                 }
 
                 // format cells - add borders
-                using (ExcelRange r = workSheet.Cells[startRowFrom + 1, 1, startRowFrom + dataTable.Rows.Count, dataTable.Columns.Count])
+                using (var r = workSheet.Cells[startRowFrom + 1, 1, startRowFrom + dataTable.Rows.Count, dataTable.Columns.Count])
                 {
                     r.Style.Border.Top.Style = ExcelBorderStyle.Thin;
                     r.Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
@@ -79,7 +79,7 @@ namespace OFrameLibrary.Helpers
                 }
 
                 // removed ignored columns
-                for (int i = dataTable.Columns.Count - 1; i >= 0; i--)
+                for (var i = dataTable.Columns.Count - 1; i >= 0; i--)
                 {
                     if (i == 0 && showSrNo)
                     {
@@ -114,19 +114,18 @@ namespace OFrameLibrary.Helpers
 
         public static DataTable ListToDataTable<T>(List<T> data)
         {
-            PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
-            DataTable dataTable = new DataTable();
+            var properties = TypeDescriptor.GetProperties(typeof(T));
+            var dataTable = new DataTable();
 
-            for (int i = 0; i < properties.Count; i++)
+            foreach (PropertyDescriptor property in properties)
             {
-                PropertyDescriptor property = properties[i];
                 dataTable.Columns.Add(property.Name, Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType);
             }
 
-            object[] values = new object[properties.Count];
-            foreach (T item in data)
+            var values = new object[properties.Count];
+            foreach (var item in data)
             {
-                for (int i = 0; i < values.Length; i++)
+                for (var i = 0; i < values.Length; i++)
                 {
                     values[i] = properties[i].GetValue(item) != null && properties[i].GetValue(item).ToString() != "" ? properties[i].GetValue(item) : " ";
                 }

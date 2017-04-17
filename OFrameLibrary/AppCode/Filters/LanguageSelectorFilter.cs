@@ -4,7 +4,7 @@ using System.Web.Mvc;
 
 namespace OFrameLibrary.Filters
 {
-    public class LanguageSelectorFilter : ActionFilterAttribute, IActionFilter
+    public sealed class LanguageSelectorFilter : ActionFilterAttribute, IActionFilter
     {
         void IActionFilter.OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -17,9 +17,7 @@ namespace OFrameLibrary.Filters
             }
             else
             {
-                var storedLocale = CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey);
-
-                locale = (storedLocale == null) ? AppConfig.DefaultLocale : storedLocale;
+                locale = CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey) ?? AppConfig.DefaultLocale;
             }
 
             CookiesHelper.SetCookie(Constants.Keys.CurrentCultureCookieKey, locale, now.AddYears(1));

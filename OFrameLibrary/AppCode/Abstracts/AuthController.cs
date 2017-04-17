@@ -10,9 +10,9 @@ namespace OFrameLibrary.Abstracts
     public abstract class AuthController : AppController
     {
         protected const string XsrfKey = "XsrfId";
-        private ApplicationRoleManager _roleManager;
-        private ApplicationSignInManager _signInManager;
-        private ApplicationUserManager _userManager;
+        ApplicationRoleManager _roleManager;
+        ApplicationSignInManager _signInManager;
+        ApplicationUserManager _userManager;
 
         protected AuthController()
         { }

@@ -33,24 +33,28 @@ namespace OFrameLibrary.Helpers
                     ((WebControl)ctrl).Width = w;
                 }
 
-                pg = new Page();
-                pg.EnableEventValidation = false;
-
-                if (!string.IsNullOrWhiteSpace(Script))
+                using (
+                pg = new Page
                 {
-                    pg.ClientScript.RegisterStartupScript(pg.GetType(), "PrintJavaScript", Script);
+                    EnableEventValidation = false
+                })
+                {
+                    if (!string.IsNullOrWhiteSpace(Script))
+                    {
+                        pg.ClientScript.RegisterStartupScript(pg.GetType(), "PrintJavaScript", Script);
+                    }
+
+                    frm = new HtmlForm();
+                    pg.Controls.Add(frm);
+                    frm.Attributes.Add("runat", "server");
+                    frm.Controls.Add(ctrl);
+                    pg.DesignerInitialize();
+                    pg.RenderControl(htmlWrite);
+
+                    var strHTML = stringWrite.ToString();
+
+                    HttpContext.Current.Response.Write(strHTML);
                 }
-
-                frm = new HtmlForm();
-                pg.Controls.Add(frm);
-                frm.Attributes.Add("runat", "server");
-                frm.Controls.Add(ctrl);
-                pg.DesignerInitialize();
-                pg.RenderControl(htmlWrite);
-
-                var strHTML = stringWrite.ToString();
-
-                HttpContext.Current.Response.Write(strHTML);
             }
 
             HttpContext.Current.Response.Write("<script>window.print();</script>");
@@ -75,24 +79,28 @@ namespace OFrameLibrary.Helpers
 
                 var htmlWrite = new HtmlTextWriter(stringWrite);
 
-                pg = new Page();
-                pg.EnableEventValidation = false;
-
-                if (!string.IsNullOrWhiteSpace(Script))
+                using (
+                pg = new Page
                 {
-                    pg.ClientScript.RegisterStartupScript(pg.GetType(), "PrintJavaScript", Script);
+                    EnableEventValidation = false
+                })
+                {
+                    if (!string.IsNullOrWhiteSpace(Script))
+                    {
+                        pg.ClientScript.RegisterStartupScript(pg.GetType(), "PrintJavaScript", Script);
+                    }
+
+                    frm = new HtmlForm();
+                    pg.Controls.Add(frm);
+                    frm.Attributes.Add("runat", "server");
+                    frm.InnerHtml = html;
+                    pg.DesignerInitialize();
+                    pg.RenderControl(htmlWrite);
+
+                    var strHTML = stringWrite.ToString();
+
+                    HttpContext.Current.Response.Write(strHTML);
                 }
-
-                frm = new HtmlForm();
-                pg.Controls.Add(frm);
-                frm.Attributes.Add("runat", "server");
-                frm.InnerHtml = html;
-                pg.DesignerInitialize();
-                pg.RenderControl(htmlWrite);
-
-                var strHTML = stringWrite.ToString();
-
-                HttpContext.Current.Response.Write(strHTML);
             }
 
             HttpContext.Current.Response.Write("<script>window.print();</script>");

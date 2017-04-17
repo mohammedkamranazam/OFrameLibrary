@@ -6,7 +6,7 @@ namespace OFrameLibrary.Util
 {
     public class Hash : IDisposable
     {
-        private HashAlgorithm mCryptoService;
+        HashAlgorithm mCryptoService;
 
         public Hash()
         {

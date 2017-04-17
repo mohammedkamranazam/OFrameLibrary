@@ -70,11 +70,13 @@ namespace OFrameLibrary.Util
             PagerArgs args,
             string DefaultSortKey)
         {
-            var gm = new GridModel();
-
-            gm.Pager = new GridPager();
-            gm.Pager.Pages = new List<GridPage>();
-
+            var gm = new GridModel
+            {
+                Pager = new GridPager
+                {
+                    Pages = new List<GridPage>()
+                }
+            };
             if (string.IsNullOrWhiteSpace(args.CurrentPage))
             {
                 gm.Pager.CurrentPage = 1;
@@ -189,12 +191,13 @@ namespace OFrameLibrary.Util
 
             if (insertSelectOption)
             {
-                var item = new OListItem();
-                item.Selected = (string.IsNullOrWhiteSpace(selectedValue) && selectOptionSelected);
-                item.Text = selectOptionLabel;
-                item.Value = selectOptionValue;
-                item.Disabled = isSelectOptionDisabled;
-
+                var item = new OListItem
+                {
+                    Selected = (string.IsNullOrWhiteSpace(selectedValue) && selectOptionSelected),
+                    Text = selectOptionLabel,
+                    Value = selectOptionValue,
+                    Disabled = isSelectOptionDisabled
+                };
                 items.Insert(0, item);
             }
 
@@ -242,13 +245,14 @@ namespace OFrameLibrary.Util
 
         public static FileUploadResult UploadFile(HttpPostedFileBase content, FileUploadSettings fs, string customExtensions = "")
         {
-            var fr = new FileUploadResult();
-            fr.IsSuccess = false;
-            fr.NoFileSelected = true;
-            fr.FileSizeInvalid = true;
-            fr.InvalidFileType = true;
-            fr.Message = fs.Messages.Failed;
-
+            var fr = new FileUploadResult
+            {
+                IsSuccess = false,
+                NoFileSelected = true,
+                FileSizeInvalid = true,
+                InvalidFileType = true,
+                Message = fs.Messages.Failed
+            };
             var maxFileSizeBytes = (fs.MaxSize * 1024) * 1024;
 
             if (content != null)
@@ -336,7 +340,7 @@ namespace OFrameLibrary.Util
             return extensions.Contains(extension.ToLower());
         }
 
-        private static List<string> GetCountriesArray()
+        static List<string> GetCountriesArray()
         {
             return new List<string>
             {
@@ -582,7 +586,7 @@ namespace OFrameLibrary.Util
             };
         }
 
-        private static string GetListItemText(OListItem x, bool isTextTranslatable, bool translate, string locale, bool friendlyText)
+        static string GetListItemText(OListItem x, bool isTextTranslatable, bool translate, string locale, bool friendlyText)
         {
             if (isTextTranslatable)
             {
@@ -598,10 +602,10 @@ namespace OFrameLibrary.Util
             else
             {
                 return ((friendlyText) ? x.Text.ToFriendlyCase() : x.Text);
-            };
+            }
         }
 
-        private static string GetListItemValue(OListItem x, bool takeValue, bool friendlyValue)
+        static string GetListItemValue(OListItem x, bool takeValue, bool friendlyValue)
         {
             if (takeValue)
             {
@@ -613,7 +617,7 @@ namespace OFrameLibrary.Util
             }
         }
 
-        private static bool IsListItemSelected(OListItem x, bool takeValue, bool firendlyValue, string selectedValue)
+        static bool IsListItemSelected(OListItem x, bool takeValue, bool firendlyValue, string selectedValue)
         {
             if (x.Selected)
             {

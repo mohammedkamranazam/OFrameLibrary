@@ -49,7 +49,7 @@ namespace OFrameLibrary.Util
             {
                 object rawConstantValue = field.GetRawConstantValue();
 
-                list.Add(new OListItem()
+                list.Add(new OListItem
                 {
                     Text = GetDisplayName(field),
                     Value = rawConstantValue.ToString()
@@ -104,13 +104,11 @@ namespace OFrameLibrary.Util
                 extraPath = RelativePath.Remove(0, 1);
             }
 
-            var AbsoluteReturnUrlPath = string.Format("http{0}://{1}{2}{3}",
+            return string.Format("http{0}://{1}{2}{3}",
             (HttpContext.Current.Request.IsSecureConnection) ? "s" : "",
             HttpContext.Current.Request.Url.Host,
             (HttpContext.Current.Request.Url.Port != 80) ? string.Format(":{0}", HttpContext.Current.Request.Url.Port) : "",
             extraPath);
-
-            return AbsoluteReturnUrlPath;
         }
 
         public static string GetAbsoluteURL(this string relativeURL)
@@ -143,7 +141,9 @@ namespace OFrameLibrary.Util
             {
                 string name = customAttribute.GetName();
                 if (!string.IsNullOrEmpty(name))
+                {
                     return name;
+                }
             }
             return field.Name;
         }
@@ -284,10 +284,10 @@ namespace OFrameLibrary.Util
 
         public static JsonValidationResult<T> ValidateJsonModel<T>(this string json)
         {
-            var vr = new JsonValidationResult<T>();
-
-            vr.Model = new List<T>();
-
+            var vr = new JsonValidationResult<T>
+            {
+                Model = new List<T>()
+            };
             if (!string.IsNullOrWhiteSpace(json))
             {
                 vr.IsJsonEmpty = false;

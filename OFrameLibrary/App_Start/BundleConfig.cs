@@ -10,13 +10,13 @@ namespace OFrameLibrary.App_Start
         {
             foreach (var directory in ThemeHelper.GetThemeDirectories())
             {
-                var cssBundle = new StyleBundle(string.Format("~/Theme_{0}", directory));
+                var cssBundle = new StyleBundle($"~/Theme_{directory}");
 
                 cssBundle.Include(MvcThemeStylesheetsHelper.GetPathsFromSettings(directory));
 
                 bundles.Add(cssBundle);
 
-                var scriptBundle = new ScriptBundle(string.Format("~/Script_{0}", directory));
+                var scriptBundle = new ScriptBundle($"~/Script_{directory}");
 
                 scriptBundle.Include(MvcThemeScriptsHelper.GetPathsFromSettings(directory));
 

@@ -13,7 +13,7 @@ namespace OFrameLibrary.Helpers
 
             if (File.Exists(layoutPath.MapPath()))
             {
-                layoutPath = string.Format("~/Content/Themes/{0}/Layout.cshtml", theme);
+                layoutPath = $"~/Content/Themes/{theme}/Layout.cshtml";
             }
 
             return layoutPath;

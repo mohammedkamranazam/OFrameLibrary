@@ -40,7 +40,7 @@ namespace OFrameLibrary.Helpers
                 gm.Pager.CurrentPage = 1;
             }
 
-            for (int x = gm.Pager.StartPage; x <= gm.Pager.EndPage; x++)
+            for (var x = gm.Pager.StartPage; x <= gm.Pager.EndPage; x++)
             {
                 gm.Pager.Pages.Add(new GridPage
                 {

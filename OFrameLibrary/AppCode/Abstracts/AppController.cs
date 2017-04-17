@@ -59,12 +59,12 @@ namespace OFrameLibrary.Abstracts
             base.Dispose(disposing);
         }
 
-        protected string Language(string key)
+        protected static string Language(string key)
         {
             return LanguageHelper.GetKey(key);
         }
 
-        protected string Language(string key, string locale)
+        protected static string Language(string key, string locale)
         {
             return LanguageHelper.GetKey(key, locale);
         }
@@ -74,7 +74,7 @@ namespace OFrameLibrary.Abstracts
             return Redirect(GetRedirectUrl(url, action, controller));
         }
 
-        private string GetRedirectUrl(string url = "", string action = "Index", string controller = "Home")
+        string GetRedirectUrl(string url = "", string action = "Index", string controller = "Home")
         {
             if (string.IsNullOrWhiteSpace(url) || !Url.IsLocalUrl(url))
             {

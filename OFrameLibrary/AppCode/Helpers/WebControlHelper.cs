@@ -18,8 +18,10 @@ namespace OFrameLibrary.Helpers
 
         public static void ExportExcel(ControlCollection Controls, Object datasource, string filename)
         {
-            var gridview = new GridView();
-            gridview.DataSource = datasource;
+            var gridview = new GridView
+            {
+                DataSource = datasource
+            };
             gridview.DataBind();
             gridview.AllowPaging = false;
 
@@ -28,7 +30,7 @@ namespace OFrameLibrary.Helpers
                 return;
             }
 
-            filename = string.Format("{0}_{1}.xls", filename, Utilities.DateTimeNow());
+            filename = $"{filename}_{Utilities.DateTimeNow()}.xls";
 
             var response = HttpContext.Current.Response;
             response.Clear();
@@ -56,7 +58,7 @@ namespace OFrameLibrary.Helpers
         public static string GetHTML(Control ctrl, string Script)
         {
             var frm = new HtmlForm();
-            using (Page pg = new Page())
+            using (var pg = new Page())
             {
                 HttpContext.Current.Response.Clear();
 
@@ -80,9 +82,7 @@ namespace OFrameLibrary.Helpers
                 frm.Controls.Add(ctrl);
                 pg.DesignerInitialize();
                 pg.RenderControl(htmlWrite);
-                var strHTML = stringWrite.ToString();
-
-                return strHTML;
+                return stringWrite.ToString();
             }
         }
 
@@ -94,7 +94,7 @@ namespace OFrameLibrary.Helpers
 
             foreach (var tag in tagsList)
             {
-                sb.Append(string.Format("<strong><a href='{1}'>{0}</a></strong>, ", tag, page.ResolveClientUrl(string.Format("~/Search.aspx?Search={0}", tag))));
+                sb.Append($"<strong><a href='{page.ResolveClientUrl($"~/Search.aspx?Search={tag}")}'>{tag}</a></strong>, ");
             }
 
             if (sb.Length > 0)
@@ -111,7 +111,7 @@ namespace OFrameLibrary.Helpers
             return sb.ToString();
         }
 
-        private static void ClearControls(Control control)
+        static void ClearControls(Control control)
         {
             for (var i = control.Controls.Count - 1; i >= 0; i--)
             {
@@ -130,8 +130,9 @@ namespace OFrameLibrary.Helpers
                             (string)control.GetType().GetProperty("SelectedItem").
                                 GetValue(control, null);
                     }
-                    catch
+                    catch (Exception)
                     {
+                        
                     }
 
                     control.Parent.Controls.Remove(control);

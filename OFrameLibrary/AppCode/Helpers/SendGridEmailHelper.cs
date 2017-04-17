@@ -12,7 +12,7 @@ namespace OFrameLibrary.Helpers
         {
             get
             {
-                return new SendGridSettings()
+                return new SendGridSettings
                 {
                     SenderEmail = AppConfig.WebsiteMainEmail,
                     SenderName = AppConfig.SiteName,
@@ -29,7 +29,7 @@ namespace OFrameLibrary.Helpers
 
                 sendGridApiClient.client.mail.send.post(requestBody: GetMail(message).Get());
             }
-            catch (Exception ex) { throw (ex); }
+            catch (Exception) { throw; }
         }
 
         public static async Task SendMailAsync(EmailMessage message)
@@ -40,38 +40,38 @@ namespace OFrameLibrary.Helpers
 
                 await sendGridApiClient.client.mail.send.post(requestBody: GetMail(message).Get());
             }
-            catch (Exception ex) { throw (ex); }
+            catch (Exception) { throw; }
         }
 
         public static void SendMailToMultiple(EmailMessage message)
         {
             try
             {
-                foreach (string to in message.Tos)
+                foreach (var to in message.Tos)
                 {
                     message.To = to;
                     SendMail(message);
-                };
+                }
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception) { throw; }
         }
 
         public static async Task SendMailToMultipleAsync(EmailMessage message)
         {
             try
             {
-                foreach (string to in message.Tos)
+                foreach (var to in message.Tos)
                 {
                     message.To = to;
                     await SendMailAsync(message);
                 }
             }
-            catch (Exception ex) { throw ex; }
+            catch (Exception) { throw; }
         }
 
-        private static Mail GetMail(EmailMessage message)
+        static Mail GetMail(EmailMessage message)
         {
-            var mail = new Mail(
+            return new Mail(
                                 new Email(Settings.SenderEmail, Settings.SenderName),
                                 message.Subject,
                                 new Email(message.To),
@@ -79,17 +79,17 @@ namespace OFrameLibrary.Helpers
                                 {
                                     Type = "text/html",
                                     Value = message.Body
-                                });
-
-            mail.MailSettings = new MailSettings
+                                })
             {
-                FooterSettings = new FooterSettings
+                MailSettings = new MailSettings
                 {
-                    Enable = !(string.IsNullOrWhiteSpace(message.FooterTemplate)),
-                    Html = message.FooterTemplate
+                    FooterSettings = new FooterSettings
+                    {
+                        Enable = !(string.IsNullOrWhiteSpace(message.FooterTemplate)),
+                        Html = message.FooterTemplate
+                    }
                 }
             };
-            return mail;
         }
     }
 }

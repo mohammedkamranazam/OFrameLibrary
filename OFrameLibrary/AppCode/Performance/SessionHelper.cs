@@ -14,9 +14,10 @@ namespace OFrameLibrary.Performance
         /// <param name="key">Name of item</param>
         public static void Add<T>(string key, T o)
         {
-            var ss = new SerializableSession();
-            ss.SessionObject = o;
-
+            var ss = new SerializableSession
+            {
+                SessionObject = o
+            };
             HttpContext.Current.Session.Add(key, ss);
         }
 

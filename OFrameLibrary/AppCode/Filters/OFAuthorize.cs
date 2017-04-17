@@ -2,7 +2,7 @@
 
 namespace OFrameLibrary.Filters
 {
-    public class OFAuthorize : AuthorizeAttribute
+    public sealed class OFAuthorize : AuthorizeAttribute
     {
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
         {

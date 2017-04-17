@@ -51,22 +51,22 @@ namespace OFrameLibrary.Abstracts
             }
         }
 
-        protected string Language(string key)
+        protected static string Language(string key)
         {
             return LanguageHelper.GetKey(key);
         }
 
-        protected string Language(string key, string locale)
+        protected static string Language(string key, string locale)
         {
             return LanguageHelper.GetKey(key, locale);
         }
 
-        protected IHtmlString ScriptRender(string theme)
+        protected static IHtmlString ScriptRender(string theme)
         {
             return Scripts.Render(string.Format("~/Script_{0}", theme));
         }
 
-        protected IHtmlString StyleRender(string theme)
+        protected static IHtmlString StyleRender(string theme)
         {
             return Styles.Render(string.Format("~/Theme_{0}", theme));
         }

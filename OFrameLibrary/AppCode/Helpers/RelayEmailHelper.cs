@@ -22,11 +22,12 @@ namespace OFrameLibrary.Helpers
         {
             var msg = MailHelper.GetMessage(message);
 
-            var smtp = new SmtpClient();
+            using (var smtp = new SmtpClient())
+            {
+                smtp.SendCompleted += MailHelper.smtp_SendCompleted;
 
-            smtp.SendCompleted += MailHelper.smtp_SendCompleted;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
+                return Task.Run(() => smtp.SendAsync(msg, token));
+            }
         }
 
         public static void SendUsingRelayWithAttachments(EmailMessage message)
@@ -49,11 +50,12 @@ namespace OFrameLibrary.Helpers
 
             MailHelper.GetAttachments(message.Attachments, msg);
 
-            var smtp = new SmtpClient();
+            using (var smtp = new SmtpClient())
+            {
+                smtp.SendCompleted += MailHelper.smtp_SendCompleted;
 
-            smtp.SendCompleted += MailHelper.smtp_SendCompleted;
-
-            return Task.Run(() => smtp.SendAsync(msg, token));
+                return Task.Run(() => smtp.SendAsync(msg, token));
+            }
         }
     }
 }

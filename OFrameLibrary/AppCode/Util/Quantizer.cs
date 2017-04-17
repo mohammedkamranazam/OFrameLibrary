@@ -7,8 +7,8 @@ namespace OFrameLibrary.Util
 {
     internal abstract class Quantizer
     {
-        private readonly int _pixelSize;
-        private readonly bool _singlePass;
+        readonly int _pixelSize;
+        readonly bool _singlePass;
 
         public Quantizer(bool singlePass)
         {
@@ -165,19 +165,19 @@ namespace OFrameLibrary.Util
         public struct Color32
         {
             [FieldOffset(0)]
-            private byte _Blue;
+            byte _Blue;
 
             [FieldOffset(1)]
-            private byte _Green;
+            byte _Green;
 
             [FieldOffset(2)]
-            private byte _Red;
+            byte _Red;
 
             [FieldOffset(3)]
-            private byte _Alpha;
+            byte _Alpha;
 
             [FieldOffset(0)]
-            private int _ARGB;
+            int _ARGB;
 
             public Color32(IntPtr pSourcePixel)
             {

@@ -5,18 +5,18 @@ namespace OFrameLibrary.Performance
 {
     public static class MemoryCacheHelper
     {
-        private static readonly ObjectCache memoryCache = MemoryCache.Default;
+        static readonly ObjectCache memoryCache = MemoryCache.Default;
 
-        private static CacheItemPolicy policy;
+        static CacheItemPolicy policy;
 
         public static void Add<T>(string key, T o)
         {
-            policy = new CacheItemPolicy();
+            policy = new CacheItemPolicy
+            {
+                Priority = AppConfig.MemoryCacheItemPriority,
 
-            policy.Priority = AppConfig.MemoryCacheItemPriority;
-
-            policy.AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(AppConfig.PerformanceTimeOutMinutes);
-
+                AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(AppConfig.PerformanceTimeOutMinutes)
+            };
             memoryCache.Set(key, o, policy);
         }
 

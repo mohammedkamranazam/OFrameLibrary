@@ -5,9 +5,9 @@ namespace OFrameLibrary.Models
 {
     public class TagCloudItem
     {
-        private string _hovertitle;
-        private int _scaleValue;
-        private string _text;
+        string _hovertitle;
+        int _scaleValue;
+        string _text;
 
         public TagCloudItem(string text, string url, int count)
         {
