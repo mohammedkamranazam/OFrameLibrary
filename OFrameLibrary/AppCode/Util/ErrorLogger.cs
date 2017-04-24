@@ -9,57 +9,36 @@ namespace OFrameLibrary.Util
 {
     public static class ErrorLogger
     {
-        public static void LogError(Exception ex, DbEntityValidationException e = null)
+        public static void LogError(Exception ex = null, DbEntityValidationException e = null)
         {
             var datetime = Utilities.DateTimeNow();
-            var dateTime = $"{datetime.ToLongDateString()}, at {datetime.ToShortTimeString()}";
-
-            var errorMessage = "Exception generated on " + dateTime;
-
             var context = HttpContext.Current;
-            errorMessage += "<br /><br /> Page location: " + context.Request.RawUrl;
-            errorMessage += "<br /><br /> Client IP Address: " + Utilities.GetIPAddress(context);
-            errorMessage += "<br /><br /> Inner Exception: " + ExceptionHelper.GetExceptionMessage(ex);
-            errorMessage += "<br /><br /> Entity Exception: " + ExceptionHelper.GetEntityExceptionMessage(e);
-            errorMessage += "<br /><br /> Message: " + ex.Message;
-            errorMessage += "<br /><br /> Source: " + ex.Source;
-            errorMessage += "<br /><br /> Method: " + ex.TargetSite;
-            errorMessage += "<br /><br /> Stack Trace: <br /><br />" + ex.StackTrace;
 
-            var from = AppConfig.WebsiteMainEmail;
-            var to = AppConfig.ErrorAdminEmail;
-            var subject = AppConfig.SiteName + ": Error log";
-            var body = errorMessage;
+            var errorMessage = $"<h3>Exception Generated On {datetime.ToLongDateString()} @ {datetime.ToShortTimeString()}</h3>";
+            errorMessage += $"<br /><br /><strong>Page Location:</strong> {context?.Request.RawUrl}";
+            errorMessage += $"<br /><br /><strong>Client IP Address:</strong> {Utilities.GetIPAddress(context)}";
+            errorMessage += ExceptionHelper.GetExceptionMessage(ex);
+            errorMessage += ExceptionHelper.GetEntityExceptionMessage(e);
 
             try
             {
                 MailHelper.Send(new EmailMessage
                 {
-                    Body = body,
-                    To = to,
-                    Subject = subject
+                    From = AppConfig.WebsiteMainEmail,
+                    Body = errorMessage,
+                    To = AppConfig.ErrorAdminEmail,
+                    Subject = AppConfig.SiteName + ": Error Log"
                 });
             }
-            catch (Exception mailException)
+            catch (Exception mex)
             {
-                errorMessage += "--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ";
-                errorMessage += "<br /><br /> <strong>Mail Exception</strong>";
-                errorMessage += "<br /><br /> Inner Exception: " + mailException.InnerException;
-                errorMessage += "<br /><br /> Message: " + mailException.Message;
-                errorMessage += "<br /><br /> Source: " + mailException.Source;
-                errorMessage += "<br /><br /> Method: " + mailException.TargetSite;
-                errorMessage += "<br /><br /> Stack Trace: <br /><br />" + mailException.StackTrace;
-                errorMessage += "<hr /><br />";
+                errorMessage += $"<br /><hr /><br /><h3>Mail Exception</h3>{ExceptionHelper.GetExceptionMessage(mex)}<hr /><br />";
 
-                errorMessage.Replace("<br />", "\n");
-                errorMessage.Replace("<hr />", "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ");
-
-                var mydocpath = LocalStorages.Storage_Logs.MapPath();
-
-                var fileName = $"{Utilities.DateTimeNow().ToString("dd-MM-yyyy")}.txt";
+                //errorMessage.Replace("<br />", "\n");
+                //errorMessage.Replace("<hr />", "# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # ");
 
                 // Write the text asynchronously to a new file named "WriteTextAsync.txt".
-                using (var outputFile = new StreamWriter(mydocpath + fileName, true))
+                using (var outputFile = new StreamWriter($"{LocalStorages.Storage_Logs.MapPath()}{Utilities.DateTimeNow().ToString("dd-MM-yyyy")}.html", true))
                 {
                     outputFile.WriteLine(errorMessage);
                 }
