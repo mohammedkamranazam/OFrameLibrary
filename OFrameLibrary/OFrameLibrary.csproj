@@ -239,6 +239,7 @@
     <Compile Include="AppCode\Abstracts\AppController.cs" />
     <Compile Include="AppCode\Abstracts\AppViewPage.cs" />
     <Compile Include="AppCode\Abstracts\AuthController.cs" />
+    <Compile Include="AppCode\Filters\CompressAttribute.cs" />
     <Compile Include="AppCode\Filters\OFAuthorize.cs" />
     <Compile Include="AppCode\Helpers\EmailTagsHelper.cs" />
     <Compile Include="AppCode\Helpers\ExcelExportHelper.cs" />

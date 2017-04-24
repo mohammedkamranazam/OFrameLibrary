@@ -38,7 +38,10 @@ namespace OFrameLibrary.Helpers
 
                 foreach (var ve in eve.ValidationErrors)
                 {
-                    message.Add($"<br /></br /><strong>Property:</strong> {ve.PropertyName}, <strong>Error:</strong> {ve.ErrorMessage}");
+                    message.Add($"<br /></br />" +
+                        $"<strong>Property:</strong> {ve.PropertyName}, " +
+                        $"<strong>Value:</strong> {eve.Entry.CurrentValues.GetValue<object>(ve.PropertyName)}, " +
+                        $"<strong>Error:</strong> {ve.ErrorMessage}");
                 }
             }
 
