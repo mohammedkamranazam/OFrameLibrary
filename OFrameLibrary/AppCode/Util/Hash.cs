@@ -6,16 +6,7 @@ namespace OFrameLibrary.Util
 {
     public class Hash : IDisposable
     {
-        private HashAlgorithm mCryptoService;
-
-        public void Dispose()
-        {
-            if (mCryptoService != null)
-            {
-                mCryptoService.Dispose();
-                mCryptoService = null;
-            }
-        }
+        HashAlgorithm mCryptoService;
 
         public Hash()
         {
@@ -53,17 +44,28 @@ namespace OFrameLibrary.Util
             mCryptoService = (HashAlgorithm)CryptoConfig.CreateFromName(serviceProviderName.ToUpper());
         }
 
-        public virtual string Encrypt(string plainText)
-        {
-            byte[] cryptoByte = mCryptoService.ComputeHash(ASCIIEncoding.ASCII.GetBytes(plainText + Salt));
-
-            return Convert.ToBase64String(cryptoByte, 0, cryptoByte.Length);
-        }
-
         public string Salt
         {
             get;
             set;
+        }
+
+        public void Dispose()
+        {
+            if (mCryptoService != null)
+            {
+                mCryptoService.Dispose();
+                mCryptoService = null;
+            }
+
+            GC.SuppressFinalize(this);
+        }
+
+        public virtual string Encrypt(string plainText)
+        {
+            var cryptoByte = mCryptoService.ComputeHash(Encoding.ASCII.GetBytes(plainText + Salt));
+
+            return Convert.ToBase64String(cryptoByte, 0, cryptoByte.Length);
         }
     }
 }

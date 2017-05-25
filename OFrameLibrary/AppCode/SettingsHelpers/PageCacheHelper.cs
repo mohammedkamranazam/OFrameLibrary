@@ -1,4 +1,5 @@
-﻿using OFrameLibrary.Models;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using OFrameLibrary.Util;
 using System;
 using System.Web;
@@ -8,25 +9,25 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class PageCacheHelper
     {
-        private static string fileName = AppConfig.PageCacheFile;
-        private const string uniqueKey = "_PageCacheHelper_";
-        private const string xPath = "pages/page";
+        const string pageXPath = "pages/page";
+        const string uniqueKey = "_PageCacheHelper_";
+        static readonly string fileName = AppConfig.PageCacheFile;
 
         public static void AddCache(PageCache entity)
         {
             if (!IsPagePresent(entity.ID))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                XmlElement newPage = xmlDoc.CreateElement("page");
+                var newPage = xmlDoc.CreateElement("page");
 
                 newPage.SetAttribute("id", entity.ID);
                 newPage.SetAttribute("duration", entity.Minutes.ToString());
                 newPage.SetAttribute("location", entity.Location.ToString());
 
-                xmlDoc.SelectSingleNode(xPath).ParentNode.AppendChild(newPage);
+                xmlDoc.SelectSingleNode(pageXPath).ParentNode.AppendChild(newPage);
 
                 SaveXml(xmlDoc);
             }
@@ -36,13 +37,11 @@ namespace OFrameLibrary.SettingsHelpers
         {
             if (IsPagePresent(id))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                XmlNodeList pages = xmlDoc.SelectNodes(xPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (id == page.Attributes["id"].Value)
                     {
@@ -61,17 +60,29 @@ namespace OFrameLibrary.SettingsHelpers
             return GetCache(id, AppConfig.PerformanceMode);
         }
 
+        public static PageCache GetCache(string id, PerformanceMode performanceMode)
+        {
+            var keyValue = new PageCache();
+            var performanceKey = uniqueKey + id;
+
+            var fnc = new Func<string, PageCache>(GetCacheFromSettings);
+
+            object[] args = { id };
+
+            PerformanceHelper.GetPerformance<PageCache>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+
         public static PageCache GetCacheFromSettings(string id)
         {
-            PageCache entity = new PageCache();
+            var entity = new PageCache();
 
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            XmlNodeList pages = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (id == page.Attributes["id"].Value)
                 {
@@ -85,31 +96,15 @@ namespace OFrameLibrary.SettingsHelpers
             return entity;
         }
 
-        public static PageCache GetCache(string id, PerformanceMode performanceMode)
-        {
-            PageCache keyValue = new PageCache();
-            string performanceKey = uniqueKey + id;
-
-            Func<string, PageCache> fnc = new Func<string, PageCache>(GetCacheFromSettings);
-
-            object[] args = { id };
-
-            Utilities.GetPerformance<PageCache>(performanceMode, performanceKey, out keyValue, fnc, args);
-
-            return keyValue;
-        }
-
         public static bool IsPagePresent(string id)
         {
-            bool present = false;
+            var present = false;
 
-            XmlDocument xmlDoc = new XmlDocument();
+            var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            XmlNodeList pages = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (id == page.Attributes["id"].Value)
                 {
@@ -125,13 +120,11 @@ namespace OFrameLibrary.SettingsHelpers
         {
             if (IsPagePresent(entity.ID))
             {
-                XmlDocument xmlDoc = new XmlDocument();
+                var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                XmlNodeList pages = xmlDoc.SelectNodes(xPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (entity.ID == page.Attributes["id"].Value)
                     {
@@ -146,10 +139,39 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        private static void SaveXml(XmlDocument xmlDoc)
+        public static void SetPageCache(PageCache entity)
         {
-            XmlTextWriter xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
+            switch (entity.Location)
+            {
+                case HttpCacheability.Public:
+                case HttpCacheability.ServerAndPrivate:
+                case HttpCacheability.Server:
+                    var freshness = new TimeSpan(0, 0, 0, entity.Minutes);
+                    var now = DateTime.Now;
+                    HttpContext.Current.Response.Cache.SetExpires(now.Add(freshness));
+                    HttpContext.Current.Response.Cache.SetMaxAge(freshness);
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    HttpContext.Current.Response.Cache.SetValidUntilExpires(true);
+                    break;
+
+                case HttpCacheability.Private:
+                    HttpContext.Current.Response.Cache.SetExpires(DateTime.Now.AddMinutes(entity.Minutes));
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+
+                case HttpCacheability.NoCache:
+                default:
+                    HttpContext.Current.Response.Cache.SetCacheability(entity.Location);
+                    break;
+            }
+        }
+
+        static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
             xmlDoc.WriteContentTo(xmlTextWriter);
             xmlTextWriter.Close();
         }

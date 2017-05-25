@@ -9,20 +9,22 @@ namespace OFrameLibrary.Helpers
         /// <summary>
         /// JSON Deserialization
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="jsonString">todo: describe jsonString parameter on JsonDeserialize</param>
         public static T JsonDeserialize<T>(string jsonString)
         {
             var ser = new DataContractJsonSerializer(typeof(T));
 
             var ms = new MemoryStream(Encoding.UTF8.GetBytes(jsonString));
 
-            var obj = (T)ser.ReadObject(ms);
-
-            return obj;
+            return (T)ser.ReadObject(ms);
         }
 
         /// <summary>
         /// JSON Serialization
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="t">todo: describe t parameter on JsonSerializer</param>
         public static string JsonSerializer<T>(T t)
         {
             var ser = new DataContractJsonSerializer(typeof(T));

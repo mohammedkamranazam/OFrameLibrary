@@ -1,15 +1,10 @@
 ﻿using OFrameLibrary.Helpers;
 using OFrameLibrary.SettingsHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace OFrameLibrary.Filters
 {
-    public class LanguageSelectorFilter : ActionFilterAttribute, IActionFilter
+    public sealed class LanguageSelectorFilter : ActionFilterAttribute, IActionFilter
     {
         void IActionFilter.OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -22,7 +17,7 @@ namespace OFrameLibrary.Filters
             }
             else
             {
-                var currentLocale = CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey);
+                locale = CookiesHelper.GetCookie(Constants.Keys.CurrentCultureCookieKey) ?? AppConfig.DefaultLocale;
             }
 
             CookiesHelper.SetCookie(Constants.Keys.CurrentCultureCookieKey, locale, now.AddYears(1));
@@ -33,6 +28,5 @@ namespace OFrameLibrary.Filters
 
             this.OnActionExecuting(filterContext);
         }
-
     }
 }

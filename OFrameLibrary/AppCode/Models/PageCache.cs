@@ -4,7 +4,7 @@ namespace OFrameLibrary.Models
 {
     public class PageCache
     {
-        public int Minutes
+        public string ID
         {
             get;
             set;
@@ -16,7 +16,7 @@ namespace OFrameLibrary.Models
             set;
         }
 
-        public string ID
+        public int Minutes
         {
             get;
             set;

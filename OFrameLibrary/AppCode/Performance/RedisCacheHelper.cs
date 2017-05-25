@@ -7,11 +7,11 @@ namespace OFrameLibrary.Performance
 {
     public static class RedisCacheHelper
     {
-        private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
-        {
-            //return ConnectionMultiplexer.Connect("shopyzone.redis.cache.windows.net,ssl=true,password=MbeBeEQYMvBZNznKGPPy+ZZeHCJEJMQT92LWZ/VGO3Q=");
-            return ConnectionMultiplexer.Connect(string.Format("{0},ssl={1},password={2}", AppConfig.RedisHost, AppConfig.RedisIsSsl, AppConfig.RedisPassword));
-        });
+        static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
+          {
+              //return ConnectionMultiplexer.Connect("shopyzone.redis.cache.windows.net,ssl=true,password=MbeBeEQYMvBZNznKGPPy+ZZeHCJEJMQT92LWZ/VGO3Q=");
+              return ConnectionMultiplexer.Connect(string.Format("{0},ssl={1},password={2}", AppConfig.RedisHost, AppConfig.RedisIsSsl, AppConfig.RedisPassword));
+          });
 
         public static ConnectionMultiplexer Connection
         {
@@ -30,7 +30,7 @@ namespace OFrameLibrary.Performance
         /// <param name="key">Name of item</param>
         public static void Add<T>(string key, T o)
         {
-            IDatabase cache = Connection.GetDatabase();
+            var cache = Connection.GetDatabase();
 
             cache.Set(key, o);
         }
@@ -41,7 +41,7 @@ namespace OFrameLibrary.Performance
         /// <param name="key">Name of application state item</param>
         public static void Clear(string key)
         {
-            IDatabase cache = Connection.GetDatabase();
+            var cache = Connection.GetDatabase();
 
             cache.KeyDelete(key);
         }
@@ -53,7 +53,7 @@ namespace OFrameLibrary.Performance
         /// <returns></returns>
         public static bool Exists(string key)
         {
-            IDatabase cache = Connection.GetDatabase();
+            var cache = Connection.GetDatabase();
 
             return cache.KeyExists(key);
         }
@@ -75,11 +75,11 @@ namespace OFrameLibrary.Performance
                     return false;
                 }
 
-                IDatabase cache = Connection.GetDatabase();
+                var cache = Connection.GetDatabase();
 
                 value = (T)cache.Get(key);
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;
@@ -88,50 +88,64 @@ namespace OFrameLibrary.Performance
             return true;
         }
 
-        private static T Get<T>(this IDatabase cache, string key)
+        public static T SetOrGet<T>(string key, T value)
         {
-            return Deserialize<T>(cache.StringGet(key));
-        }
-
-        private static object Get(this IDatabase cache, string key)
-        {
-            return Deserialize<object>(cache.StringGet(key));
-        }
-
-        private static void Set(this IDatabase cache, string key, object value)
-        {
-            cache.StringSet(key, Serialize(value));
-        }
-
-        private static byte[] Serialize(object o)
-        {
-            if (o == null)
+            if (!Exists(key))
             {
-                return null;
+                Add(key, value);
+            }
+            else
+            {
+                var cache = Connection.GetDatabase();
+
+                value = (T)cache.Get(key);
             }
 
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                binaryFormatter.Serialize(memoryStream, o);
-                byte[] objectDataAsStream = memoryStream.ToArray();
-                return objectDataAsStream;
-            }
+            return value;
         }
 
-        private static T Deserialize<T>(byte[] stream)
+        static T Deserialize<T>(byte[] stream)
         {
             if (stream == null)
             {
                 return default(T);
             }
 
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (MemoryStream memoryStream = new MemoryStream(stream))
+            var binaryFormatter = new BinaryFormatter();
+            using (var memoryStream = new MemoryStream(stream))
             {
-                T result = (T)binaryFormatter.Deserialize(memoryStream);
-                return result;
+                return (T)binaryFormatter.Deserialize(memoryStream);
             }
+        }
+
+        static T Get<T>(this IDatabase cache, string key)
+        {
+            return Deserialize<T>(cache.StringGet(key));
+        }
+
+        static object Get(this IDatabase cache, string key)
+        {
+            return Deserialize<object>(cache.StringGet(key));
+        }
+
+        static byte[] Serialize(object o)
+        {
+            if (o == null)
+            {
+                return null;
+            }
+
+            var binaryFormatter = new BinaryFormatter();
+            using (var memoryStream = new MemoryStream())
+            {
+                binaryFormatter.Serialize(memoryStream, o);
+                return memoryStream.ToArray();
+            }
+        }
+
+        static void Set(this IDatabase cache, string key, object value)
+        {
+            cache.StringSet(key, Serialize(value));
         }
     }
 }

@@ -4,27 +4,18 @@ using OFrameLibrary.Util;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Xml;
 using System.Linq;
-
+using System.Xml;
 
 namespace OFrameLibrary.SettingsHelpers
 {
     public static class LanguageHelper
     {
-        private const string languagesUniqueKey = "_LanguagesDataSource_";
-        private const string messageXPath = "languages/language";
-        private const string uniqueKey = "_LanguageHelper_";
+        const string languagesUniqueKey = "_LanguagesDataSource_";
+        const string messageXPath = "languages/language";
+        const string uniqueKey = "_LanguageHelper_";
 
-        private readonly static string fileName = AppConfig.LanguagesFile;
-
-        private static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        static readonly string fileName = AppConfig.LanguagesFile;
 
         public static void AddKey(string name, string locale, string value)
         {
@@ -39,9 +30,7 @@ namespace OFrameLibrary.SettingsHelpers
                 newKey.SetAttribute("name", name);
                 newKey.SetAttribute("value", value);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
-
-                foreach (XmlNode language in languages)
+                foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
                 {
                     if (language.Attributes["locale"].Value == locale)
                     {
@@ -83,15 +72,11 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
-
-                foreach (XmlNode language in languages)
+                foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
                 {
                     if (language.Attributes["locale"].Value == locale)
                     {
-                        var keys = language.ChildNodes;
-
-                        foreach (XmlNode key in keys)
+                        foreach (XmlNode key in language.ChildNodes)
                         {
                             if (name == key.Attributes["name"].Value)
                             {
@@ -133,7 +118,7 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                     else
                     {
-                        return string.Format("KEY_[{0}]_UNDEFINED", name);
+                        return $"KEY_[{name}]_UNDEFINED";
                     }
                 }
             }
@@ -141,41 +126,37 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static string GetKey(string name, string locale)
         {
-            return KeyExists(name, locale) ? GetKey(name, locale, AppConfig.PerformanceMode) : string.Empty;
+            return KeyExists(name, locale) ? GetKey(name, locale, AppConfig.PerformanceMode) : $"KEY_[{name}]_UNDEFINED";
         }
 
         public static string GetKey(string name, string locale, PerformanceMode performanceMode)
         {
-            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
+            var keyValue = $"KEY_[{name}]_UNDEFINED";
 
-            var performanceKey = string.Format("{0}{1}_{2}", uniqueKey, name, locale);
+            var performanceKey = $"{uniqueKey}{name}_{locale}";
 
             Func<string, string, string> fnc = GetKeyFromSettings;
 
             var args = new object[] { name, locale };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
 
         public static string GetKeyFromSettings(string name, string locale)
         {
-            var keyValue = string.Format("KEY_[{0}]_UNDEFINED", name);
+            var keyValue = $"KEY_[{name}]_UNDEFINED";
 
             var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (language.Attributes["locale"].Value == locale)
                 {
-                    var keys = language.ChildNodes;
-
-                    foreach (XmlNode key in keys)
+                    foreach (XmlNode key in language.ChildNodes)
                     {
                         if (name == key.Attributes["name"].Value)
                         {
@@ -204,7 +185,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = (object[])null;
 
-            Utilities.GetPerformance<List<Language>>(performanceMode, languagesUniqueKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance(performanceMode, languagesUniqueKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -223,12 +204,12 @@ namespace OFrameLibrary.SettingsHelpers
 
             foreach (XmlNode language in languages)
             {
-                lang = new Language();
-
-                lang.Direction = language.Attributes["direction"].Value;
-                lang.Locale = language.Attributes["locale"].Value;
-                lang.Name = language.Attributes["name"].Value;
-
+                lang = new Language
+                {
+                    Direction = language.Attributes["direction"].Value,
+                    Locale = language.Attributes["locale"].Value,
+                    Name = language.Attributes["name"].Value
+                };
                 langs.Add(lang);
             }
 
@@ -243,13 +224,13 @@ namespace OFrameLibrary.SettingsHelpers
         public static string GetLocaleDirection(string locale, PerformanceMode performanceMode)
         {
             var keyValue = "ltr";
-            var performanceKey = string.Format("{0}_{1}_LocaleDirection", uniqueKey, locale);
+            var performanceKey = $"{uniqueKey}_{locale}_LocaleDirection";
 
             Func<string, string> fnc = GetLocaleDirectionFromSettings;
 
             var args = new object[] { locale };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -262,9 +243,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (language.Attributes["locale"].Value == locale)
                 {
@@ -277,6 +256,39 @@ namespace OFrameLibrary.SettingsHelpers
             return directionValue;
         }
 
+        public static string GetLocaleHash(string locale)
+        {
+            return $"{locale}#{GetLocaleName(locale)};";
+        }
+
+        public static string GetLocaleName(string locale)
+        {
+            return GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
+        }
+
+        public static string GetLocalesHash(List<Translator> translations)
+        {
+            var locales = translations.Select(c => c.Locale).ToList();
+
+            locales = locales.Select(c => GetLocaleHash(c)).ToList();
+
+            return locales.ToArray<string>().Join("");
+        }
+
+        public static string GetTranslation(List<Translator> translations, string locale)
+        {
+            var transText = translations.FirstOrDefault(d => d.Locale == locale);
+
+            if (transText != null)
+            {
+                return transText.Text;
+            }
+            else
+            {
+                return $"No Translation Found For Language: {GetLocaleName(locale)}";
+            }
+        }
+
         public static bool KeyExists(string name, string locale)
         {
             return KeyExists(name, locale, AppConfig.PerformanceMode);
@@ -285,13 +297,13 @@ namespace OFrameLibrary.SettingsHelpers
         public static bool KeyExists(string name, string locale, PerformanceMode performanceMode)
         {
             var keyValue = false;
-            var performanceKey = string.Format("{0}{1}_{2}_KeyExistance", uniqueKey, name, locale);
+            var performanceKey = $"{uniqueKey}{name}_{locale}_KeyExistance";
 
             Func<string, string, bool> fnc = KeyExistsFromSettings;
 
             var args = new object[] { name, locale };
 
-            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -304,15 +316,11 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (language.Attributes["locale"].Value == locale)
                 {
-                    var keys = language.ChildNodes;
-
-                    foreach (XmlNode key in keys)
+                    foreach (XmlNode key in language.ChildNodes)
                     {
                         if (name == key.Attributes["name"].Value)
                         {
@@ -336,13 +344,13 @@ namespace OFrameLibrary.SettingsHelpers
         public static bool LanguageExists(string locale, PerformanceMode performanceMode)
         {
             var keyValue = false;
-            var performanceKey = string.Format("{0}_{1}_LanguageExistance", uniqueKey, locale);
+            var performanceKey = $"{uniqueKey}_{locale}_LanguageExistance";
 
             Func<string, bool> fnc = LanguageExistsFromSettings;
 
             var args = new object[] { locale };
 
-            Utilities.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -355,9 +363,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (locale == language.Attributes["locale"].Value)
                 {
@@ -377,15 +383,11 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
-
-                foreach (XmlNode language in languages)
+                foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
                 {
                     if (language.Attributes["locale"].Value == locale)
                     {
-                        var keys = language.ChildNodes;
-
-                        foreach (XmlNode key in keys)
+                        foreach (XmlNode key in language.ChildNodes)
                         {
                             if (name == key.Attributes["name"].Value)
                             {
@@ -403,37 +405,14 @@ namespace OFrameLibrary.SettingsHelpers
             }
         }
 
-        public static string GetLocaleName(string locale)
+        static void SaveXml(XmlDocument xmlDoc)
         {
-            return LanguageHelper.GetLanguages().FirstOrDefault(c => c.Locale == locale)?.Name;
-        }
-
-        public static string GetLocaleHash(string locale)
-        {
-            return string.Format("{0}#{1};", locale, GetLocaleName(locale));
-        }
-
-        public static string GetLocalesHash(List<Translator> translations)
-        {
-            var locales = translations.Select(c => c.Locale).ToList();            
-
-            locales = locales.Select(c => GetLocaleHash(c)).ToList();
-
-            return locales.ToArray<string>().Join("");
-        }
-        
-        public static string GetTranslation(List<Translator> translations, string locale)
-        {
-            var transText = translations.FirstOrDefault(d => d.Locale == locale);
-
-            if (transText != null)
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
             {
-                return transText.Text;
-            }
-            else
-            {
-                return string.Format("No Translation Found For Language: {0}", LanguageHelper.GetLocaleName(locale));
-            }
+                Formatting = Formatting.Indented
+            };
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

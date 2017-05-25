@@ -4,34 +4,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.UI.WebControls;
 
-namespace OFrameLibrary.Util
+namespace OFrameLibrary.Helpers
 {
     public static class StringHelper
     {
-        public static string TruncateFromHere(string content)
-        {
-            int position = content.IndexOf("{TRUNCATE-HERE}", 0);
-
-            if (position > 0)
-            {
-                return content.Remove(position);
-            }
-            else
-            {
-                return content;
-            }
-        }
-
-        public static string RemoveTruncator(string content)
-        {
-            return content.Replace("{TRUNCATE-HERE}", string.Empty);
-        }
-
         public static ListItem GetKey(Match match)
         {
-            string key = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
+            var key = match.Value.Replace("{", string.Empty).Replace("}", string.Empty);
 
-            string[] keyParts = key.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            var keyParts = key.Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             return new ListItem(keyParts[0], keyParts[1]);
         }
@@ -40,9 +21,9 @@ namespace OFrameLibrary.Util
         {
             const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
 
-            Regex r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-            MatchCollection mc = r.Matches(content);
+            var mc = r.Matches(content);
 
             if (mc.Count > 0)
             {
@@ -52,15 +33,6 @@ namespace OFrameLibrary.Util
             {
                 return null;
             }
-        }
-
-        public static string RemoveKeys(string content)
-        {
-            const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
-
-            Regex r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-
-            return r.Replace(content, string.Empty);
         }
 
         public static bool HasSpecialChar(string text)
@@ -81,13 +53,11 @@ namespace OFrameLibrary.Util
         {
             if (!string.IsNullOrWhiteSpace(email))
             {
-                var emailRegX = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
+                const string emailRegX = @"^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}" +
                               @"\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\" +
                               @".)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$";
 
-                var re = new Regex(emailRegX);
-
-                return re.IsMatch(email);
+                return Regex.IsMatch(email, emailRegX, RegexOptions.Compiled);
             }
             else
             {
@@ -99,16 +69,23 @@ namespace OFrameLibrary.Util
         {
             if (!string.IsNullOrWhiteSpace(url))
             {
-                var urlRegEx = @"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
+                const string urlRegEx = @"(http|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?";
 
-                var re = new Regex(urlRegEx);
-
-                return re.IsMatch(url);
+                return Regex.IsMatch(url, urlRegEx, RegexOptions.Compiled);
             }
             else
             {
                 return false;
             }
+        }
+
+        public static string RemoveKeys(string content)
+        {
+            const string regExp = "(\\{)((?:[a-z][a-z0-9_]*))(:)(\\d+)(\\})";
+
+            var r = new Regex(regExp, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            return r.Replace(content, string.Empty);
         }
 
         public static string RemoveSpecialChars(string text)
@@ -125,105 +102,23 @@ namespace OFrameLibrary.Util
             return text;
         }
 
-        /// <summary>
-        /// Truncates a string containing HTML to a number of text characters, keeping whole words.
-        /// The result contains HTML and any tags left open are closed.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string TruncateHtml(this string html, int maxCharacters, string trailingText)
+        public static string RemoveTruncator(string content)
         {
-            if (string.IsNullOrEmpty(html))
-                return html;
-
-            // find the spot to truncate
-            // count the text characters and ignore tags
-            var textCount = 0;
-            var charCount = 0;
-            var ignore = false;
-            foreach (char c in html)
-            {
-                charCount++;
-                if (c == '<')
-                    ignore = true;
-                else if (!ignore)
-                    textCount++;
-
-                if (c == '>')
-                    ignore = false;
-
-                // stop once we hit the limit
-                if (textCount >= maxCharacters)
-                    break;
-            }
-
-            // Truncate the html and keep whole words only
-            var trunc = new StringBuilder(html.TruncateWords(charCount));
-
-            // keep track of open tags and close any tags left open
-            var tags = new Stack<string>();
-            var matches = Regex.Matches(trunc.ToString(),
-                @"<((?<tag>[^\s/>]+)|/(?<closeTag>[^\s>]+)).*?(?<selfClose>/)?\s*>",
-                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline);
-
-            foreach (Match match in matches)
-            {
-                if (match.Success)
-                {
-                    var tag = match.Groups["tag"].Value;
-                    var closeTag = match.Groups["closeTag"].Value;
-
-                    // push to stack if open tag and ignore it if it is self-closing, i.e. <br />
-                    if (!string.IsNullOrEmpty(tag) && string.IsNullOrEmpty(match.Groups["selfClose"].Value))
-                        tags.Push(tag);
-
-                    // pop from stack if close tag
-                    else if (!string.IsNullOrEmpty(closeTag))
-                    {
-                        // pop the tag to close it.. find the matching opening tag
-                        // ignore any unclosed tags
-                        while (tags.Pop() != closeTag && tags.Count > 0)
-                        {
-                        }
-                    }
-                }
-            }
-
-            if (html.Length > charCount)
-                // add the trailing text
-                trunc.Append(trailingText);
-
-            // pop the rest off the stack to close remainder of tags
-            while (tags.Count > 0)
-            {
-                trunc.Append("</");
-                trunc.Append(tags.Pop());
-                trunc.Append('>');
-            }
-
-            return trunc.ToString();
-        }
-
-        /// <summary>
-        /// Truncates a string containing HTML to a number of text characters, keeping whole words.
-        /// The result contains HTML and any tags left open are closed.
-        /// </summary>
-        /// <param name="s"></param>
-        /// <returns></returns>
-        public static string TruncateHtml(this string html, int maxCharacters)
-        {
-            return html.TruncateHtml(maxCharacters, null);
+            return content.Replace("{TRUNCATE-HERE}", string.Empty);
         }
 
         /// <summary>
         /// Strips all HTML tags from a string
         /// </summary>
         /// <param name="s"></param>
+        /// <param name="html">todo: describe html parameter on StripHtml</param>
         /// <returns></returns>
         public static string StripHtml(this string html)
         {
             if (string.IsNullOrEmpty(html))
+            {
                 return html;
+            }
 
             return Regex.Replace(html, @"<(.|\n)*?>", string.Empty);
         }
@@ -250,9 +145,131 @@ namespace OFrameLibrary.Util
         public static string Truncate(this string text, int maxCharacters, string trailingText)
         {
             if (string.IsNullOrEmpty(text) || maxCharacters <= 0 || text.Length <= maxCharacters)
+            {
                 return text;
+            }
             else
+            {
                 return text.Substring(0, maxCharacters) + trailingText;
+            }
+        }
+
+        public static string TruncateFromHere(string content)
+        {
+            var position = content.IndexOf("{TRUNCATE-HERE}", 0);
+
+            if (position > 0)
+            {
+                return content.Remove(position);
+            }
+            else
+            {
+                return content;
+            }
+        }
+
+        /// <summary>
+        /// Truncates a string containing HTML to a number of text characters, keeping whole words.
+        /// The result contains HTML and any tags left open are closed.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="html">todo: describe html parameter on TruncateHtml</param>
+        /// <param name="maxCharacters">todo: describe maxCharacters parameter on TruncateHtml</param>
+        /// <param name="trailingText">todo: describe trailingText parameter on TruncateHtml</param>
+        /// <returns></returns>
+        public static string TruncateHtml(this string html, int maxCharacters, string trailingText)
+        {
+            if (string.IsNullOrEmpty(html))
+            {
+                return html;
+            }
+
+            // find the spot to truncate
+            // count the text characters and ignore tags
+            var textCount = 0;
+            var charCount = 0;
+            var ignore = false;
+            foreach (char c in html)
+            {
+                charCount++;
+                if (c == '<')
+                {
+                    ignore = true;
+                }
+                else if (!ignore)
+                {
+                    textCount++;
+                }
+
+                ignore &= c != '>';
+
+                // stop once we hit the limit
+                if (textCount >= maxCharacters)
+                {
+                    break;
+                }
+            }
+
+            // Truncate the html and keep whole words only
+            var trunc = new StringBuilder(html.TruncateWords(charCount));
+
+            // keep track of open tags and close any tags left open
+            var tags = new Stack<string>();
+            foreach (Match match in Regex.Matches(trunc.ToString(),
+                @"<((?<tag>[^\s/>]+)|/(?<closeTag>[^\s>]+)).*?(?<selfClose>/)?\s*>",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Multiline))
+            {
+                if (match.Success)
+                {
+                    var tag = match.Groups["tag"].Value;
+                    var closeTag = match.Groups["closeTag"].Value;
+
+                    // push to stack if open tag and ignore it if it is self-closing, i.e. <br />
+                    if (!string.IsNullOrEmpty(tag) && string.IsNullOrEmpty(match.Groups["selfClose"].Value))
+                    {
+                        tags.Push(tag);
+                    }
+
+                    // pop from stack if close tag
+                    else if (!string.IsNullOrEmpty(closeTag))
+                    {
+                        // pop the tag to close it.. find the matching opening tag
+                        // ignore any unclosed tags
+                        while (tags.Pop() != closeTag && tags.Count > 0)
+                        {
+                        }
+                    }
+                }
+            }
+
+            if (html.Length > charCount)
+            {
+                // add the trailing text
+                trunc.Append(trailingText);
+            }
+
+            // pop the rest off the stack to close remainder of tags
+            while (tags.Count > 0)
+            {
+                trunc.Append("</");
+                trunc.Append(tags.Pop());
+                trunc.Append('>');
+            }
+
+            return trunc.ToString();
+        }
+
+        /// <summary>
+        /// Truncates a string containing HTML to a number of text characters, keeping whole words.
+        /// The result contains HTML and any tags left open are closed.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="html">todo: describe html parameter on TruncateHtml</param>
+        /// <param name="maxCharacters">todo: describe maxCharacters parameter on TruncateHtml</param>
+        /// <returns></returns>
+        public static string TruncateHtml(this string html, int maxCharacters)
+        {
+            return html.TruncateHtml(maxCharacters, null);
         }
 
         /// <summary>
@@ -277,7 +294,9 @@ namespace OFrameLibrary.Util
         public static string TruncateWords(this string text, int maxCharacters, string trailingText)
         {
             if (string.IsNullOrEmpty(text) || maxCharacters <= 0 || text.Length <= maxCharacters)
+            {
                 return text;
+            }
 
             // trunctate the text, then remove the partial word at the end
             return Regex.Replace(text.Truncate(maxCharacters),

@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNet.Identity;
+using OFrameLibrary.Factories;
 using OFrameLibrary.Helpers;
 using OFrameLibrary.SettingsHelpers;
+using System.Linq;
 using System.Security.Claims;
 using System.Web.Mvc;
-using System.Linq;
 
 namespace OFrameLibrary.Abstracts
 {
@@ -18,6 +19,14 @@ namespace OFrameLibrary.Abstracts
             get
             {
                 return new AppUserPrincipal(this.User as ClaimsPrincipal);
+            }
+        }
+
+        protected string Direction
+        {
+            get
+            {
+                return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureDirectionCookieKey);
             }
         }
 
@@ -37,24 +46,6 @@ namespace OFrameLibrary.Abstracts
             }
         }
 
-        protected string Direction
-        {
-            get
-            {
-                return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureDirectionCookieKey);
-            }
-        }
-
-        protected string Language(string key)
-        {
-            return LanguageHelper.GetKey(key);
-        }
-
-        protected string Language(string key, string locale)
-        {
-            return LanguageHelper.GetKey(key, locale);
-        }
-
         protected void AddErrors(IdentityResult result)
         {
             foreach (var error in result.Errors)
@@ -63,12 +54,22 @@ namespace OFrameLibrary.Abstracts
             }
         }
 
+        protected static string Language(string key)
+        {
+            return LanguageHelper.GetKey(key);
+        }
+
+        protected static string Language(string key, string locale)
+        {
+            return LanguageHelper.GetKey(key, locale);
+        }
+
         protected ActionResult RedirectToLocal(string url = "", string action = "Index", string controller = "Home")
         {
             return Redirect(GetRedirectUrl(url, action, controller));
         }
 
-        private string GetRedirectUrl(string url = "", string action = "Index", string controller = "Home")
+        string GetRedirectUrl(string url = "", string action = "Index", string controller = "Home")
         {
             if (string.IsNullOrWhiteSpace(url) || !Url.IsLocalUrl(url))
             {
@@ -76,11 +77,6 @@ namespace OFrameLibrary.Abstracts
             }
 
             return url;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
         }
     }
 }

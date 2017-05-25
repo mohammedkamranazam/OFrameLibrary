@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 
 namespace OFrameLibrary.Performance
 {
@@ -13,6 +14,11 @@ namespace OFrameLibrary.Performance
         /// <param name="key">Name of item</param>
         public static void Add<T>(string key, T o)
         {
+            if (HttpContext.Current == null)
+            {
+                return;
+            }
+
             HttpContext.Current.Application.Add(key, o);
         }
 
@@ -32,6 +38,11 @@ namespace OFrameLibrary.Performance
         /// <returns></returns>
         public static bool Exists(string key)
         {
+            if (HttpContext.Current == null)
+            {
+                return false;
+            }
+
             return HttpContext.Current.Application[key] != null;
         }
 
@@ -54,13 +65,27 @@ namespace OFrameLibrary.Performance
 
                 value = (T)HttpContext.Current.Application[key];
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;
             }
 
             return true;
+        }
+
+        public static T SetOrGet<T>(string key, T value)
+        {
+            if (!Exists(key))
+            {
+                Add(key, value);
+            }
+            else
+            {
+                value = (T)HttpContext.Current.Application[key];
+            }
+
+            return value;
         }
     }
 }

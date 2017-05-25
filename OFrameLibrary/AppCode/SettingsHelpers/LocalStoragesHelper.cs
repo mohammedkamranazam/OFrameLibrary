@@ -1,4 +1,5 @@
-﻿using OFrameLibrary.Util;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Util;
 using System;
 using System.IO;
 using System.Xml;
@@ -7,65 +8,10 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class LocalStoragesHelper
     {
-        private const string localStoragesUniqueKey = "_LocalStoragesHelper_";
-        private const string localStoragesXPath = "storages/storage";
+        const string localStoragesUniqueKey = "_LocalStoragesHelper_";
+        const string localStoragesXPath = "storages/storage";
 
-        private readonly static string fileName = AppConfig.LocalStoragesFile;
-
-        private static string CheckPathFormat(this string path)
-        {
-            if (!path.EndsWith("/"))
-            {
-                path += "/";
-            }
-
-            return path;
-        }
-
-        private static bool CreateDirectory(this string absPath)
-        {
-            var success = true;
-
-            if (!Directory.Exists(absPath))
-            {
-                try
-                {
-                    Directory.CreateDirectory(absPath);
-                }
-                catch (Exception ex)
-                {
-                    success = false;
-                    ErrorLogger.LogError(ex);
-                }
-            }
-
-            return success;
-        }
-
-        private static bool DeleteDirectory(this string absPath)
-        {
-            var success = false;
-
-            try
-            {
-                Directory.Delete(absPath);
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                ErrorLogger.LogError(ex);
-            }
-
-            return success;
-        }
-
-        private static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        static readonly string fileName = AppConfig.LocalStoragesFile;
 
         public static void AddStoragePath(string name, string path)
         {
@@ -94,9 +40,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-                foreach (XmlNode storage in storages)
+                foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
                 {
                     if (name == storage.Attributes["name"].Value && storage.Attributes["path"].Value.CheckPathFormat().MapPath().DeleteDirectory())
                     {
@@ -124,7 +68,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -137,9 +81,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-            foreach (XmlNode storage in storages)
+            foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
             {
                 if (name == storage.Attributes["name"].Value)
                 {
@@ -161,9 +103,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-                foreach (XmlNode storage in storages)
+                foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
                 {
                     if (name == storage.Attributes["name"].Value)
                     {
@@ -185,9 +125,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var storages = xmlDoc.SelectNodes(localStoragesXPath);
-
-            foreach (XmlNode storage in storages)
+            foreach (XmlNode storage in xmlDoc.SelectNodes(localStoragesXPath))
             {
                 if (name == storage.Attributes["name"].Value)
                 {
@@ -197,6 +135,63 @@ namespace OFrameLibrary.SettingsHelpers
             }
 
             return present;
+        }
+
+        static string CheckPathFormat(this string path)
+        {
+            if (!path.EndsWith("/", StringComparison.OrdinalIgnoreCase))
+            {
+                path += "/";
+            }
+
+            return path;
+        }
+
+        static bool CreateDirectory(this string absPath)
+        {
+            var success = true;
+
+            if (!Directory.Exists(absPath))
+            {
+                try
+                {
+                    Directory.CreateDirectory(absPath);
+                }
+                catch (Exception ex)
+                {
+                    success = false;
+                    ErrorLogger.LogError(ex);
+                }
+            }
+
+            return success;
+        }
+
+        static bool DeleteDirectory(this string absPath)
+        {
+            var success = false;
+
+            try
+            {
+                Directory.Delete(absPath);
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.LogError(ex);
+            }
+
+            return success;
+        }
+
+        static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

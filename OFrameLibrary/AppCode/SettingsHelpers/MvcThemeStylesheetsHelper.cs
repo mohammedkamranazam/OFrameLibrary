@@ -6,11 +6,11 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class MvcThemeStylesheetsHelper
     {
-        private const string xPath = "stylesheets/stylesheet";
+        const string stylesheetXPath = "stylesheets/stylesheet";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
-            var fileName = string.Format("~/Content/Themes/{0}/CSS.xml", themeName).MapPath();
+            var fileName = $"~/Content/Themes/{themeName}/CSS.xml".MapPath();
 
             var paths = new List<string>();
 
@@ -18,9 +18,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pathNodes = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode pathNode in pathNodes)
+            foreach (XmlNode pathNode in xmlDoc.SelectNodes(stylesheetXPath))
             {
                 paths.Add(pathNode.Attributes["path"].Value);
             }

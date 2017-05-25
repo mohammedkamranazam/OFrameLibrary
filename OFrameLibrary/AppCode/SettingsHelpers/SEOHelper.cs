@@ -1,24 +1,18 @@
-﻿using OFrameLibrary.Models;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Models;
 using OFrameLibrary.Util;
 using System;
+using System.Web.UI;
 using System.Xml;
 
 namespace OFrameLibrary.SettingsHelpers
 {
     public static class SEOHelper
     {
-        private const string pagesXPath = "pages/page";
-        private const string uniqueKey = "_PageSEO_";
+        const string pageXPath = "pages/page";
+        const string uniqueKey = "_PageSEO_";
 
-        private readonly static string fileName = AppConfig.SEOFile;
-
-        private static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        static readonly string fileName = AppConfig.SEOFile;
 
         public static void AddPage(string id)
         {
@@ -30,7 +24,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 var page = xmlDoc.CreateElement("page");
                 page.SetAttribute("id", id);
-                xmlDoc.SelectSingleNode(pagesXPath).ParentNode.AppendChild(page);
+                xmlDoc.SelectSingleNode(pageXPath).ParentNode.AppendChild(page);
 
                 SaveXml(xmlDoc);
             }
@@ -54,9 +48,7 @@ namespace OFrameLibrary.SettingsHelpers
             newKeywordMeta.SetAttribute("name", "keywords");
             newKeywordMeta.SetAttribute("content", entity.Keywords);
 
-            var pages = xmlDoc.SelectNodes(pagesXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (page.Attributes["id"].Value == entity.ID)
                 {
@@ -79,9 +71,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pagesXPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (page.Attributes["id"].Value == id)
                     {
@@ -103,35 +93,32 @@ namespace OFrameLibrary.SettingsHelpers
         public static SEO GetPageSEO(string id, PerformanceMode performanceMode)
         {
             var keyValue = new SEO();
-            var performanceKey = string.Format("{0}_{1}", uniqueKey, id);
+            var performanceKey = $"{uniqueKey}_{id}";
 
             Func<string, SEO> fnc = GetPageSEOFromSettings;
 
             var args = new object[] { id };
 
-            Utilities.GetPerformance<SEO>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<SEO>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
 
         public static SEO GetPageSEOFromSettings(string id)
         {
-            var entity = new SEO();
-            entity.ID = id;
-
+            var entity = new SEO()
+            {
+                ID = id
+            };
             var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pagesXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (page.Attributes["id"].Value == id)
                 {
-                    var metas = page.ChildNodes;
-
-                    foreach (XmlNode meta in metas)
+                    foreach (XmlNode meta in page.ChildNodes)
                     {
                         if ("keywords" == meta.Attributes["name"].Value)
                         {
@@ -164,9 +151,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pages = xmlDoc.SelectNodes(pagesXPath);
-
-            foreach (XmlNode page in pages)
+            foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
             {
                 if (id == page.Attributes["id"].Value)
                 {
@@ -178,6 +163,33 @@ namespace OFrameLibrary.SettingsHelpers
             return present;
         }
 
+        public static void SetPageSEO(Page page, SEO seo)
+        {
+            var title = seo.Title;
+
+            if (title.NullableContains("{ONLY-SITENAME}"))
+            {
+                title = title.Replace("{ONLY-SITENAME}", string.Empty);
+
+                page.Title = $"{AppConfig.SiteName}";
+            }
+
+            if (title.NullableContains("{ONLY-TITLE}"))
+            {
+                title = title.Replace("{ONLY-TITLE}", string.Empty);
+
+                page.Title = $"{title}";
+            }
+
+            if (!seo.Title.NullableContains("{ONLY-SITENAME}") && !seo.Title.NullableContains("{ONLY-TITLE}"))
+            {
+                page.Title = $"{seo.Title} | {AppConfig.SiteName}";
+            }
+
+            page.MetaDescription = seo.Description;
+            page.MetaKeywords = seo.Keywords;
+        }
+
         public static void SetPageSEO(SEO entity)
         {
             if (PageExists(entity.ID))
@@ -186,15 +198,11 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var pages = xmlDoc.SelectNodes(pagesXPath);
-
-                foreach (XmlNode page in pages)
+                foreach (XmlNode page in xmlDoc.SelectNodes(pageXPath))
                 {
                     if (page.Attributes["id"].Value == entity.ID)
                     {
-                        var metas = page.ChildNodes;
-
-                        foreach (XmlNode meta in metas)
+                        foreach (XmlNode meta in page.ChildNodes)
                         {
                             if ("keywords" == meta.Attributes["name"].Value)
                             {
@@ -218,6 +226,16 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

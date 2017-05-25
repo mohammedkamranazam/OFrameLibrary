@@ -6,7 +6,7 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ThemeStylesheetsHelper
     {
-        private const string xPath = "stylesheets/stylesheet";
+        const string xPath = "stylesheets/stylesheet";
 
         public static string[] GetPathsFromSettings(string themeName)
         {
@@ -18,9 +18,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var pathNodes = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode pathNode in pathNodes)
+            foreach (XmlNode pathNode in xmlDoc.SelectNodes(xPath))
             {
                 paths.Add(pathNode.Attributes["path"].Value);
             }

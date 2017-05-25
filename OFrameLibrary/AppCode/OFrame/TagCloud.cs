@@ -12,8 +12,11 @@ namespace OFrameLibrary.OFrame
     [DefaultProperty("BookmarkText")]
     public class TagCloud : WebControl
     {
-        private string[] FontScale = new string[7]
-        {
+        const string SPACER_MARKUP = " ";
+
+        const string TAG_LINK = "<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}";
+
+        string[] FontScale = {
             "tag-link-1",
             "tag-link-2",
             "tag-link-3",
@@ -23,71 +26,73 @@ namespace OFrameLibrary.OFrame
             "tag-link-7"
         };
 
-        private Decimal minWeight = new Decimal(-1, -1, -1, false, (byte)0);
-        private Decimal maxWeight = new Decimal(-1, -1, -1, true, (byte)0);
-        private const string SPACER_MARKUP = " ";
-        private const string TAG_LINK = "<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}";
-        private Decimal scaleUnitLength;
+        decimal maxWeight = new Decimal(-1, -1, -1, true, 0);
+        decimal minWeight = new Decimal(-1, -1, -1, false, 0);
+        decimal scaleUnitLength;
 
-        private string TagCloudsHtml
+        string TagCloudsHtml
         {
             get
             {
-                string str = (string)this.ViewState["TagCloudsHtml"];
-                return str == null ? string.Empty : str;
+                var str = (string)ViewState["TagCloudsHtml"];
+                return str ?? string.Empty;
             }
+
             set
             {
-                this.ViewState["TagCloudsHtml"] = (object)value;
+                ViewState["TagCloudsHtml"] = value;
             }
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
         }
 
         public void GenerateTagCloud(TagCloudItemCollection tags)
         {
-            this.ProcessTagWeights(tags);
-            this.ProcessTagCloud(tags);
-            this.TagCloudsHtml = this.GetTagCloudHtml(tags);
-        }
-
-        protected void ProcessTagWeights(TagCloudItemCollection tags)
-        {
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
-            {
-                if (tagCloudItem.Count < this.minWeight)
-                    this.minWeight = tagCloudItem.Count;
-                if (tagCloudItem.Count > this.maxWeight)
-                    this.maxWeight = tagCloudItem.Count;
-            }
-            this.scaleUnitLength = (Convert.ToDecimal(this.maxWeight - this.minWeight) + 1) / Convert.ToDecimal(this.FontScale.Length);
+            ProcessTagWeights(tags);
+            ProcessTagCloud(tags);
+            TagCloudsHtml = GetTagCloudHtml(tags);
         }
 
         protected string GetTagCloudHtml(TagCloudItemCollection tags)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             stringBuilder.Append("<div id=\"tag-cloud-div\">");
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
-                stringBuilder.Append(string.Format("<a class=\"{0}\" title=\"{1}\" href=\"{2}\">{3}</a>{4}", (object)this.FontScale[tagCloudItem.ScaleValue], (object)tagCloudItem.HoverTitle, (object)tagCloudItem.Url, (object)tagCloudItem.Text, (object)" "));
+            foreach (TagCloudItem tagCloudItem in tags)
+            {
+                stringBuilder.Append($"<a class=\"{FontScale[tagCloudItem.ScaleValue]}\" title=\"{tagCloudItem.HoverTitle}\" href=\"{tagCloudItem.Url}\">{tagCloudItem.Text}</a>{" "}");
+            }
+
             stringBuilder.Append("</div>");
-            return ((object)stringBuilder).ToString();
+            return stringBuilder.ToString();
         }
 
         protected void ProcessTagCloud(TagCloudItemCollection tags)
         {
-            foreach (TagCloudItem tagCloudItem in (List<TagCloudItem>)tags)
+            foreach (TagCloudItem tagCloudItem in tags)
             {
-                int scaleValue = (int)Math.Truncate((tagCloudItem.Count - this.minWeight) / this.scaleUnitLength);
+                var scaleValue = (int)Math.Truncate((tagCloudItem.Count - minWeight) / scaleUnitLength);
                 tagCloudItem.SetScaleValue(scaleValue);
             }
         }
 
+        protected void ProcessTagWeights(TagCloudItemCollection tags)
+        {
+            foreach (TagCloudItem tagCloudItem in tags)
+            {
+                if (tagCloudItem.Count < minWeight)
+                {
+                    minWeight = tagCloudItem.Count;
+                }
+
+                if (tagCloudItem.Count > maxWeight)
+                {
+                    maxWeight = tagCloudItem.Count;
+                }
+            }
+            scaleUnitLength = (Convert.ToDecimal(maxWeight - minWeight) + 1) / Convert.ToDecimal(FontScale.Length);
+        }
+
         protected override void RenderContents(HtmlTextWriter output)
         {
-            output.Write(this.TagCloudsHtml);
+            output.Write(TagCloudsHtml);
         }
     }
 }

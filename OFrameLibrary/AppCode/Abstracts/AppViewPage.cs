@@ -1,10 +1,11 @@
-﻿using OFrameLibrary.Helpers;
+﻿using OFrameLibrary.Factories;
+using OFrameLibrary.Helpers;
 using OFrameLibrary.SettingsHelpers;
+using System.Linq;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
-using System.Linq;
 
 namespace OFrameLibrary.Abstracts
 {
@@ -18,22 +19,12 @@ namespace OFrameLibrary.Abstracts
             }
         }
 
-        protected string Theme
+        protected string Direction
         {
-            set
+            get
             {
-                Layout = ThemeHelper.GetTheme(value);
+                return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureDirectionCookieKey);
             }
-        }
-
-        protected IHtmlString StyleRender(string theme)
-        {
-            return Styles.Render(string.Format("~/Theme_{0}", theme));
-        }
-
-        protected IHtmlString ScriptRender(string theme)
-        {
-            return Scripts.Render(string.Format("~/Script_{0}", theme));
         }
 
         protected string Locale
@@ -52,22 +43,32 @@ namespace OFrameLibrary.Abstracts
             }
         }
 
-        protected string Direction
+        protected string Theme
         {
-            get
+            set
             {
-                return CookiesHelper.GetCookie(Constants.Keys.CurrentCultureDirectionCookieKey);
+                Layout = ThemeHelper.GetTheme(value);
             }
         }
 
-        protected string Language(string key)
+        protected static string Language(string key)
         {
             return LanguageHelper.GetKey(key);
         }
 
-        protected string Language(string key, string locale)
+        protected static string Language(string key, string locale)
         {
             return LanguageHelper.GetKey(key, locale);
+        }
+
+        protected static IHtmlString ScriptRender(string theme)
+        {
+            return Scripts.Render(string.Format("~/Script_{0}", theme));
+        }
+
+        protected static IHtmlString StyleRender(string theme)
+        {
+            return Styles.Render(string.Format("~/Theme_{0}", theme));
         }
     }
 

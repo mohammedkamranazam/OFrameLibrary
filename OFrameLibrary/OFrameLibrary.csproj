@@ -48,6 +48,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ImageResizer, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ImageResizer.4.0.5\lib\net45\ImageResizer.dll</HintPath>
       <Private>True</Private>
@@ -235,22 +239,40 @@
     <Compile Include="AppCode\Abstracts\AppController.cs" />
     <Compile Include="AppCode\Abstracts\AppViewPage.cs" />
     <Compile Include="AppCode\Abstracts\AuthController.cs" />
+    <Compile Include="AppCode\Filters\CompressAttribute.cs" />
+    <Compile Include="AppCode\Filters\OFAuthorize.cs" />
+    <Compile Include="AppCode\Helpers\EmailTagsHelper.cs" />
+    <Compile Include="AppCode\Helpers\ExcelExportHelper.cs" />
+    <Compile Include="AppCode\Helpers\GridHelper.cs" />
+    <Compile Include="AppCode\Helpers\MvcHelper.cs" />
+    <Compile Include="AppCode\Helpers\PerformanceHelper.cs" />
+    <Compile Include="AppCode\Helpers\RelayEmailHelper.cs" />
+    <Compile Include="AppCode\Helpers\SendGridEmailHelper.cs" />
+    <Compile Include="AppCode\Helpers\SmtpEmailHelper.cs" />
+    <Compile Include="AppCode\Helpers\TreeViewHelper.cs" />
+    <Compile Include="AppCode\Helpers\WebControlHelper.cs" />
+    <Compile Include="AppCode\Models\EmailMessage.cs" />
     <Compile Include="AppCode\Models\JsonValidationResult.cs" />
+    <Compile Include="AppCode\Models\OListItem.cs" />
+    <Compile Include="AppCode\Models\SendGridSettings.cs" />
+    <Compile Include="AppCode\Models\SerializableSession.cs" />
     <Compile Include="AppCode\Models\Translator.cs" />
+    <Compile Include="AppCode\Providers\LanguageModelMetadataProvider.cs" />
+    <Compile Include="AppCode\Util\UnitOfWork.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="AppCode\Filters\LanguageSelectorFilter.cs" />
-    <Compile Include="AppCode\Helpers\AppDbContext.cs" />
-    <Compile Include="AppCode\Helpers\ApplicationRoleManager.cs" />
-    <Compile Include="AppCode\Helpers\ApplicationSignInManager.cs" />
-    <Compile Include="AppCode\Helpers\ApplicationUser.cs" />
-    <Compile Include="AppCode\Helpers\ApplicationUserManager.cs" />
-    <Compile Include="AppCode\Helpers\AppUserClaimsIdentityFactory.cs" />
-    <Compile Include="AppCode\Helpers\AppUserPrincipal.cs" />
+    <Compile Include="AppCode\Factories\AppDbContext.cs" />
+    <Compile Include="AppCode\Factories\ApplicationRoleManager.cs" />
+    <Compile Include="AppCode\Factories\ApplicationSignInManager.cs" />
+    <Compile Include="AppCode\Factories\ApplicationUser.cs" />
+    <Compile Include="AppCode\Factories\ApplicationUserManager.cs" />
+    <Compile Include="AppCode\Factories\AppUserClaimsIdentityFactory.cs" />
+    <Compile Include="AppCode\Factories\AppUserPrincipal.cs" />
     <Compile Include="AppCode\Helpers\CookiesHelper.cs" />
-    <Compile Include="AppCode\Helpers\EmailService.cs" />
+    <Compile Include="AppCode\Services\EmailService.cs" />
     <Compile Include="AppCode\Helpers\ExceptionHelper.cs" />
     <Compile Include="AppCode\Helpers\FtpHelper.cs" />
-    <Compile Include="AppCode\Helpers\GenericRepository.cs" />
+    <Compile Include="AppCode\Util\GenericRepository.cs" />
     <Compile Include="AppCode\Helpers\ImageHelper.cs" />
     <Compile Include="AppCode\Helpers\JsonHelper.cs" />
     <Compile Include="AppCode\Helpers\MailHelper.cs" />
@@ -261,7 +283,7 @@
     <Compile Include="AppCode\Helpers\PdfHelper.cs" />
     <Compile Include="AppCode\Helpers\PrintHelper.cs" />
     <Compile Include="AppCode\Helpers\QRCodeHelper.cs" />
-    <Compile Include="AppCode\Helpers\SmsService.cs" />
+    <Compile Include="AppCode\Services\SmsService.cs" />
     <Compile Include="AppCode\Helpers\ThemeHelper.cs" />
     <Compile Include="AppCode\SettingsHelpers\MvcThemeScriptsHelper.cs" />
     <Compile Include="AppCode\SettingsHelpers\MvcThemeStylesheetsHelper.cs" />
@@ -287,7 +309,6 @@
     <Compile Include="AppCode\Models\TagCloudItemCollection.cs" />
     <Compile Include="AppCode\OFrame\AppConfig.cs" />
     <Compile Include="AppCode\OFrame\Constants.cs" />
-    <Compile Include="AppCode\OFrame\DynamicLinq.cs" />
     <Compile Include="AppCode\OFrame\Enums.cs" />
     <Compile Include="AppCode\OFrame\LocalStorages.cs" />
     <Compile Include="AppCode\OFrame\TagCloud.cs" />
@@ -296,15 +317,8 @@
     <Compile Include="AppCode\Performance\CacheHelper.cs" />
     <Compile Include="AppCode\Performance\MemoryCacheHelper.cs" />
     <Compile Include="AppCode\Performance\RedisCacheHelper.cs" />
-    <Compile Include="AppCode\Performance\SerializableSession.cs" />
     <Compile Include="AppCode\Performance\SessionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\ASPSMSX2\Reference.cs" />
-    <Compile Include="Service References\ASPSMSX2\Reference1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="AppCode\SettingsHelpers\KeywordsHelper.cs" />
     <Compile Include="AppCode\SettingsHelpers\LanguageHelper.cs" />
     <Compile Include="AppCode\SettingsHelpers\LocalStoragesHelper.cs" />
@@ -321,17 +335,14 @@
     <Compile Include="AppCode\Util\Hash.cs" />
     <Compile Include="AppCode\Util\OctreeQuantizer.cs" />
     <Compile Include="AppCode\Util\Quantizer.cs" />
-    <Compile Include="AppCode\Util\StringHelper.cs" />
+    <Compile Include="AppCode\Helpers\StringHelper.cs" />
     <Compile Include="AppCode\Util\SymCryptography.cs" />
     <Compile Include="AppCode\Util\Utilities.cs" />
-    <Compile Include="AppCode\ValidationAttributes\RegularExpressionAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="App_Data\Settings\Web.config" />
     <None Include="packages.config" />
-    <None Include="Service References\ASPSMSX2\aspsmsx2.wsdl" />
-    <None Include="Service References\ASPSMSX2\OFrameLibrary.ASPSMSX2.vouchers.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Settings\KeyWords.xml" />
@@ -345,12 +356,6 @@
     <Content Include="Content\Plugins\OFrame\style.css" />
     <Content Include="Docs\CustomGrid.txt" />
     <Content Include="Docs\LanguageSelector.txt" />
-    <Content Include="Service References\ASPSMSX2\configuration.svcinfo" />
-    <Content Include="Service References\ASPSMSX2\configuration91.svcinfo" />
-    <Content Include="Service References\ASPSMSX2\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference1.cs</LastGenOutput>
-    </Content>
     <Content Include="Storage\TextFile.txt" />
   </ItemGroup>
   <ItemGroup />

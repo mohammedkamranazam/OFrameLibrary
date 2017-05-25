@@ -1,4 +1,5 @@
 ﻿using OFrameLibrary.Util;
+using System;
 using System.Web;
 
 namespace OFrameLibrary.Performance
@@ -60,13 +61,27 @@ namespace OFrameLibrary.Performance
 
                 value = (T)HttpContext.Current.Cache[key];
             }
-            catch
+            catch (Exception)
             {
                 value = default(T);
                 return false;
             }
 
             return true;
+        }
+
+        public static T SetOrGet<T>(string key, T value)
+        {
+            if (!Exists(key))
+            {
+                Add(key, value);
+            }
+            else
+            {
+                value = (T)HttpContext.Current.Cache[key];
+            }
+
+            return value;
         }
     }
 }

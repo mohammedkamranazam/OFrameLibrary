@@ -1,25 +1,5 @@
 ﻿namespace OFrameLibrary
 {
-    public enum FileType
-    {
-        Image,
-        Document,
-        PDF,
-        Custom,
-        All
-    }
-
-    public enum ManageMessageId
-    {
-        AddPhoneSuccess,
-        ChangePasswordSuccess,
-        SetTwoFactorSuccess,
-        SetPasswordSuccess,
-        RemoveLoginSuccess,
-        RemovePhoneSuccess,
-        Error
-    }
-
     public enum BlinkRate
     {
         None,
@@ -47,6 +27,15 @@
         full,
     }
 
+    public enum FileType
+    {
+        Image,
+        Document,
+        PDF,
+        Custom,
+        All
+    }
+
     public enum Gender
     {
         Male,
@@ -61,6 +50,23 @@
         SHA384,
         SHA512,
         MD5,
+    }
+
+    public enum LogType
+    {
+        Error,
+        Activity
+    }
+
+    public enum ManageMessageId
+    {
+        AddPhoneSuccess,
+        ChangePasswordSuccess,
+        SetTwoFactorSuccess,
+        SetPasswordSuccess,
+        RemoveLoginSuccess,
+        RemovePhoneSuccess,
+        Error
     }
 
     public enum MemoryCacheItemPriority
@@ -118,11 +124,5 @@
     {
         Left = 0,
         Right = 2,
-    }
-
-    public enum LogType
-    {
-        Error,
-        Activity
     }
 }

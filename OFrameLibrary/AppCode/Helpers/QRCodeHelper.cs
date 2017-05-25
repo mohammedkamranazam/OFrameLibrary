@@ -9,21 +9,25 @@ namespace OFrameLibrary.Helpers
         public static void GenerateQRCode(string code, string path)
         {
             var qrGenerator = new QRCodeGenerator();
-            var qrCode = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.M);
-            var imgBarCode = new System.Web.UI.WebControls.Image();
-            imgBarCode.Height = 100;
-            imgBarCode.Width = 100;
-            using (Bitmap bitMap = qrCode.GetGraphic(20))
+            var qrCode = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.H);
+            using (var imgBarCode = new System.Web.UI.WebControls.Image
             {
-                using (MemoryStream ms = new MemoryStream())
+                Height = 100,
+                Width = 100
+            })
+            {
+                using (Bitmap bitMap = qrCode.GetGraphic(20))
                 {
-                    bitMap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    //byte[] byteImage = ms.ToArray();
-                    //imgBarCode.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
-                    //return imgBarCode.ImageUrl;
-                    var img = Image.FromStream(ms);
-                    img.Save(path);
-                    img.Dispose();
+                    using (var ms = new MemoryStream())
+                    {
+                        bitMap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        //byte[] byteImage = ms.ToArray();
+                        //imgBarCode.ImageUrl = "data:image/png;base64," + Convert.ToBase64String(byteImage);
+                        //return imgBarCode.ImageUrl;
+                        var img = Image.FromStream(ms);
+                        img.Save(path);
+                        img.Dispose();
+                    }
                 }
             }
         }

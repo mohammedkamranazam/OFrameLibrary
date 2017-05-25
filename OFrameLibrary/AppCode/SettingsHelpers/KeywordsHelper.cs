@@ -1,4 +1,5 @@
-﻿using OFrameLibrary.Util;
+﻿using OFrameLibrary.Helpers;
+using OFrameLibrary.Util;
 using System;
 using System.Xml;
 
@@ -6,18 +7,9 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class KeywordsHelper
     {
-        private const string uniqueKey = "_KeywordsHelper_";
-        private const string xPath = "keys/key";
-
-        private readonly static string fileName = AppConfig.KeywordsFile;
-
-        private static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        const string keyXPath = "keys/key";
+        const string uniqueKey = "_KeywordsHelper_";
+        static readonly string fileName = AppConfig.KeywordsFile;
 
         public static void AddKeyword(string name, string value)
         {
@@ -32,7 +24,7 @@ namespace OFrameLibrary.SettingsHelpers
                 newKey.SetAttribute("name", name);
                 newKey.SetAttribute("value", value);
 
-                xmlDoc.SelectSingleNode(xPath).ParentNode.AppendChild(newKey);
+                xmlDoc.SelectSingleNode(keyXPath).ParentNode.AppendChild(newKey);
 
                 SaveXml(xmlDoc);
             }
@@ -46,9 +38,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var keys = xmlDoc.SelectNodes(xPath);
-
-                foreach (XmlNode key in keys)
+                foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
                 {
                     if (name == key.Attributes["name"].Value)
                     {
@@ -77,7 +67,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -90,9 +80,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var keys = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode key in keys)
+            foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
             {
                 if (name == key.Attributes["name"].Value)
                 {
@@ -112,9 +100,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var keys = xmlDoc.SelectNodes(xPath);
-
-            foreach (XmlNode key in keys)
+            foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
             {
                 if (name == key.Attributes["name"].Value)
                 {
@@ -134,9 +120,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var keys = xmlDoc.SelectNodes(xPath);
-
-                foreach (XmlNode key in keys)
+                foreach (XmlNode key in xmlDoc.SelectNodes(keyXPath))
                 {
                     if (name == key.Attributes["name"].Value)
                     {
@@ -148,6 +132,16 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

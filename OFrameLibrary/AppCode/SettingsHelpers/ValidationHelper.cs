@@ -8,20 +8,12 @@ namespace OFrameLibrary.SettingsHelpers
 {
     public static class ValidationHelper
     {
-        private const string expressionUniqueKey = "_ValidationExpressionHelper_";
-        private const string expressionXPath = "validationSetting/validationExpressions/validationExpression";
-        private const string messageUniqueKey = "_ValidationMessageHelper_";
-        private const string messageXPath = "validationSetting/validationMessages/language";
+        const string expressionUniqueKey = "_ValidationExpressionHelper_";
+        const string expressionXPath = "validationSetting/validationExpressions/validationExpression";
+        const string messageUniqueKey = "_ValidationMessageHelper_";
+        const string messageXPath = "validationSetting/validationMessages/language";
 
-        private readonly static string fileName = AppConfig.ValidationSettingsFile;
-
-        private static void SaveXml(XmlDocument xmlDoc)
-        {
-            var xmlTextWriter = new XmlTextWriter(fileName, null);
-            xmlTextWriter.Formatting = Formatting.Indented;
-            xmlDoc.WriteContentTo(xmlTextWriter);
-            xmlTextWriter.Close();
-        }
+        static readonly string fileName = AppConfig.ValidationSettingsFile;
 
         public static void AddExpression(string name, string value)
         {
@@ -62,7 +54,7 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void AddMessage(string name, string locale, string value)
         {
-            if (!MessageExists(name, locale) && LanguageExists(locale))
+            if (!MessageExistsFromSettings(name, locale) && LanguageExists(locale))
             {
                 var xmlDoc = new XmlDocument();
 
@@ -73,9 +65,7 @@ namespace OFrameLibrary.SettingsHelpers
                 newMessage.SetAttribute("name", name);
                 newMessage.SetAttribute("value", value);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
-
-                foreach (XmlNode language in languages)
+                foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
                 {
                     if (language.Attributes["locale"].Value == locale)
                     {
@@ -97,9 +87,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-                foreach (XmlNode expression in expressions)
+                foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
                 {
                     if (name == expression.Attributes["name"].Value)
                     {
@@ -115,21 +103,17 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void DeleteMessage(string name, string locale)
         {
-            if (MessageExists(name, locale))
+            if (MessageExistsFromSettings(name, locale))
             {
                 var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
-
-                foreach (XmlNode language in languages)
+                foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
                 {
                     if (language.Attributes["locale"].Value == locale)
                     {
-                        var messages = language.ChildNodes;
-
-                        foreach (XmlNode message in messages)
+                        foreach (XmlNode message in language.ChildNodes)
                         {
                             if (name == message.Attributes["name"].Value)
                             {
@@ -155,9 +139,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-            foreach (XmlNode expression in expressions)
+            foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
             {
                 if (name == expression.Attributes["name"].Value)
                 {
@@ -183,7 +165,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -196,9 +178,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-            foreach (XmlNode expression in expressions)
+            foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
             {
                 if (name == expression.Attributes["name"].Value)
                 {
@@ -216,19 +196,19 @@ namespace OFrameLibrary.SettingsHelpers
             var defaultLocale = AppConfig.DefaultLocale;
             var currentLocale = CultureInfo.CurrentCulture.Name;
 
-            if (!string.IsNullOrWhiteSpace(userSetLocale) && MessageExists(name, userSetLocale))
+            if (!string.IsNullOrWhiteSpace(userSetLocale) && MessageExistsFromSettings(name, userSetLocale))
             {
                 return GetMessage(name, userSetLocale);
             }
             else
             {
-                if (MessageExists(name, currentLocale))
+                if (MessageExistsFromSettings(name, currentLocale))
                 {
                     return GetMessage(name, currentLocale);
                 }
                 else
                 {
-                    if (MessageExists(name, defaultLocale))
+                    if (MessageExistsFromSettings(name, defaultLocale))
                     {
                         return GetMessage(name, defaultLocale);
                     }
@@ -254,7 +234,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             var args = new object[] { name, locale };
 
-            Utilities.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
+            PerformanceHelper.GetPerformance<string>(performanceMode, performanceKey, out keyValue, fnc, args);
 
             return keyValue;
         }
@@ -267,15 +247,11 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (language.Attributes["locale"].Value == locale)
                 {
-                    var messages = language.ChildNodes;
-
-                    foreach (XmlNode message in messages)
+                    foreach (XmlNode message in language.ChildNodes)
                     {
                         if (name == message.Attributes["name"].Value)
                         {
@@ -299,9 +275,7 @@ namespace OFrameLibrary.SettingsHelpers
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (locale == language.Attributes["locale"].Value)
                 {
@@ -315,21 +289,36 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static bool MessageExists(string name, string locale)
         {
+            return MessageExists(name, locale, AppConfig.PerformanceMode);
+        }
+
+        public static bool MessageExists(string name, string locale, PerformanceMode performanceMode)
+        {
+            var keyValue = false;
+            var performanceKey = string.Format("{0}{1}_{2}_MessageExistance", messageUniqueKey, name, locale);
+
+            Func<string, string, bool> fnc = MessageExistsFromSettings;
+
+            var args = new object[] { name, locale };
+
+            PerformanceHelper.GetPerformance<bool>(performanceMode, performanceKey, out keyValue, fnc, args);
+
+            return keyValue;
+        }
+
+        public static bool MessageExistsFromSettings(string name, string locale)
+        {
             var present = false;
 
             var xmlDoc = new XmlDocument();
 
             xmlDoc.Load(fileName);
 
-            var languages = xmlDoc.SelectNodes(messageXPath);
-
-            foreach (XmlNode language in languages)
+            foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
             {
                 if (language.Attributes["locale"].Value == locale)
                 {
-                    var messages = language.ChildNodes;
-
-                    foreach (XmlNode message in messages)
+                    foreach (XmlNode message in language.ChildNodes)
                     {
                         if (name == message.Attributes["name"].Value)
                         {
@@ -353,9 +342,7 @@ namespace OFrameLibrary.SettingsHelpers
 
                 xmlDoc.Load(fileName);
 
-                var expressions = xmlDoc.SelectNodes(expressionXPath);
-
-                foreach (XmlNode expression in expressions)
+                foreach (XmlNode expression in xmlDoc.SelectNodes(expressionXPath))
                 {
                     if (name == expression.Attributes["name"].Value)
                     {
@@ -371,21 +358,17 @@ namespace OFrameLibrary.SettingsHelpers
 
         public static void SetMessage(string name, string locale, string value)
         {
-            if (MessageExists(name, locale))
+            if (MessageExistsFromSettings(name, locale))
             {
                 var xmlDoc = new XmlDocument();
 
                 xmlDoc.Load(fileName);
 
-                var languages = xmlDoc.SelectNodes(messageXPath);
-
-                foreach (XmlNode language in languages)
+                foreach (XmlNode language in xmlDoc.SelectNodes(messageXPath))
                 {
                     if (language.Attributes["locale"].Value == locale)
                     {
-                        var messages = language.ChildNodes;
-
-                        foreach (XmlNode message in messages)
+                        foreach (XmlNode message in language.ChildNodes)
                         {
                             if (name == message.Attributes["name"].Value)
                             {
@@ -401,6 +384,16 @@ namespace OFrameLibrary.SettingsHelpers
                     }
                 }
             }
+        }
+
+        static void SaveXml(XmlDocument xmlDoc)
+        {
+            var xmlTextWriter = new XmlTextWriter(fileName, null)
+            {
+                Formatting = Formatting.Indented
+            };
+            xmlDoc.WriteContentTo(xmlTextWriter);
+            xmlTextWriter.Close();
         }
     }
 }

@@ -7,24 +7,17 @@ namespace OFrameLibrary.Util
 {
     public class SymCryptography : IDisposable
     {
-        private SymCryptographyServiceProvider mAlgorithm;
-        private SymmetricAlgorithm mCryptoService;
-        private string mKey = string.Empty;
-        private string mSalt = string.Empty;
-
-        public void Dispose()
-        {
-            if (mCryptoService != null)
-            {
-                mCryptoService.Dispose();
-                mCryptoService = null;
-            }
-        }
+        SymCryptographyServiceProvider mAlgorithm;
+        SymmetricAlgorithm mCryptoService;
+        string mKey = string.Empty;
+        string mSalt = string.Empty;
 
         public SymCryptography()
         {
-            mCryptoService = new RijndaelManaged();
-            mCryptoService.Mode = CipherMode.CBC;
+            mCryptoService = new RijndaelManaged
+            {
+                Mode = CipherMode.CBC
+            };
             mAlgorithm = SymCryptographyServiceProvider.Rijndael;
         }
 
@@ -97,6 +90,7 @@ namespace OFrameLibrary.Util
             {
                 return mKey;
             }
+
             set
             {
                 mKey = value;
@@ -109,32 +103,17 @@ namespace OFrameLibrary.Util
             {
                 return mSalt;
             }
+
             set
             {
                 mSalt = value;
             }
         }
 
-        private void SetLegalIV()
-        {
-            switch (mAlgorithm)
-            {
-                case SymCryptographyServiceProvider.Rijndael:
-                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9, 0x5, 0x46, 0x9c, 0xea, 0xa8, 0x4b, 0x73, 0xcc };
-                    break;
-
-                default:
-                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9 };
-                    break;
-            }
-        }
-
         public virtual string Decrypt(string cryptoText)
         {
             var cryptoByte = Convert.FromBase64String(cryptoText);
-            var keyByte = GetLegalKey();
-
-            mCryptoService.Key = keyByte;
+            mCryptoService.Key = GetLegalKey();
             SetLegalIV();
 
             var cryptoTransform = mCryptoService.CreateDecryptor();
@@ -145,36 +124,47 @@ namespace OFrameLibrary.Util
 
                 var cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Read);
 
-                var sr = new StreamReader(cs);
-
-                return sr.ReadToEnd();
+                using (var sr = new StreamReader(cs))
+                {
+                    return sr.ReadToEnd();
+                }
             }
-            catch
+            catch (Exception)
             {
                 return null;
             }
         }
 
+        public void Dispose()
+        {
+            if (mCryptoService != null)
+            {
+                mCryptoService.Dispose();
+                mCryptoService = null;
+            }
+
+            GC.SuppressFinalize(this);
+        }
+
         public virtual string Encrypt(string plainText)
         {
-            var plainByte = ASCIIEncoding.ASCII.GetBytes(plainText);
-            var keyByte = GetLegalKey();
-
-            mCryptoService.Key = keyByte;
+            var plainByte = Encoding.ASCII.GetBytes(plainText);
+            mCryptoService.Key = GetLegalKey();
             SetLegalIV();
 
             var cryptoTransform = mCryptoService.CreateEncryptor();
 
             var ms = new MemoryStream();
 
-            var cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write);
+            using (var cs = new CryptoStream(ms, cryptoTransform, CryptoStreamMode.Write))
+            {
+                cs.Write(plainByte, 0, plainByte.Length);
+                cs.FlushFinalBlock();
 
-            cs.Write(plainByte, 0, plainByte.Length);
-            cs.FlushFinalBlock();
+                var cryptoByte = ms.ToArray();
 
-            var cryptoByte = ms.ToArray();
-
-            return Convert.ToBase64String(cryptoByte, 0, cryptoByte.GetLength(0));
+                return Convert.ToBase64String(cryptoByte, 0, cryptoByte.GetLength(0));
+            }
         }
 
         public virtual byte[] GetLegalKey()
@@ -203,9 +193,23 @@ namespace OFrameLibrary.Util
                 }
             }
 
-            using (PasswordDeriveBytes passwordDeriveBytes = new PasswordDeriveBytes(mKey, ASCIIEncoding.ASCII.GetBytes(mSalt)))
+            using (var passwordDeriveBytes = new PasswordDeriveBytes(mKey, Encoding.ASCII.GetBytes(mSalt)))
             {
                 return passwordDeriveBytes.GetBytes(mKey.Length);
+            }
+        }
+
+        void SetLegalIV()
+        {
+            switch (mAlgorithm)
+            {
+                case SymCryptographyServiceProvider.Rijndael:
+                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9, 0x5, 0x46, 0x9c, 0xea, 0xa8, 0x4b, 0x73, 0xcc };
+                    break;
+
+                default:
+                    mCryptoService.IV = new byte[] { 0xf, 0x6f, 0x13, 0x2e, 0x35, 0xc2, 0xcd, 0xf9 };
+                    break;
             }
         }
     }

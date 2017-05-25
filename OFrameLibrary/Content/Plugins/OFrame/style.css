@@ -1,5 +1,4 @@
-﻿
-@media (max-width: 600px) {
+﻿@media (max-width: 600px) {
     /* CSS Responsive table */
     table.responsive,
     table.responsive thead,
@@ -65,7 +64,6 @@
         }
 }
 
-
 .loader {
     margin: 0px auto;
     font-size: 10px;
@@ -112,4 +110,257 @@
         -webkit-transform: rotate(360deg);
         transform: rotate(360deg);
     }
+}
+
+.portlet {
+    background: #fff;
+    padding: 0px;
+}
+
+    .portlet .portlet-heading {
+        padding: 0 15px;
+        border-bottom: 1px solid #e5e5e5;
+        background: #fff;
+        line-height: 38px;
+        min-height: 39px;
+    }
+
+        .portlet .portlet-heading .fa, .portlet .portlet-heading .glyphicon {
+            opacity: .55;
+            filter: alpha(opacity=55.00000000000001);
+        }
+
+        .portlet .portlet-heading.dark a, .portlet .portlet-heading.bg-info a, .portlet .portlet-heading.bg-success a, .portlet .portlet-heading.bg-primary a, .portlet .portlet-heading.bg-danger a, .portlet .portlet-heading.bg-warning a, .portlet .portlet-heading.inverse a {
+            color: #fff;
+        }
+
+        .portlet .portlet-heading.dark small, .portlet .portlet-heading.bg-info small, .portlet .portlet-heading.bg-success small, .portlet .portlet-heading.bg-primary small, .portlet .portlet-heading.bg-danger small, .portlet .portlet-heading.bg-warning small, .portlet .portlet-heading.inverse small {
+            color: #999;
+        }
+
+        .portlet .portlet-heading.dark .nav li.active > a, .portlet .portlet-heading.bg-info .nav li.active > a, .portlet .portlet-heading.bg-success .nav li.active > a, .portlet .portlet-heading.bg-primary .nav li.active > a, .portlet .portlet-heading.bg-danger .nav li.active > a, .portlet .portlet-heading.bg-warning .nav li.active > a, .portlet .portlet-heading.inverse .nav li.active > a {
+            color: #686868;
+        }
+
+        .portlet .portlet-heading .nav li {
+            margin-bottom: auto;
+        }
+
+            .portlet .portlet-heading .nav li > a {
+                padding: 7.5px 15px;
+                font-size: 13px;
+            }
+
+            .portlet .portlet-heading .nav li:not(.active) > a {
+                border-color: transparent;
+                background-color: transparent;
+            }
+
+            .portlet .portlet-heading .nav li.active > a {
+                background-color: #fff;
+                border-bottom-color: transparent;
+                box-shadow: none;
+                color: #686868;
+            }
+
+        .portlet .portlet-heading .nav.nav-tabs {
+            float: right;
+            border-bottom: 0;
+            margin-bottom: 0;
+            position: relative;
+            bottom: -5px;
+        }
+
+        .portlet .portlet-heading .portlet-title {
+            float: left;
+        }
+
+        .portlet .portlet-heading a {
+            color: #999;
+        }
+
+            .portlet .portlet-heading a:hover, .portlet .portlet-heading a:focus, .portlet .portlet-heading a:active {
+                outline: 0;
+            }
+
+        .portlet .portlet-heading h4 {
+            font-size: 14px;
+            margin: 0;
+            line-height: 37px;
+        }
+
+        .portlet .portlet-heading .portlet-widgets {
+            position: relative;
+            text-align: right;
+            float: right;
+            padding-left: 15px;
+            display: inline-block;
+            font-size: 15px;
+            line-height: 37px;
+        }
+
+            .portlet .portlet-heading .portlet-widgets:before {
+                display: inline-block;
+                content: "";
+                position: absolute;
+                top: 3px;
+                bottom: 3px;
+                left: -1px;
+                border: 1px solid rgba(0,0,0,.1);
+                border-width: 0 1px 0 0;
+            }
+
+            .portlet .portlet-heading .portlet-widgets .divider {
+                margin: 0 3px;
+            }
+
+            .portlet .portlet-heading .portlet-widgets .fa:hover {
+                -moz-transform: scale(1.2);
+                -webkit-transform: scale(1.2);
+                -o-transform: scale(1.2);
+                -ms-transform: scale(1.2);
+                transform: scale(1.2);
+                opacity: 1;
+            }
+
+            .portlet .portlet-heading .portlet-widgets .dropdown-menu a {
+                color: #555;
+            }
+
+            .portlet .portlet-heading .portlet-widgets ul.dropdown-menu {
+                min-width: 0;
+            }
+
+        .portlet .portlet-heading.no-left-border .portlet-widgets:before {
+            border: 0 none;
+        }
+
+    .portlet form .form-actions {
+        padding: 15px 10px 0;
+    }
+
+    .portlet.no-border {
+        border: 0;
+    }
+
+    .portlet .portlet-body {
+        background: #fff;
+    }
+
+        .portlet .portlet-body .table {
+            margin-bottom: 0;
+        }
+
+            .portlet .portlet-body .table > thead > tr > th, .portlet .portlet-body .table > thead > tr > td {
+                border-bottom: 3px double #e5e5e5;
+            }
+
+        .portlet .portlet-body .datepicker.datepicker-inline {
+            margin: 0;
+        }
+
+        .portlet .portlet-body.no-padding .table.table-bordered {
+            border-width: 1px 0 0;
+        }
+
+            .portlet .portlet-body.no-padding .table.table-bordered th:first-child, .portlet .portlet-body.no-padding .table.table-bordered td:first-child {
+                border-left: 0 none;
+            }
+
+            .portlet .portlet-body.no-padding .table.table-bordered th:last-child, .portlet .portlet-body.no-padding .table.table-bordered td:last-child {
+                border-right: 0 none;
+            }
+
+            .portlet .portlet-body.no-padding .table.table-bordered tr:last-child td {
+                border-bottom: 0 none;
+            }
+
+    .portlet .portlet-footer {
+        padding: 10px 15px;
+        background: #f2f2f2;
+        border-top: 1px solid #e5e5e5;
+    }
+
+        .portlet .portlet-footer ul {
+            margin: 0;
+        }
+
+    .portlet.hidden-widgets .portlet-widgets {
+        display: none;
+    }
+
+    .portlet.hidden-widgets:hover .portlet-widgets {
+        display: block;
+    }
+
+    .portlet.portlet-primary .portlet-heading, .portlet.portlet-success .portlet-heading, .portlet.portlet-warning .portlet-heading, .portlet.portlet-info .portlet-heading, .portlet.portlet-danger .portlet-heading, .portlet.portlet-dark .portlet-heading, .portlet.portlet-gray .portlet-heading, .portlet.portlet-inverse .portlet-heading {
+        color: #fff;
+    }
+
+        .portlet.portlet-primary .portlet-heading a, .portlet.portlet-success .portlet-heading a, .portlet.portlet-warning .portlet-heading a, .portlet.portlet-info .portlet-heading a, .portlet.portlet-danger .portlet-heading a, .portlet.portlet-dark .portlet-heading a, .portlet.portlet-gray .portlet-heading a, .portlet.portlet-inverse .portlet-heading a {
+            color: #fff;
+        }
+
+    .portlet.portlet-basic .portlet-heading {
+        background: #f2f2f2;
+    }
+
+        .portlet.portlet-basic .portlet-heading a {
+            color: #999;
+        }
+
+.portlet-gray > .portlet-heading {
+    background-color: #555;
+}
+
+.portlet-dark > .portlet-heading, .portlet-inverse > .portlet-heading {
+    background-color: #414141;
+}
+
+.portlet-success > .portlet-heading {
+    background-color: #72af46;
+}
+
+.portlet-danger > .portlet-heading {
+    background-color: #bd362f;
+}
+
+.portlet-info > .portlet-heading {
+    background-color: #466baf;
+}
+
+.portlet-warning > .portlet-heading {
+    background-color: #ab7a4b;
+}
+
+.portlet-primary > .portlet-heading {
+    background-color: #86618f;
+}
+
+.portlet-primary, .portlet-primary > .portlet-heading {
+    border-color: #86618f;
+}
+
+.portlet-danger, .portlet-danger > .portlet-heading {
+    border-color: #bd362f;
+}
+
+.portlet-success, .portlet-success > .portlet-heading {
+    border-color: #72af46;
+}
+
+.portlet-warning, .portlet-warning > .portlet-heading {
+    border-color: #ab7a4b;
+}
+
+.portlet-info, .portlet-info > .portlet-heading {
+    border-color: #466baf;
+}
+
+.portlet-gray, .portlet-gray > .portlet-heading {
+    border-color: #555;
+}
+
+.portlet-dark, .portlet-dark > .portlet-heading, .portlet-inverse, .portlet-inverse > .portlet-heading {
+    border-color: #414141;
 }

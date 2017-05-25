@@ -9,6 +9,7 @@
         }
 
         public string Message { get; set; }
+
         public StatusMessageType MessageType { get; set; }
     }
 }

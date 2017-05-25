@@ -5,10 +5,10 @@ using System.Drawing.Imaging;
 
 namespace OFrameLibrary.Util
 {
-    internal class OctreeQuantizer : Quantizer
+    class OctreeQuantizer : Quantizer
     {
-        private int _maxColors;
-        private Octree _octree;
+        int _maxColors;
+        Octree _octree;
 
         /// <summary>
         /// Construct the octree quantizer
@@ -64,37 +64,37 @@ namespace OFrameLibrary.Util
         }
 
         // private classes...
-        private class Octree
+        class Octree
         {
+            /// <summary>
+            /// Mask used when getting the appropriate pixels for a given node
+            /// </summary>
+            static readonly int[] mask = { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+
             /// <summary>
             /// Maximum number of significant bits in the image
             /// </summary>
-            private int _maxColorBits;
+            int _maxColorBits;
 
             /// <summary>
             /// Cache the previous color quantized
             /// </summary>
-            private int _previousColor;
+            int _previousColor;
 
             /// <summary>
             /// Store the last node quantized
             /// </summary>
-            private OctreeNode _previousNode;
+            OctreeNode _previousNode;
 
             /// <summary>
             /// Array of reducible nodes
             /// </summary>
-            private OctreeNode[] _reducibleNodes;
+            OctreeNode[] _reducibleNodes;
 
             /// <summary>
             /// The root of the octree
             /// </summary>
-            private OctreeNode _root;
-
-            /// <summary>
-            /// Mask used when getting the appropriate pixels for a given node
-            /// </summary>
-            private static int[] mask = new int[8] { 0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01 };
+            OctreeNode _root;
 
             /// <summary>
             /// Construct the octree
@@ -114,23 +114,6 @@ namespace OFrameLibrary.Util
             /// Get/Set the number of leaves in the tree
             /// </summary>
             public int Leaves { get; set; }
-
-            /// <summary>
-            /// Return the array of reducible nodes
-            /// </summary>
-            protected OctreeNode[] ReducibleNodes()
-            {
-                return _reducibleNodes;
-            }
-
-            /// <summary>
-            /// Keep track of the previous node that was quantized
-            /// </summary>
-            /// <param name="node">The node last quantized</param>
-            protected void TrackPrevious(OctreeNode node)
-            {
-                _previousNode = node;
-            }
 
             /// <summary>
             /// Add a given color value to the octree
@@ -194,7 +177,7 @@ namespace OFrameLibrary.Util
 
                 for (index = _maxColorBits - 1; (index > 0) && (null == _reducibleNodes[index]); index--)
                 {
-                    ;
+
                 }
                 var node = _reducibleNodes[index];
                 _reducibleNodes[index] = node.NextReducible;
@@ -205,49 +188,68 @@ namespace OFrameLibrary.Util
             }
 
             /// <summary>
+            /// Return the array of reducible nodes
+            /// </summary>
+            protected OctreeNode[] ReducibleNodes()
+            {
+                return _reducibleNodes;
+            }
+
+            /// <summary>
+            /// Keep track of the previous node that was quantized
+            /// </summary>
+            /// <param name="node">The node last quantized</param>
+            protected void TrackPrevious(OctreeNode node)
+            {
+                _previousNode = node;
+            }
+
+            /// <summary>
             /// Class which encapsulates each node in the tree
             /// </summary>
             protected class OctreeNode
             {
-                /// <summary>
-                /// Blue component
-                /// </summary>
-                private int _blue;
+                readonly
 
                 /// <summary>
                 /// Pointers to any child nodes
                 /// </summary>
-                private OctreeNode[] _children;
+                OctreeNode[] _children;
+
+                /// <summary>
+                /// Blue component
+                /// </summary>
+                int _blue;
 
                 /// <summary>
                 /// Green Component
                 /// </summary>
-                private int _green;
+                int _green;
 
                 /// <summary>
                 /// Flag indicating that this is a leaf node
                 /// </summary>
-                private bool _leaf;
+                bool _leaf;
 
                 /// <summary>
                 /// Pointer to next reducible node
                 /// </summary>
-                private OctreeNode _nextReducible;
+                OctreeNode _nextReducible;
 
                 /// <summary>
                 /// The index of this node in the palette
                 /// </summary>
-                private int _paletteIndex;
+                int _paletteIndex;
 
                 /// <summary>
                 /// Number of pixels in this node
                 /// </summary>
-                private int _pixelCount;
+                int _pixelCount;
 
                 /// <summary>
                 /// Red component
                 /// </summary>
-                private int _red;
+                int _red;
 
                 /// <summary>
                 /// Construct the node
@@ -353,6 +355,8 @@ namespace OFrameLibrary.Util
                 /// <summary>
                 /// Return the palette index for the passed color
                 /// </summary>
+                /// <param name="pixel">todo: describe pixel parameter on GetPaletteIndex</param>
+                /// <param name="level">todo: describe level parameter on GetPaletteIndex</param>
                 public int GetPaletteIndex(Color32 pixel, int level)
                 {
                     var paletteIndex = _paletteIndex;
@@ -383,6 +387,7 @@ namespace OFrameLibrary.Util
                 /// <summary>
                 /// Increment the pixel count and add to the color information
                 /// </summary>
+                /// <param name="pixel">todo: describe pixel parameter on Increment</param>
                 public void Increment(Color32 pixel)
                 {
                     _pixelCount++;

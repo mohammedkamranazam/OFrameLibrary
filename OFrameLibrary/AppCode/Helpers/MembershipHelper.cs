@@ -15,7 +15,7 @@ namespace OFrameLibrary.Helpers
             if (!string.IsNullOrWhiteSpace(cookieValue))
             {
                 return cookieValue;
-                ;
+
             }
             else
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 
-namespace OFrameLibrary.Helpers
+namespace OFrameLibrary.Factories
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {

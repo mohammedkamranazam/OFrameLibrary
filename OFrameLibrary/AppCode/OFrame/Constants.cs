@@ -8,11 +8,11 @@
             public const string AvatarPathPerformanceKey = "_AvatarPathPerformanceKey__";
             public const string CurrentCultureCookieKey = "_CurrentCulture__";
             public const string CurrentCultureDirectionCookieKey = "_CurrentCultureDirection__";
+            public const string CurrentCultureSessionKey = "_CurrentCultureSessionKey__";
             public const string GridViewSortDirection = "_GridViewSortDirection__";
             public const string GridViewSortExpression = "_GridViewSortExpression__";
             public const string GuestEmailIDCookieKey = "_GuestEmailID__";
             public const string PrintSettingsKey = "_PrintSettings__";
-            public const string CurrentCultureSessionKey = "_CurrentCultureSessionKey__";
         }
 
         public static class Messages
