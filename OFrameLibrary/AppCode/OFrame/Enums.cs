@@ -1,12 +1,5 @@
 ﻿namespace OFrameLibrary
 {
-    public enum BlinkRate
-    {
-        None,
-        Slow,
-        Regular,
-        Fast,
-    }
 
     public enum EventSchedule
     {
@@ -16,16 +9,6 @@
         Continuing,
     }
 
-    public enum FieldWidth
-    {
-        xxsmall,
-        xsmall,
-        small,
-        medium,
-        large,
-        largeXL,
-        full,
-    }
 
     public enum FileType
     {
@@ -43,7 +26,7 @@
         Unspecified,
     }
 
-    public enum HashServiceProvider : int
+    public enum HashServiceProvider
     {
         SHA1,
         SHA256,
@@ -58,16 +41,6 @@
         Activity
     }
 
-    public enum ManageMessageId
-    {
-        AddPhoneSuccess,
-        ChangePasswordSuccess,
-        SetTwoFactorSuccess,
-        SetPasswordSuccess,
-        RemoveLoginSuccess,
-        RemovePhoneSuccess,
-        Error
-    }
 
     public enum MemoryCacheItemPriority
     {
@@ -75,24 +48,6 @@
         NotRemovable = 2,
     }
 
-    public enum MessageColor
-    {
-        None,
-        White,
-        Black,
-        Blue,
-        Orange,
-        Yellow,
-        Red,
-        Green,
-    }
-
-    public enum PageSetting
-    {
-        Add = 0,
-        List = 1,
-        Manage = 2,
-    }
 
     public enum PerformanceMode
     {
@@ -112,7 +67,7 @@
         Warning,
     }
 
-    public enum SymCryptographyServiceProvider : int
+    public enum SymCryptographyServiceProvider
     {
         Rijndael,
         RC2,
@@ -120,9 +75,4 @@
         TripleDES,
     }
 
-    public enum TipPosition
-    {
-        Left = 0,
-        Right = 2,
-    }
 }
